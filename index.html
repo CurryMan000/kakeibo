@@ -287,9 +287,7 @@
             });
 
             if (response.ok) {
-                alert('データが保存されました');
-            } else {
-                alert('保存に失敗しました');
+                // メッセージは表示しません
             }
         }
 
@@ -453,14 +451,8 @@
             };
 
             entries.push(entry);
-            saveData();
+            saveData();  // GitHubへの保存は続けるが、メッセージは表示しない
             updateEntriesTable();
-        }
-
-        // 入力内容の保存
-        function saveData() {
-            saveDataToGitHub();
-            alert("データがGitHubに保存されました！");
         }
 
         // エントリテーブルの更新
