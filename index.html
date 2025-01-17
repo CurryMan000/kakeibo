@@ -352,9 +352,9 @@
                 data: {
                     labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
                     datasets: [{
-                        label: `${category}の月別支出`,
+                        label: `${category}の支出`,
                         data: monthlyTotals,
-                        backgroundColor: '#4CAF50',
+                        backgroundColor: '#00bcd4',
                     }]
                 },
                 options: {
@@ -367,40 +367,32 @@
             });
         }
 
-        // 入力データの保存
-        function saveData() {
-            localStorage.setItem('entries', JSON.stringify(entries));
-        }
-
-        // 新しいエントリーを追加
+        // エントリーの追加
         function addEntry() {
-            const month = parseInt(document.getElementById('month').value);
             const date = document.getElementById('date').value;
             const category = document.getElementById('category').value;
             const amount = parseInt(document.getElementById('amount').value);
+            const month = parseInt(document.getElementById('month').value);
 
-            if (!date || !category || !amount) {
-                alert("全ての項目を入力してください。");
+            if (!date || !category || !amount || isNaN(amount)) {
+                alert('すべての項目を入力してください。');
                 return;
             }
 
-            const newEntry = { month, date, category, amount };
-            entries.push(newEntry);
-
+            entries.push({ month, date, category, amount });
             updateEntriesTable();
             saveData();
         }
 
-        // 入力テーブルの更新
+        // エントリーの表示更新
         function updateEntriesTable() {
-            const month = parseInt(document.getElementById('month').value);
             const table = document.getElementById('entriesTable').getElementsByTagName('tbody')[0];
-            table.innerHTML = "";
+            table.innerHTML = '';
 
             let totalExpense = 0;
 
             entries.forEach(entry => {
-                if (entry.month === month) {
+                if (entry.month === selectedMonth) {
                     const row = table.insertRow();
                     row.innerHTML = `
                         <td>${entry.month}</td>
@@ -423,12 +415,17 @@
             saveData();
         }
 
-        // セクションの表示
+        // データを保存
+        function saveData() {
+            localStorage.setItem('entries', JSON.stringify(entries));
+        }
+
+        // セクションの表示切り替え
         function showSection(sectionId, button) {
             document.getElementById('entryFormSection').style.display = 'none';
             document.getElementById('monthlyGraphSection').style.display = 'none';
             document.getElementById('yearlyGraphSection').style.display = 'none';
-            document.querySelectorAll('footer button').forEach(button => button.classList.remove('active'));
+            document.querySelectorAll('footer button').forEach(btn => btn.classList.remove('active'));
 
             document.getElementById(sectionId).style.display = 'block';
             button.classList.add('active');
