@@ -15,8 +15,8 @@
         }
         h1 {
             text-align: center;
-            font-size: 1.8rem;
-            color: #4CAF50;
+            font-size: 1.5rem;
+            color: #ADE0EE;
             margin: 20px 0;
         }
         #content {
@@ -36,7 +36,7 @@
             box-sizing: border-box;
         }
         button {
-            background-color: #4CAF50;
+            background-color: #FFCC99;
             color: white;
             border: none;
             cursor: pointer;
@@ -68,7 +68,7 @@
             position: fixed;
             bottom: 0;
             width: 100%;
-            background-color: #4CAF50;
+            background-color: #ADE0EE;
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
@@ -103,6 +103,10 @@
             font-size: 1rem;
             flex: 0 0 30%;
             max-width: 120px;
+            background-color: #ADE0EE; /* 変更: 月ボタン・年ボタンの色 */
+            color: white;
+            border: none;
+            border-radius: 5px;
         }
         #saveButton {
             position: fixed;
@@ -318,7 +322,7 @@
                         datasets: [{
                             label: '総支出',
                             data: monthlyTotals,
-                            backgroundColor: '#4CAF50',
+                            backgroundColor: '#FFCC99',
                         }]
                     },
                     options: {
@@ -354,7 +358,7 @@
                     datasets: [{
                         label: `${category}の月別支出`,
                         data: monthlyTotals,
-                        backgroundColor: '#4CAF50',
+                        backgroundColor: '#FFCC99',
                     }]
                 },
                 options: {
