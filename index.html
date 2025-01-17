@@ -459,7 +459,8 @@
     });
 }
 
-function saveData() {
+//保存ボタン押下
+        function saveData() {
     const repository = "kakeibo";
     const filePath = "data.json";
     const token = "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";
@@ -473,23 +474,45 @@ function saveData() {
         content: encodedData,
     };
 
+    // GitHub APIを使って現在のファイルの状態を取得
     fetch(url, {
-        method: "PUT",
+        method: "GET",
         headers: {
             "Authorization": `token ${token}`,
             "Accept": "application/vnd.github.v3+json"
-        },
-        body: JSON.stringify(data)
+        }
     })
     .then(response => {
-        if (!response.ok) {
-            // レスポンスがエラーの場合、詳細を表示
+        if (response.status === 404) {
+            // ファイルが存在しない場合、新規作成
+            return fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Accept": "application/vnd.github.v3+json"
+                },
+                body: JSON.stringify(data)
+            });
+        } else if (!response.ok) {
+            // 他のエラーが発生した場合
             return response.json().then(err => {
                 throw new Error(`GitHub API Error: ${err.message || err.error}`);
             });
         }
-        return response.json();
+        // ファイルが存在している場合、PUTリクエストを送信して更新
+        return response.json().then(existingFile => {
+            data.sha = existingFile.sha;  // 既存ファイルのSHAを利用して更新する
+            return fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Accept": "application/vnd.github.v3+json"
+                },
+                body: JSON.stringify(data)
+            });
+        });
     })
+    .then(response => response.json())
     .then(data => {
         alert("データが保存されました。");
     })
@@ -498,6 +521,7 @@ function saveData() {
         alert("エラーが発生しました: " + error.message);
     });
 }
+
 
     </script>
 </body>
