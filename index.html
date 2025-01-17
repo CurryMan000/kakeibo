@@ -460,23 +460,24 @@
 }
 
 //保存ボタン押下
-function saveData() {
-    const repository = "kakeibo";
-    const filePath = "data.json";
-    const token = "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";
+        function saveData() {
+    const username = "CurryMan000";  // GitHubユーザ名
+    const repository = "kakeibo";  // GitHubリポジトリ名
+    const filePath = "kakeibo/data.json"; // 保存するファイルパス（ディレクトリも含む）
+    const token = "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";  // GitHubのアクセストークン（必須）
 
-    const url = `https://api.github.com/repos/${repository}/contents/${filePath}`;
-    const jsonData = JSON.stringify(entries);
-    const encodedData = btoa(unescape(encodeURIComponent(jsonData)));
+    const url = `https://api.github.com/repos/${username}/${repository}/contents/${filePath}`;
+    const jsonData = JSON.stringify(entries);  // 保存するデータ（entriesの内容）
+    const encodedData = btoa(unescape(encodeURIComponent(jsonData)));  // Base64エンコード
 
     const data = {
-        message: "Save data",
-        content: encodedData,
+        message: "Save data",  // コミットメッセージ
+        content: encodedData,  // base64エンコードしたデータ
     };
 
     // GitHub APIでファイルの状態を取得
     fetch(url, {
-        method: "GET",
+        method: "GET",  // まずはGETリクエストでファイルが存在するか確認
         headers: {
             "Authorization": `token ${token}`,
             "Accept": "application/vnd.github.v3+json"
@@ -487,7 +488,7 @@ function saveData() {
             // ファイルが存在しない場合、新規作成
             console.log("File not found, creating new file...");
             return fetch(url, {
-                method: "PUT",
+                method: "PUT",  // PUTリクエストで新規作成
                 headers: {
                     "Authorization": `token ${token}`,
                     "Accept": "application/vnd.github.v3+json"
@@ -506,7 +507,7 @@ function saveData() {
             console.log("File found, updating with SHA:", existingFile.sha);
             data.sha = existingFile.sha;  // 既存ファイルのSHAを利用して更新
             return fetch(url, {
-                method: "PUT",
+                method: "PUT",  // PUTリクエストで更新
                 headers: {
                     "Authorization": `token ${token}`,
                     "Accept": "application/vnd.github.v3+json"
@@ -515,14 +516,14 @@ function saveData() {
             });
         });
     })
-    .then(response => response.json())
+    .then(response => response.json())  // レスポンスをJSON形式で取得
     .then(data => {
         console.log("File saved successfully:", data);
-        alert("データが保存されました。");
+        alert("データが保存されました。");  // 成功メッセージ
     })
     .catch(error => {
-        console.error("Error details:", error);
-        alert("エラーが発生しました: " + error.message);
+        console.error("Error details:", error);  // エラー内容をコンソールに表示
+        alert("エラーが発生しました: " + error.message);  // エラーメッセージを表示
     });
 }
 
