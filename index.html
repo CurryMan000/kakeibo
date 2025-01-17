@@ -433,25 +433,41 @@
             const repository = "kakeibo";  // GitHubリポジトリ名
             const filePath = "data.json"; // 保存するファイルパス
             const token = "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";  // GitHubのアクセストークン（必須）
-
-            const url = `https://api.github.com/repos/${repository}/contents/${filePath}`;
-            const data = {
-                message: "Save data",
-                content: btoa(JSON.stringify(entries)), // base64エンコードしたデータ
-            };
-
-            fetch(url, {
-                method: "PUT",
+        
+            // 既にファイルが存在するか確認するためのGETリクエスト
+            fetch(`https://api.github.com/repos/${repository}/contents/${filePath}`, {
+                method: "GET",
                 headers: {
                     "Authorization": `token ${token}`,
                     "Accept": "application/vnd.github.v3+json"
-                },
-                body: JSON.stringify(data)
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // ファイルが存在する場合は、そのSHAを取得し、更新リクエストを送信
+                const sha = data.sha;
+        
+                const url = `https://api.github.com/repos/${repository}/contents/${filePath}`;
+                const requestData = {
+                    message: "Update data",
+                    content: btoa(JSON.stringify(entries)), // base64エンコードしたデータ
+                    sha: sha // 更新するファイルのSHAを指定
+                };
+        
+                return fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `token ${token}`,
+                        "Accept": "application/vnd.github.v3+json"
+                    },
+                    body: JSON.stringify(requestData)
+                });
             })
             .then(response => response.json())
             .then(data => alert("データが保存されました。"))
             .catch(error => alert("エラーが発生しました: " + error));
-        }
+            }
+
     </script>
 </body>
 </html>
