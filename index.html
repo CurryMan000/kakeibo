@@ -243,106 +243,88 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        let entries = JSON.parse(localStorage.getItem('entries')) || [];
-        let selectedMonth = localStorage.getItem('selectedMonth') ? parseInt(localStorage.getItem('selectedMonth')) : 1;
-        let monthlyChart = null;
-        let yearlyChart = null;
+   <script>
+    let entries = JSON.parse(localStorage.getItem('entries')) || [];
+    let selectedMonth = localStorage.getItem('selectedMonth') ? parseInt(localStorage.getItem('selectedMonth')) : 1;
+    let monthlyChart = null;
+    let yearlyChart = null;
 
-        // アプリ起動時に前回の月のデータを表示
-        window.onload = function() {
-            showSection('entryFormSection', document.querySelector('footer button'));
-            document.getElementById('month').value = selectedMonth;
-            updateEntriesTable();
+    // アプリ起動時に前回の月のデータを表示
+    window.onload = function() {
+        showSection('entryFormSection', document.querySelector('footer button'));
+        document.getElementById('month').value = selectedMonth;
+        updateEntriesTable();
+    };
+
+    // タブの切り替え
+    function showSection(sectionId, button) {
+        // 全てのセクションを非表示にする
+        const sections = ['entryFormSection', 'monthlyGraphSection', 'yearlyGraphSection'];
+        sections.forEach(id => document.getElementById(id).style.display = 'none');
+
+        // クリックされたタブをアクティブにする
+        const buttons = document.querySelectorAll('footer button');
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        // 対象セクションを表示
+        document.getElementById(sectionId).style.display = 'block';
+        button.classList.add('active');
+    }
+
+    // 月別グラフの更新
+    function updateMonthlyGraph(month) {
+        selectedMonth = month;
+        localStorage.setItem('selectedMonth', selectedMonth);
+
+        if (monthlyChart) {
+            monthlyChart.destroy();
+        }
+
+        const categoryAmounts = {
+            'お肉': 0, '飲料': 0, '野菜': 0, 'お菓子': 0, '生活用品': 0, '外食': 0,
+            '特別': 0, '水道': 0, 'ガス': 0, '電気': 0, 'その他': 0
         };
 
-        // 月別グラフの更新
-        function updateMonthlyGraph(month) {
-            selectedMonth = month;
-            localStorage.setItem('selectedMonth', selectedMonth);
+        let hasData = false;
 
-            if (monthlyChart) {
-                monthlyChart.destroy();
+        // その月のデータを集計
+        entries.forEach(entry => {
+            if (entry.month === month) {
+                categoryAmounts[entry.category] += entry.amount;
+                hasData = true;
             }
+        });
 
-            const categoryAmounts = {
-                'お肉': 0, '飲料': 0, '野菜': 0, 'お菓子': 0, '生活用品': 0, '外食': 0,
-                '特別': 0, '水道': 0, 'ガス': 0, '電気': 0, 'その他': 0
-            };
-
-            let hasData = false;
-
-            // その月のデータを集計
-            entries.forEach(entry => {
-                if (entry.month === month) {
-                    categoryAmounts[entry.category] += entry.amount;
-                    hasData = true;
-                }
-            });
-
-            if (!hasData) {
-                alert(`${month}月のデータがありません。`);
-                return;
-            }
-
-            const ctx = document.getElementById('monthlyGraph').getContext('2d');
-            monthlyChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: Object.keys(categoryAmounts),
-                    datasets: [{
-                        label: `${month}月の支出`,
-                        data: Object.values(categoryAmounts),
-                        backgroundColor: ['#ffcc00', '#4caf50', '#00bcd4', '#ff4081', '#ff9800', '#607d8b', '#8bc34a', '#f44336', '#9c27b0', '#3f51b5', '#e91e63'],
-                    }]
-                },
-            });
+        if (!hasData) {
+            alert(`${month}月のデータがありません。`);
+            return;
         }
-        // 年別グラフの更新（総支出）
-        function updateYearlyGraph(type) {
-            if (yearlyChart) {
-                yearlyChart.destroy();
-            }
 
-            if (type === 'total') {
-                // 各月の総支出を計算
-                const monthlyTotals = Array(12).fill(0);
-                entries.forEach(entry => {
-                    monthlyTotals[entry.month - 1] += entry.amount;
-                });
+        const ctx = document.getElementById('monthlyGraph').getContext('2d');
+        monthlyChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(categoryAmounts),
+                datasets: [{
+                    label: `${month}月の支出`,
+                    data: Object.values(categoryAmounts),
+                    backgroundColor: ['#ffcc00', '#4caf50', '#00bcd4', '#ff4081', '#ff9800', '#607d8b', '#8bc34a', '#f44336', '#9c27b0', '#3f51b5', '#e91e63'],
+                }]
+            },
+        });
+    }
 
-                const ctx = document.getElementById('yearlyGraph').getContext('2d');
-                yearlyChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                        datasets: [{
-                            label: '総支出',
-                            data: monthlyTotals,
-                            backgroundColor: '#4CAF50',
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            }
+    // 年別グラフの更新（総支出 または 分類別）
+    function updateYearlyGraph(type) {
+        if (yearlyChart) {
+            yearlyChart.destroy();
         }
-        // 分類別の年グラフ
-        function updateCategoryYearlyGraph(category) {
-            if (yearlyChart) {
-                yearlyChart.destroy();
-            }
 
+        if (type === 'total') {
+            // 各月の総支出を計算
             const monthlyTotals = Array(12).fill(0);
             entries.forEach(entry => {
-                if (entry.category === category) {
-                    monthlyTotals[entry.month - 1] += entry.amount;
-                }
+                monthlyTotals[entry.month - 1] += entry.amount;
             });
 
             const ctx = document.getElementById('yearlyGraph').getContext('2d');
@@ -351,9 +333,40 @@
                 data: {
                     labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
                     datasets: [{
-                        label: `${category}の支出`,
+                        label: '総支出',
                         data: monthlyTotals,
-                        backgroundColor: '#00bcd4',
+                        backgroundColor: '#4CAF50',
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        } else if (type === 'category') {
+            const categories = ['お肉', '飲料', '野菜', 'お菓子', '生活用品', '外食', '特別', '水道', 'ガス', '電気', 'その他'];
+            const categoryData = categories.map(category => {
+                let total = 0;
+                entries.forEach(entry => {
+                    if (entry.category === category) {
+                        total += entry.amount;
+                    }
+                });
+                return total;
+            });
+
+            const ctx = document.getElementById('yearlyGraph').getContext('2d');
+            yearlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: categories,
+                    datasets: [{
+                        label: 'カテゴリ別年間支出',
+                        data: categoryData,
+                        backgroundColor: ['#ffcc00', '#4caf50', '#00bcd4', '#ff4081', '#ff9800', '#607d8b', '#8bc34a', '#f44336', '#9c27b0', '#3f51b5', '#e91e63'],
                     }]
                 },
                 options: {
@@ -365,6 +378,8 @@
                 }
             });
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
