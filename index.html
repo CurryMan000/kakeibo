@@ -483,7 +483,10 @@ function saveData() {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error("GitHubへの保存に失敗しました。");
+            // レスポンスがエラーの場合、詳細を表示
+            return response.json().then(err => {
+                throw new Error(`GitHub API Error: ${err.message || err.error}`);
+            });
         }
         return response.json();
     })
@@ -491,6 +494,7 @@ function saveData() {
         alert("データが保存されました。");
     })
     .catch(error => {
+        console.error("エラー内容:", error);
         alert("エラーが発生しました: " + error.message);
     });
 }
