@@ -429,22 +429,48 @@
         }
 
         // 保存ボタンの動作
-        function saveData() {
-    const repository = "kakeibo";  // GitHubリポジトリ名
-    const filePath = "data.json"; // 保存するファイルパス
-    const token = "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";  // GitHubのアクセストークン（必須）
+        function checkAndSaveData() {
+    const repository = "kakeibo";
+    const filePath = "data.json";
+    const token = "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";
 
     const url = `https://api.github.com/repos/${repository}/contents/${filePath}`;
 
-    // entriesをJSON文字列に変換
-    const jsonData = JSON.stringify(entries);
+    // 既存ファイルの確認
+    fetch(url, {
+        method: "GET",
+        headers: {
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json"
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // 既存のファイルが見つかった場合、保存処理へ進む
+            saveData();
+        } else {
+            // ファイルが見つからなかった場合、新たに作成
+            saveData();
+        }
+    })
+    .catch(error => {
+        console.error("Error fetching file:", error);
+        alert("エラーが発生しました: " + error.message);
+    });
+}
 
-    // UTF-8エンコードしてBase64エンコード
+function saveData() {
+    const repository = "kakeibo";
+    const filePath = "data.json";
+    const token = "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";
+
+    const url = `https://api.github.com/repos/${repository}/contents/${filePath}`;
+    const jsonData = JSON.stringify(entries);
     const encodedData = btoa(unescape(encodeURIComponent(jsonData)));
 
     const data = {
         message: "Save data",
-        content: encodedData, // base64エンコードしたデータ
+        content: encodedData,
     };
 
     fetch(url, {
@@ -457,20 +483,18 @@
     })
     .then(response => {
         if (!response.ok) {
-            // レスポンスが200 OKでない場合はエラーを表示
             throw new Error("GitHubへの保存に失敗しました。");
         }
         return response.json();
     })
     .then(data => {
-        console.log("Response data:", data);  // レスポンスデータを確認
         alert("データが保存されました。");
     })
     .catch(error => {
-        console.error("Error:", error);  // エラーメッセージを表示
         alert("エラーが発生しました: " + error.message);
     });
 }
+
     </script>
 </body>
 </html>
