@@ -460,7 +460,7 @@
 }
 
 //保存ボタン押下
-        function saveData() {
+function saveData() {
     const repository = "kakeibo";
     const filePath = "data.json";
     const token = "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";
@@ -474,7 +474,7 @@
         content: encodedData,
     };
 
-    // GitHub APIを使って現在のファイルの状態を取得
+    // GitHub APIでファイルの状態を取得
     fetch(url, {
         method: "GET",
         headers: {
@@ -485,6 +485,7 @@
     .then(response => {
         if (response.status === 404) {
             // ファイルが存在しない場合、新規作成
+            console.log("File not found, creating new file...");
             return fetch(url, {
                 method: "PUT",
                 headers: {
@@ -496,12 +497,14 @@
         } else if (!response.ok) {
             // 他のエラーが発生した場合
             return response.json().then(err => {
+                console.error("GitHub API Error:", err);
                 throw new Error(`GitHub API Error: ${err.message || err.error}`);
             });
         }
-        // ファイルが存在している場合、PUTリクエストを送信して更新
+        // ファイルが存在している場合は更新するためにSHAを使う
         return response.json().then(existingFile => {
-            data.sha = existingFile.sha;  // 既存ファイルのSHAを利用して更新する
+            console.log("File found, updating with SHA:", existingFile.sha);
+            data.sha = existingFile.sha;  // 既存ファイルのSHAを利用して更新
             return fetch(url, {
                 method: "PUT",
                 headers: {
@@ -514,14 +517,14 @@
     })
     .then(response => response.json())
     .then(data => {
+        console.log("File saved successfully:", data);
         alert("データが保存されました。");
     })
     .catch(error => {
-        console.error("エラー内容:", error);
+        console.error("Error details:", error);
         alert("エラーが発生しました: " + error.message);
     });
 }
-
 
     </script>
 </body>
