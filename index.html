@@ -242,8 +242,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        let entries = JSON.parse(localStorage.getItem('entries')) || [];
-        let selectedMonth = localStorage.getItem('selectedMonth') ? parseInt(localStorage.getItem('selectedMonth')) : 1;
+        let entries = [];
+        let selectedMonth = 1;
         let monthlyChart = null;
         let yearlyChart = null;
 
@@ -318,7 +318,6 @@
         // 月別グラフの更新
         function updateMonthlyGraph(month) {
             selectedMonth = month;
-            localStorage.setItem('selectedMonth', selectedMonth);
 
             if (monthlyChart) {
                 monthlyChart.destroy();
@@ -329,74 +328,89 @@
                 '特別': 0, '水道': 0, 'ガス': 0, '電気': 0, 'その他': 0
             };
 
-            let hasData = false;
-
-            // その月のデータを集計
             entries.forEach(entry => {
-                if (entry.month === month) {
+                if (entry.month === selectedMonth) {
                     categoryAmounts[entry.category] += entry.amount;
-                    hasData = true;
                 }
             });
 
-            if (!hasData) {
-                alert(`${month}月のデータがありません。`);
-                return;
-            }
+            const labels = Object.keys(categoryAmounts);
+            const data = Object.values(categoryAmounts);
 
             const ctx = document.getElementById('monthlyGraph').getContext('2d');
             monthlyChart = new Chart(ctx, {
-                type: 'pie',
+                type: 'bar',
                 data: {
-                    labels: Object.keys(categoryAmounts),
+                    labels: labels,
                     datasets: [{
-                        label: `${month}月の支出`,
-                        data: Object.values(categoryAmounts),
-                        backgroundColor: ['#ffcc00', '#4caf50', '#00bcd4', '#ff4081', '#ff9800', '#607d8b', '#8bc34a', '#f44336', '#9c27b0', '#3f51b5', '#e91e63'],
+                        label: `${selectedMonth}月の支出`,
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
                     }]
                 },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
             });
         }
 
-        // 年別グラフの更新（総支出）
+        // 年別グラフの更新
         function updateYearlyGraph(type) {
-            if (yearlyChart) {
-                yearlyChart.destroy();
-            }
+            const categoryAmounts = {
+                'お肉': 0, '飲料': 0, '野菜': 0, 'お菓子': 0, '生活用品': 0, '外食': 0,
+                '特別': 0, '水道': 0, 'ガス': 0, '電気': 0, 'その他': 0
+            };
 
-            if (type === 'total') {
-                // 各月の総支出を計算
-                const monthlyTotals = Array(12).fill(0);
-                entries.forEach(entry => {
-                    monthlyTotals[entry.month - 1] += entry.amount;
-                });
+            let totalAmount = 0;
 
-                const ctx = document.getElementById('yearlyGraph').getContext('2d');
-                yearlyChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                        datasets: [{
-                            label: '総支出',
-                            data: monthlyTotals,
-                            backgroundColor: '#4caf50',
-                        }]
-                    },
-                });
-            }
+            entries.forEach(entry => {
+                totalAmount += entry.amount;
+                categoryAmounts[entry.category] += entry.amount;
+            });
+
+            const labels = Object.keys(categoryAmounts);
+            const data = type === 'total' ? [totalAmount] : Object.values(categoryAmounts);
+
+            const ctx = document.getElementById('yearlyGraph').getContext('2d');
+            yearlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: type === 'total' ? '総支出' : '各カテゴリ支出',
+                        data: data,
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
         }
 
-        // 年別グラフの更新（カテゴリ別支出）
+        // カテゴリ別年グラフの更新
         function updateCategoryYearlyGraph(category) {
-            if (yearlyChart) {
-                yearlyChart.destroy();
-            }
-
-            const categoryTotals = Array(12).fill(0);
+            const categoryAmounts = {
+                [category]: 0
+            };
 
             entries.forEach(entry => {
                 if (entry.category === category) {
-                    categoryTotals[entry.month - 1] += entry.amount;
+                    categoryAmounts[category] += entry.amount;
                 }
             });
 
@@ -404,76 +418,94 @@
             yearlyChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    labels: [category],
                     datasets: [{
                         label: `${category}支出`,
-                        data: categoryTotals,
-                        backgroundColor: '#ffcc00',
+                        data: [categoryAmounts[category]],
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
                     }]
                 },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
             });
         }
 
-        // 支出データを追加する
+        // 入力フォームに新しいエントリを追加
         function addEntry() {
             const date = document.getElementById('date').value;
             const category = document.getElementById('category').value;
             const amount = parseInt(document.getElementById('amount').value);
             const month = parseInt(document.getElementById('month').value);
 
-            if (date && category && amount) {
-                const newEntry = {
-                    date: date,
-                    category: category,
-                    amount: amount,
-                    month: month
-                };
-                entries.push(newEntry);
-                updateEntriesTable();
-                saveData();
-            }
+            const entry = {
+                month: month,
+                date: date,
+                category: category,
+                amount: amount
+            };
+
+            entries.push(entry);
+            saveData();
+            updateEntriesTable();
         }
 
-        // 追加されたエントリーテーブルを更新する
+        // 入力内容の保存
+        function saveData() {
+            saveDataToGitHub();
+            alert("データがGitHubに保存されました！");
+        }
+
+        // エントリテーブルの更新
         function updateEntriesTable() {
-            const entriesTable = document.getElementById('entriesTable').getElementsByTagName('tbody')[0];
-            entriesTable.innerHTML = '';
-            let totalExpense = 0;
+            const tableBody = document.querySelector('#entriesTable tbody');
+            tableBody.innerHTML = '';
             entries.forEach(entry => {
-                const row = entriesTable.insertRow();
-                row.insertCell().textContent = entry.month + '月';
-                row.insertCell().textContent = entry.date;
-                row.insertCell().textContent = entry.category;
-                row.insertCell().textContent = entry.amount.toLocaleString();
-                const deleteButton = row.insertCell();
-                deleteButton.innerHTML = `<button onclick="deleteEntry(${entries.indexOf(entry)})">削除</button>`;
-                totalExpense += entry.amount;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${entry.month}</td>
+                    <td>${entry.date}</td>
+                    <td>${entry.category}</td>
+                    <td>${entry.amount}</td>
+                    <td><button onclick="deleteEntry(${entries.indexOf(entry)})">削除</button></td>
+                `;
+                tableBody.appendChild(row);
             });
-            document.getElementById('totalExpense').textContent = totalExpense.toLocaleString();
+            updateTotalExpense();
         }
 
-        // エントリーを削除する
+        // エントリ削除
         function deleteEntry(index) {
             entries.splice(index, 1);
-            updateEntriesTable();
             saveData();
+            updateEntriesTable();
         }
 
-        // 保存処理
-        function saveData() {
-            // ローカルに保存
-            localStorage.setItem('entries', JSON.stringify(entries));
-            saveDataToGitHub();
+        // 総支出を更新
+        function updateTotalExpense() {
+            const totalExpense = entries.reduce((sum, entry) => sum + entry.amount, 0);
+            document.getElementById('totalExpense').innerText = totalExpense;
         }
 
-        // セクションの切替
+        // セクションの表示
         function showSection(sectionId, button) {
-            const sections = ['entryFormSection', 'monthlyGraphSection', 'yearlyGraphSection'];
-            sections.forEach(id => document.getElementById(id).style.display = 'none');
+            const sections = document.querySelectorAll('div[id$="Section"]');
+            sections.forEach(section => section.style.display = 'none');
+
+            const buttons = document.querySelectorAll('footer button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
             document.getElementById(sectionId).style.display = 'block';
-            document.querySelectorAll('footer button').forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
         }
+
     </script>
 </body>
 </html>
