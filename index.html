@@ -3,108 +3,477 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>家計簿アプリ</title>
+    <title>家計簿あゆみきひ2025</title>
+    <style>
+        /* ベーススタイル */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #4CAF50;
+            margin: 20px 0;
+        }
+        #content {
+            padding: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input, select, button {
+            font-size: 1rem;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .summary {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #4CAF50;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            color: white;
+        }
+        footer button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        footer button.active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        footer button:hover {
+            opacity: 0.8;
+        }
+        #graphContainer {
+            text-align: center;
+            padding: 50px;
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .button-group button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            flex: 0 0 30%;
+            max-width: 120px;
+        }
+        #saveButton {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: #00bcd4;
+            color: white;
+            font-size: 1rem;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: auto;
+            max-width: 150px;
+        }
+        #saveButton:hover {
+            background-color: #0097a7;
+        }
+    </style>
 </head>
 <body>
+    <button id="saveButton" onclick="saveData()">保存</button>
+    <h1>家計簿あゆみきひ2025</h1>
 
-<h1>家計簿</h1>
+    <div id="content">
+        <!-- 入力フォーム -->
+        <div id="entryFormSection">
+            <form id="entryForm">
+                <label for="month">月:</label>
+                <select id="month" onchange="updateEntriesTable()">
+                    <option value="1">1月</option>
+                    <option value="2">2月</option>
+                    <option value="3">3月</option>
+                    <option value="4">4月</option>
+                    <option value="5">5月</option>
+                    <option value="6">6月</option>
+                    <option value="7">7月</option>
+                    <option value="8">8月</option>
+                    <option value="9">9月</option>
+                    <option value="10">10月</option>
+                    <option value="11">11月</option>
+                    <option value="12">12月</option>
+                </select>
 
-<!-- 入力フォーム -->
-<div>
-    <input type="date" id="date" />
-    <input type="text" id="category" placeholder="カテゴリー" />
-    <input type="number" id="amount" placeholder="金額" />
-    <button id="saveBtn">保存</button>
-</div>
+                <label for="date">日付:</label>
+                <input type="text" id="date">
 
-<h2>データ</h2>
-<ul id="dataList"></ul>
+                <label for="category">分類:</label>
+                <select id="category">
+                    <option value="お肉">お肉</option>
+                    <option value="飲料">飲料</option>
+                    <option value="野菜">野菜</option>
+                    <option value="お菓子">お菓子</option>
+                    <option value="生活用品">生活用品</option>
+                    <option value="外食">外食</option>
+                    <option value="特別">特別</option>
+                    <option value="水道">水道</option>
+                    <option value="ガス">ガス</option>
+                    <option value="電気">電気</option>
+                    <option value="その他">その他</option>
+                </select>
 
-<!-- ファイル選択 -->
-<input type="file" id="fileInput" accept=".json" />
+                <label for="amount">金額:</label>
+                <input type="number" id="amount">
 
-<script>
-    let data = [];  // 保存するデータ
+                <button type="button" onclick="addEntry()">追加</button>
+            </form>
 
-    // ページ読み込み時にファイルからデータを読み込む
-    window.onload = function() {
-        // もしローカルストレージに保存されたデータがあれば読み込む
-        const savedData = localStorage.getItem("budgetData");
-        if (savedData) {
-            data = JSON.parse(savedData);
-            displayData();
-        }
+            <table id="entriesTable">
+                <thead>
+                    <tr>
+                        <th>月</th>
+                        <th>日付</th>
+                        <th>分類</th>
+                        <th>金額</th>
+                        <th>削除</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 記録がここに追加される -->
+                </tbody>
+            </table>
 
-        // ファイル入力があれば読み込む
-        document.getElementById("fileInput").addEventListener("change", function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const fileData = JSON.parse(e.target.result);
-                        data = fileData;
-                        displayData();
-                    } catch (error) {
-                        console.error("JSONファイルの解析エラー:", error);
-                    }
-                };
-                reader.readAsText(file);
+            <div class="summary">
+                <p>総支出: <span id="totalExpense">0</span> 円</p>
+            </div>
+        </div>
+
+        <div id="monthlyGraphSection" style="display: none;">
+            <div class="button-group">
+                <button onclick="updateMonthlyGraph(1)">1月</button>
+                <button onclick="updateMonthlyGraph(2)">2月</button>
+                <button onclick="updateMonthlyGraph(3)">3月</button>
+                <button onclick="updateMonthlyGraph(4)">4月</button>
+                <button onclick="updateMonthlyGraph(5)">5月</button>
+                <button onclick="updateMonthlyGraph(6)">6月</button>
+                <button onclick="updateMonthlyGraph(7)">7月</button>
+                <button onclick="updateMonthlyGraph(8)">8月</button>
+                <button onclick="updateMonthlyGraph(9)">9月</button>
+                <button onclick="updateMonthlyGraph(10)">10月</button>
+                <button onclick="updateMonthlyGraph(11)">11月</button>
+                <button onclick="updateMonthlyGraph(12)">12月</button>
+            </div>
+
+            <div id="graphContainer">
+                <canvas id="monthlyGraph" width="400" height="400"></canvas>
+            </div>
+        </div>
+
+        <div id="yearlyGraphSection" style="display: none;">
+            <div class="button-group">
+                <button onclick="updateYearlyGraph('total')">総支出</button>
+                <button onclick="updateCategoryYearlyGraph('お肉')">お肉</button>
+                <button onclick="updateCategoryYearlyGraph('飲料')">飲料</button>
+                <button onclick="updateCategoryYearlyGraph('野菜')">野菜</button>
+                <button onclick="updateCategoryYearlyGraph('お菓子')">お菓子</button>
+                <button onclick="updateCategoryYearlyGraph('生活用品')">生活用品</button>
+                <button onclick="updateCategoryYearlyGraph('外食')">外食</button>
+                <button onclick="updateCategoryYearlyGraph('特別')">特別</button>
+                <button onclick="updateCategoryYearlyGraph('水道')">水道</button>
+                <button onclick="updateCategoryYearlyGraph('ガス')">ガス</button>
+                <button onclick="updateCategoryYearlyGraph('電気')">電気</button>
+                <button onclick="updateCategoryYearlyGraph('その他')">その他</button>
+            </div>
+
+            <div id="graphContainer">
+                <canvas id="yearlyGraph" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <button onclick="showSection('entryFormSection', this)" class="active">入力</button>
+        <button onclick="showSection('monthlyGraphSection', this)">月グラフ</button>
+        <button onclick="showSection('yearlyGraphSection', this)">年グラフ</button>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let entries = JSON.parse(localStorage.getItem('entries')) || [];
+        let selectedMonth = localStorage.getItem('selectedMonth') ? parseInt(localStorage.getItem('selectedMonth')) : 1;
+        let monthlyChart = null;
+        let yearlyChart = null;
+
+        // GitHub APIの設定
+        const GITHUB_API_URL = 'https://api.github.com';
+        const REPO_OWNER = 'your-username';
+        const REPO_NAME = 'your-repo';
+        const FILE_PATH = 'household_budget.json';
+        const GITHUB_TOKEN = 'your-personal-access-token'; // GitHubのPersonal Access Tokenを使用
+
+        // GitHubからデータを読み込む
+        async function loadDataFromGitHub() {
+            const response = await fetch(`${GITHUB_API_URL}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+                headers: {
+                    Authorization: `token ${GITHUB_TOKEN}`,
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const content = atob(data.content); // Base64デコード
+                entries = JSON.parse(content);
+                updateEntriesTable();
             }
-        });
-    };
-
-    // データを表示する
-    function displayData() {
-        const dataList = document.getElementById("dataList");
-        dataList.innerHTML = '';  // 以前のリストを消す
-        data.forEach(item => {
-            const li = document.createElement("li");
-            li.textContent = `${item.date} | ${item.category} | ¥${item.amount}`;
-            dataList.appendChild(li);
-        });
-    }
-
-    // 保存ボタンが押された時の処理
-    document.getElementById("saveBtn").addEventListener("click", function() {
-        const date = document.getElementById("date").value;
-        const category = document.getElementById("category").value;
-        const amount = document.getElementById("amount").value;
-
-        if (date && category && amount) {
-            const newData = { date, category, amount: parseInt(amount) };
-            data.push(newData);
-
-            // ローカルストレージに保存
-            localStorage.setItem("budgetData", JSON.stringify(data));
-
-            // データを再表示
-            displayData();
-
-            // 入力欄をクリア
-            document.getElementById("date").value = '';
-            document.getElementById("category").value = '';
-            document.getElementById("amount").value = '';
-        } else {
-            alert("すべての項目を入力してください。");
         }
-    });
 
-    // JSONファイルとして保存する
-    function saveToFile() {
-        const jsonData = JSON.stringify(data);
-        const blob = new Blob([jsonData], { type: 'application/json' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'budget_data.json'; // ファイル名
-        link.click();
-    }
+        // GitHubにデータを保存する
+        async function saveDataToGitHub() {
+            const jsonData = JSON.stringify(entries);
+            const base64Data = btoa(jsonData); // Base64エンコード
 
-    // ページ終了時に保存（オプション）
-    window.onbeforeunload = function() {
-        localStorage.setItem("budgetData", JSON.stringify(data));
-    };
-</script>
+            const response = await fetch(`${GITHUB_API_URL}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+                method: 'PUT',
+                headers: {
+                    Authorization: `token ${GITHUB_TOKEN}`,
+                },
+                body: JSON.stringify({
+                    message: 'Save budget data',
+                    content: base64Data,
+                    sha: await getFileSHA(),
+                }),
+            });
 
+            if (response.ok) {
+                alert('データが保存されました');
+            } else {
+                alert('保存に失敗しました');
+            }
+        }
+
+        // ファイルのSHAを取得する（既存ファイルがある場合）
+        async function getFileSHA() {
+            const response = await fetch(`${GITHUB_API_URL}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+                headers: {
+                    Authorization: `token ${GITHUB_TOKEN}`,
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                return data.sha;
+            }
+            return null;
+        }
+
+        // アプリ起動時にデータをGitHubからロード
+        window.onload = function() {
+            loadDataFromGitHub();
+            showSection('entryFormSection', document.querySelector('footer button'));
+            document.getElementById('month').value = selectedMonth;
+            updateEntriesTable();
+        };
+
+        // 月別グラフの更新
+        function updateMonthlyGraph(month) {
+            selectedMonth = month;
+            localStorage.setItem('selectedMonth', selectedMonth);
+
+            if (monthlyChart) {
+                monthlyChart.destroy();
+            }
+
+            const categoryAmounts = {
+                'お肉': 0, '飲料': 0, '野菜': 0, 'お菓子': 0, '生活用品': 0, '外食': 0,
+                '特別': 0, '水道': 0, 'ガス': 0, '電気': 0, 'その他': 0
+            };
+
+            let hasData = false;
+
+            // その月のデータを集計
+            entries.forEach(entry => {
+                if (entry.month === month) {
+                    categoryAmounts[entry.category] += entry.amount;
+                    hasData = true;
+                }
+            });
+
+            if (!hasData) {
+                alert(`${month}月のデータがありません。`);
+                return;
+            }
+
+            const ctx = document.getElementById('monthlyGraph').getContext('2d');
+            monthlyChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(categoryAmounts),
+                    datasets: [{
+                        label: `${month}月の支出`,
+                        data: Object.values(categoryAmounts),
+                        backgroundColor: ['#ffcc00', '#4caf50', '#00bcd4', '#ff4081', '#ff9800', '#607d8b', '#8bc34a', '#f44336', '#9c27b0', '#3f51b5', '#e91e63'],
+                    }]
+                },
+            });
+        }
+
+        // 年別グラフの更新（総支出）
+        function updateYearlyGraph(type) {
+            if (yearlyChart) {
+                yearlyChart.destroy();
+            }
+
+            if (type === 'total') {
+                // 各月の総支出を計算
+                const monthlyTotals = Array(12).fill(0);
+                entries.forEach(entry => {
+                    monthlyTotals[entry.month - 1] += entry.amount;
+                });
+
+                const ctx = document.getElementById('yearlyGraph').getContext('2d');
+                yearlyChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                        datasets: [{
+                            label: '総支出',
+                            data: monthlyTotals,
+                            backgroundColor: '#4caf50',
+                        }]
+                    },
+                });
+            }
+        }
+
+        // 年別グラフの更新（カテゴリ別支出）
+        function updateCategoryYearlyGraph(category) {
+            if (yearlyChart) {
+                yearlyChart.destroy();
+            }
+
+            const categoryTotals = Array(12).fill(0);
+
+            entries.forEach(entry => {
+                if (entry.category === category) {
+                    categoryTotals[entry.month - 1] += entry.amount;
+                }
+            });
+
+            const ctx = document.getElementById('yearlyGraph').getContext('2d');
+            yearlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    datasets: [{
+                        label: `${category}支出`,
+                        data: categoryTotals,
+                        backgroundColor: '#ffcc00',
+                    }]
+                },
+            });
+        }
+
+        // 支出データを追加する
+        function addEntry() {
+            const date = document.getElementById('date').value;
+            const category = document.getElementById('category').value;
+            const amount = parseInt(document.getElementById('amount').value);
+            const month = parseInt(document.getElementById('month').value);
+
+            if (date && category && amount) {
+                const newEntry = {
+                    date: date,
+                    category: category,
+                    amount: amount,
+                    month: month
+                };
+                entries.push(newEntry);
+                updateEntriesTable();
+                saveData();
+            }
+        }
+
+        // 追加されたエントリーテーブルを更新する
+        function updateEntriesTable() {
+            const entriesTable = document.getElementById('entriesTable').getElementsByTagName('tbody')[0];
+            entriesTable.innerHTML = '';
+            let totalExpense = 0;
+            entries.forEach(entry => {
+                const row = entriesTable.insertRow();
+                row.insertCell().textContent = entry.month + '月';
+                row.insertCell().textContent = entry.date;
+                row.insertCell().textContent = entry.category;
+                row.insertCell().textContent = entry.amount.toLocaleString();
+                const deleteButton = row.insertCell();
+                deleteButton.innerHTML = `<button onclick="deleteEntry(${entries.indexOf(entry)})">削除</button>`;
+                totalExpense += entry.amount;
+            });
+            document.getElementById('totalExpense').textContent = totalExpense.toLocaleString();
+        }
+
+        // エントリーを削除する
+        function deleteEntry(index) {
+            entries.splice(index, 1);
+            updateEntriesTable();
+            saveData();
+        }
+
+        // 保存処理
+        function saveData() {
+            // ローカルに保存
+            localStorage.setItem('entries', JSON.stringify(entries));
+            saveDataToGitHub();
+        }
+
+        // セクションの切替
+        function showSection(sectionId, button) {
+            const sections = ['entryFormSection', 'monthlyGraphSection', 'yearlyGraphSection'];
+            sections.forEach(id => document.getElementById(id).style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
+            document.querySelectorAll('footer button').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        }
+    </script>
 </body>
 </html>
