@@ -429,7 +429,7 @@
         }
 
         // 保存ボタンの動作
-        ffunction saveData() {
+        function saveData() {
     const repository = "kakeibo";  // GitHubリポジトリ名
     const filePath = "data.json"; // 保存するファイルパス
     const token = "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";  // GitHubのアクセストークン（必須）
@@ -455,12 +455,22 @@
         },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(data => alert("データが保存されました。"))
-    .catch(error => alert("エラーが発生しました: " + error));
+    .then(response => {
+        if (!response.ok) {
+            // レスポンスが200 OKでない場合はエラーを表示
+            throw new Error("GitHubへの保存に失敗しました。");
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Response data:", data);  // レスポンスデータを確認
+        alert("データが保存されました。");
+    })
+    .catch(error => {
+        console.error("Error:", error);  // エラーメッセージを表示
+        alert("エラーが発生しました: " + error.message);
+    });
 }
-
-
     </script>
 </body>
 </html>
