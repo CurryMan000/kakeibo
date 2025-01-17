@@ -352,9 +352,9 @@
                 data: {
                     labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
                     datasets: [{
-                        label: `${category}の支出`,
+                        label: `${category}の月別支出`,
                         data: monthlyTotals,
-                        backgroundColor: '#00bcd4',
+                        backgroundColor: '#4CAF50',
                     }]
                 },
                 options: {
@@ -367,67 +367,70 @@
             });
         }
 
-        // エントリーの追加
+        // 入力データの保存
+        function saveData() {
+            localStorage.setItem('entries', JSON.stringify(entries));
+        }
+
+        // 新規入力の追加
         function addEntry() {
             const date = document.getElementById('date').value;
             const category = document.getElementById('category').value;
             const amount = parseInt(document.getElementById('amount').value);
             const month = parseInt(document.getElementById('month').value);
 
-            if (!date || !category || !amount || isNaN(amount)) {
-                alert('すべての項目を入力してください。');
+            if (isNaN(amount) || !date) {
+                alert('金額と日付を入力してください。');
                 return;
             }
 
-            entries.push({ month, date, category, amount });
+            const entry = { date, category, amount, month };
+            entries.unshift(entry); // 新しいエントリは先頭に追加
+
             updateEntriesTable();
-            saveData();
         }
 
-        // エントリーの表示更新
+        // エントリテーブルの更新
         function updateEntriesTable() {
-            const table = document.getElementById('entriesTable').getElementsByTagName('tbody')[0];
-            table.innerHTML = '';
+            const tbody = document.getElementById('entriesTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // テーブルをクリア
 
             let totalExpense = 0;
 
-            entries.forEach(entry => {
-                if (entry.month === selectedMonth) {
-                    const row = table.insertRow();
-                    row.innerHTML = `
-                        <td>${entry.month}</td>
-                        <td>${entry.date}</td>
-                        <td>${entry.category}</td>
-                        <td>${entry.amount}</td>
-                        <td><button onclick="deleteEntry(${entries.indexOf(entry)})">削除</button></td>
-                    `;
-                    totalExpense += entry.amount;
-                }
+            // 逆順でエントリを表示
+            entries.filter(entry => entry.month === selectedMonth).forEach(entry => {
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = entry.month;
+                row.insertCell(1).textContent = entry.date;
+                row.insertCell(2).textContent = entry.category;
+                row.insertCell(3).textContent = entry.amount;
+
+                const deleteCell = row.insertCell(4);
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '削除';
+                deleteButton.onclick = () => {
+                    entries = entries.filter(e => e !== entry);
+                    updateEntriesTable();
+                };
+                deleteCell.appendChild(deleteButton);
+
+                totalExpense += entry.amount;
             });
 
+            // 総支出の表示
             document.getElementById('totalExpense').textContent = totalExpense;
         }
 
-        // エントリーの削除
-        function deleteEntry(index) {
-            entries.splice(index, 1);
-            updateEntriesTable();
-            saveData();
-        }
-
-        // データを保存
-        function saveData() {
-            localStorage.setItem('entries', JSON.stringify(entries));
-        }
-
-        // セクションの表示切り替え
+        // セクションの表示切替
         function showSection(sectionId, button) {
-            document.getElementById('entryFormSection').style.display = 'none';
-            document.getElementById('monthlyGraphSection').style.display = 'none';
-            document.getElementById('yearlyGraphSection').style.display = 'none';
-            document.querySelectorAll('footer button').forEach(btn => btn.classList.remove('active'));
+            const sections = ['entryFormSection', 'monthlyGraphSection', 'yearlyGraphSection'];
+            sections.forEach(id => {
+                const section = document.getElementById(id);
+                section.style.display = (id === sectionId) ? 'block' : 'none';
+            });
 
-            document.getElementById(sectionId).style.display = 'block';
+            const buttons = document.querySelectorAll('footer button');
+            buttons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
         }
     </script>
