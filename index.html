@@ -279,7 +279,7 @@
             });
 
             if (!hasData) {
-                alert(`${month}月のデータがありません。`);
+                alert('この月にはデータがありません');
                 return;
             }
 
@@ -289,119 +289,170 @@
                 data: {
                     labels: Object.keys(categoryAmounts),
                     datasets: [{
-                        label: `${month}月の支出`,
                         data: Object.values(categoryAmounts),
-                        backgroundColor: ['#ffcc00', '#4caf50', '#00bcd4', '#ff4081', '#ff9800', '#607d8b', '#8bc34a', '#f44336', '#9c27b0', '#3f51b5', '#e91e63'],
+                        backgroundColor: ['#FFB6C1', '#FFD700', '#98FB98', '#87CEEB', '#FF6347', '#D2691E', '#8A2BE2', '#00FFFF', '#00BFFF', '#FF1493', '#8B4513'],
+                        borderColor: '#fff',
+                        borderWidth: 2
                     }]
                 },
-            });
-        }
-
-        // 年別グラフの更新（総支出）
-        function updateYearlyGraph(type) {
-            if (yearlyChart) {
-                yearlyChart.destroy();
-            }
-
-            if (type === 'total') {
-                // 各月の総支出を計算
-                const monthlyTotals = Array(12).fill(0);
-                entries.forEach(entry => {
-                    monthlyTotals[entry.month - 1] += entry.amount;
-                });
-
-                const ctx = document.getElementById('yearlyGraph').getContext('2d');
-                yearlyChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                        datasets: [{
-                            label: '総支出',
-                            data: monthlyTotals,
-                            backgroundColor: '#4CAF50',
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ": " + tooltipItem.raw + "円";
+                                }
                             }
                         }
                     }
-                });
-            }
+                }
+            });
         }
 
-        // 分類別の年グラフ
-        function updateCategoryYearlyGraph(category) {
+        // 年別グラフ
+        function updateYearlyGraph(type) {
+            const categoryAmounts = {
+                'お肉': 0, '飲料': 0, '野菜': 0, 'お菓子': 0, '生活用品': 0, '外食': 0,
+                '特別': 0, '水道': 0, 'ガス': 0, '電気': 0, 'その他': 0
+            };
+
+            let totalAmount = 0;
+
+            entries.forEach(entry => {
+                categoryAmounts[entry.category] += entry.amount;
+                totalAmount += entry.amount;
+            });
+
             if (yearlyChart) {
                 yearlyChart.destroy();
             }
 
-            const monthlyTotals = Array(12).fill(0);
+            const ctx = document.getElementById('yearlyGraph').getContext('2d');
+            const data = (type === 'total') ? Object.values(categoryAmounts) : [totalAmount];
+
+            yearlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: (type === 'total') ? Object.keys(categoryAmounts) : ['総支出'],
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ['#FFB6C1', '#FFD700', '#98FB98', '#87CEEB', '#FF6347', '#D2691E', '#8A2BE2', '#00FFFF', '#00BFFF', '#FF1493', '#8B4513'],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+        }
+
+        // カテゴリー別の年別グラフ
+        function updateCategoryYearlyGraph(category) {
+            const categoryAmounts = {
+                'お肉': 0, '飲料': 0, '野菜': 0, 'お菓子': 0, '生活用品': 0, '外食': 0,
+                '特別': 0, '水道': 0, 'ガス': 0, '電気': 0, 'その他': 0
+            };
+
+            let categoryTotal = 0;
 
             entries.forEach(entry => {
                 if (entry.category === category) {
-                    monthlyTotals[entry.month - 1] += entry.amount;
+                    categoryTotal += entry.amount;
                 }
             });
+
+            if (yearlyChart) {
+                yearlyChart.destroy();
+            }
 
             const ctx = document.getElementById('yearlyGraph').getContext('2d');
             yearlyChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    labels: [category],
                     datasets: [{
-                        label: category,
-                        data: monthlyTotals,
-                        backgroundColor: '#4CAF50',
+                        data: [categoryTotal],
+                        backgroundColor: ['#FFD700'],
+                        borderColor: '#fff',
+                        borderWidth: 2
                     }]
                 },
                 options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
                         }
                     }
                 }
             });
         }
 
-        // エントリーデータの追加
+        // 家計簿のデータをローカルストレージに保存
+        function saveData() {
+            localStorage.setItem('entries', JSON.stringify(entries));
+            alert('データを保存しました');
+        }
+
+        // 表示内容を切り替える
+        function showSection(sectionId, button) {
+            document.querySelectorAll('footer button').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            document.querySelectorAll('#content > div').forEach(section => {
+                section.style.display = section.id === sectionId ? 'block' : 'none';
+            });
+        }
+
+        // 追加ボタンでデータを入力
         function addEntry() {
             const date = document.getElementById('date').value;
-            const amount = parseFloat(document.getElementById('amount').value);
             const category = document.getElementById('category').value;
-            const month = parseInt(document.getElementById('month').value);
+            const amount = parseInt(document.getElementById('amount').value);
 
-            if (!date || !amount || !category) {
-                alert("すべての項目を入力してください");
+            if (!date || !category || isNaN(amount)) {
+                alert('すべての項目を入力してください');
                 return;
             }
 
-            const entry = { date, amount, category, month };
-            entries.push(entry);
-            localStorage.setItem('entries', JSON.stringify(entries));
+            entries.push({
+                month: selectedMonth,
+                date: date,
+                category: category,
+                amount: amount
+            });
+
             updateEntriesTable();
-            updateMonthlyGraph(month);
+            saveData();
         }
 
-        // エントリーテーブルの更新
+        // 表にデータを反映
         function updateEntriesTable() {
-            const entriesTable = document.getElementById('entriesTable').getElementsByTagName('tbody')[0];
-            entriesTable.innerHTML = ''; // テーブルをクリア
+            const tableBody = document.getElementById('entriesTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
 
             let totalExpense = 0;
 
-            entries.forEach((entry, index) => {
+            entries.forEach(entry => {
                 if (entry.month === selectedMonth) {
-                    const row = entriesTable.insertRow();
-                    row.insertCell().textContent = `${entry.month}月`;
-                    row.insertCell().textContent = entry.date;
-                    row.insertCell().textContent = entry.category;
-                    row.insertCell().textContent = entry.amount;
-                    const deleteCell = row.insertCell();
-                    deleteCell.innerHTML = '<button onclick="deleteEntry(' + index + ')">削除</button>';
+                    const row = tableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${entry.month}</td>
+                        <td>${entry.date}</td>
+                        <td>${entry.category}</td>
+                        <td>${entry.amount}円</td>
+                        <td><button onclick="deleteEntry(${entries.indexOf(entry)})">削除</button></td>
+                    `;
                     totalExpense += entry.amount;
                 }
             });
@@ -409,124 +460,12 @@
             document.getElementById('totalExpense').textContent = totalExpense;
         }
 
-        // エントリーの削除
+        // 追加されたデータを削除
         function deleteEntry(index) {
             entries.splice(index, 1);
-            localStorage.setItem('entries', JSON.stringify(entries));
             updateEntriesTable();
-            updateMonthlyGraph(selectedMonth);
-        }
-
-        // セクション表示切替
-        function showSection(sectionId, button) {
-            const sections = ['entryFormSection', 'monthlyGraphSection', 'yearlyGraphSection'];
-            const buttons = document.querySelectorAll('footer button');
-            sections.forEach(id => document.getElementById(id).style.display = 'none');
-            buttons.forEach(btn => btn.classList.remove('active'));
-
-            document.getElementById(sectionId).style.display = 'block';
-            button.classList.add('active');
-        }
-
-        // 保存ボタンの動作
-        function checkAndSaveData() {
-    const repository = "kakeibo";
-    const filePath = "data.json";
-    const token = "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";
-
-    const url = `https://api.github.com/repos/${repository}/contents/${filePath}`;
-
-    // 既存ファイルの確認
-    fetch(url, {
-        method: "GET",
-        headers: {
-            "Authorization": `token ${token}`,
-            "Accept": "application/vnd.github.v3+json"
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            // 既存のファイルが見つかった場合、保存処理へ進む
-            saveData();
-        } else {
-            // ファイルが見つからなかった場合、新たに作成
             saveData();
         }
-    })
-    .catch(error => {
-        console.error("Error fetching file:", error);
-        alert("エラーが発生しました: " + error.message);
-    });
-}
-
-//保存ボタン押下
-        function saveData() {
-    const username = "CurryMan000";  // GitHubユーザ名
-    const repository = "kakeibo";  // GitHubリポジトリ名
-    const filePath = "data.json"; // 保存するファイルパス（ディレクトリも含む）
-    const token = "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";  // GitHubのアクセストークン（必須）
-
-    const url = `https://api.github.com/repos/${username}/${repository}/contents/${filePath}`;
-    const jsonData = JSON.stringify(entries);  // 保存するデータ（entriesの内容）
-    const encodedData = btoa(unescape(encodeURIComponent(jsonData)));  // Base64エンコード
-
-    const data = {
-        message: "Save data",  // コミットメッセージ
-        content: encodedData,  // base64エンコードしたデータ
-    };
-
-    // GitHub APIでファイルの状態を取得
-    fetch(url, {
-        method: "GET",  // まずはGETリクエストでファイルが存在するか確認
-        headers: {
-            "Authorization": `token ${token}`,
-            "Accept": "application/vnd.github.v3+json"
-        }
-    })
-    .then(response => {
-        if (response.status === 404) {
-            // ファイルが存在しない場合、新規作成
-            console.log("File not found, creating new file...");
-            return fetch(url, {
-                method: "PUT",  // PUTリクエストで新規作成
-                headers: {
-                    "Authorization": `token ${token}`,
-                    "Accept": "application/vnd.github.v3+json"
-                },
-                body: JSON.stringify(data)
-            });
-        } else if (!response.ok) {
-            // 他のエラーが発生した場合
-            return response.json().then(err => {
-                console.error("GitHub API Error:", err);
-                throw new Error(`GitHub API Error: ${err.message || err.error}`);
-            });
-        }
-        // ファイルが存在している場合は更新するためにSHAを使う
-        return response.json().then(existingFile => {
-            console.log("File found, updating with SHA:", existingFile.sha);
-            data.sha = existingFile.sha;  // 既存ファイルのSHAを利用して更新
-            return fetch(url, {
-                method: "PUT",  // PUTリクエストで更新
-                headers: {
-                    "Authorization": `token ${token}`,
-                    "Accept": "application/vnd.github.v3+json"
-                },
-                body: JSON.stringify(data)
-            });
-        });
-    })
-    .then(response => response.json())  // レスポンスをJSON形式で取得
-    .then(data => {
-        console.log("File saved successfully:", data);
-        alert("データが保存されました。");  // 成功メッセージ
-    })
-    .catch(error => {
-        console.error("Error details:", error);  // エラー内容をコンソールに表示
-        alert("エラーが発生しました: " + error.message);  // エラーメッセージを表示
-    });
-}
-
     </script>
 </body>
 </html>
