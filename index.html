@@ -25,11 +25,11 @@
       event.preventDefault();
 
       var formData = new FormData(event.target);
-      var data = {
-        date: formData.get("date"),
-        item: formData.get("item"),
-        amount: formData.get("amount")
-      };
+     const data = {
+    date: "2025-01-21",
+    item: "食費",
+    amount: 2000
+};
 
       fetch("<https://script.google.com/macros/s/AKfycbxHnYdOpdRR-8Rrf4T5U7DwhFJTtKkBR1thh6Jo9J80TvvY7pufVgTyF5U4Cf6j12idnw/exec>", {  // 上記で公開したGoogle Apps ScriptのURLに置き換えてください
         method: "POST",
