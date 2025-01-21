@@ -31,19 +31,23 @@
     amount: 2000
 };
 
-      fetch("<https://script.google.com/macros/s/AKfycbxHnYdOpdRR-8Rrf4T5U7DwhFJTtKkBR1thh6Jo9J80TvvY7pufVgTyF5U4Cf6j12idnw/exec>", {  // 上記で公開したGoogle Apps ScriptのURLに置き換えてください
-        method: "POST",
-        body: new URLSearchParams(data)
-      })
-      .then(response => response.text())
-      .then(result => {
+      fetch("https://script.google.com/macros/s/AKfycbxHnYdOpdRR-8Rrf4T5U7DwhFJTtKkBR1thh6Jo9J80TvvY7pufVgTyF5U4Cf6j12idnw/exec", {
+    method: "POST",
+    body: new URLSearchParams(data)
+})
+.then(response => response.text())
+.then(result => {
+    if (result === "Success") {
         alert("データが送信されました！");
-        document.getElementById("budget-form").reset();
-      })
-      .catch(error => {
-        console.error("エラーが発生しました:", error);
-        alert("送信に失敗しました。");
-      });
+    } else {
+        alert("送信に失敗しました！");
+    }
+    document.getElementById("budget-form").reset();
+})
+.catch(error => {
+    console.error("エラーが発生しました:", error);
+    alert("送信に失敗しました。");
+});
     });
   </script>
 </body>
