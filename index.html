@@ -163,6 +163,7 @@
                 <button type="button" onclick="addEntry()">追加</button>
             </form>
 
+            <div id="loading-message" style="display:none;">データを読み込んでいます...</div>
             <table id="entriesTable">
                 <thead>
                     <tr>
@@ -255,6 +256,7 @@
                         });
                         tableBody.appendChild(tr);
                     });
+                    document.getElementById("loading-message").style.display = "none";
                 })
                 .catch(error => {
                     console.error("データの読み込みに失敗しました:", error);
