@@ -39,23 +39,25 @@
                 "description": description
             };
 
-            // Google Apps ScriptにPOSTリクエストを送信
-            fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('データがGoogle Sheetsに保存されました:', data);
-                alert('データが正常に保存されました！');
-            })
-            .catch(error => {
-                console.error('エラー:', error);
-                alert('データの保存に失敗しました。');
-            });
+           fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestData)
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+})
+.then(data => {
+    console.log('Success:', data);
+})
+.catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+});
         });
     </script>
 </body>
