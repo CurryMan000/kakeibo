@@ -38,11 +38,25 @@
         button:hover {
             background-color: #45a049;
         }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>家計簿</h2>
+        
+        <!-- 入力フォーム -->
         <form id="budget-form">
             <div class="form-group">
                 <label for="date">日付</label>
@@ -58,9 +72,44 @@
             </div>
             <button type="submit">送信</button>
         </form>
+
+        <!-- 家計簿のデータ表示 -->
+        <h3>家計簿データ</h3>
+        <table id="budget-table">
+            <thead>
+                <tr>
+                    <th>日付</th>
+                    <th>項目</th>
+                    <th>金額</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 
     <script>
+        // ページ読み込み時にデータを取得して表示
+        window.onload = function() {
+            fetch("https://script.google.com/macros/s/AKfycbyGpF5fvk5U6uu6CDGhh2XFaO5zsnXCIIgQ0pz62PlU_e3yryDsvq-W_A5AZsZfhrwF/exec")
+                .then(response => response.json())
+                .then(data => {
+                    // テーブルにデータを追加
+                    const tableBody = document.getElementById("budget-table").getElementsByTagName("tbody")[0];
+                    data.forEach(row => {
+                        const tr = document.createElement("tr");
+                        row.forEach(cell => {
+                            const td = document.createElement("td");
+                            td.textContent = cell;
+                            tr.appendChild(td);
+                        });
+                        tableBody.appendChild(tr);
+                    });
+                })
+                .catch(error => {
+                    console.error("データの読み込みに失敗しました:", error);
+                });
+        };
+
         // フォーム送信時の処理
         document.getElementById("budget-form").addEventListener("submit", function(event) {
             event.preventDefault();
@@ -73,7 +122,7 @@
             };
 
             // fetchでGoogle Apps Scriptにデータ送信
-            fetch("https://script.google.com/macros/s/AKfycbzihx-2aA-T7GKZa7A3wETF1iJOy6hV9Pg0EJ9pwiHldfwJu-TUzCM4-c9LrIqnkcnQcw/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbyGpF5fvk5U6uu6CDGhh2XFaO5zsnXCIIgQ0pz62PlU_e3yryDsvq-W_A5AZsZfhrwF/exec", {
                 method: "POST",
                 body: new URLSearchParams(data)
             })
@@ -81,6 +130,7 @@
             .then(result => {
                 alert(result); // レスポンスメッセージを表示
                 document.getElementById("budget-form").reset(); // フォームをリセット
+                window.onload(); // データを再読み込み
             })
             .catch(error => {
                 console.error("エラーが発生しました:", error);
