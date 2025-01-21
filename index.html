@@ -25,18 +25,17 @@
             var data = new FormData(event.target);
             
             fetch("https://script.google.com/macros/s/AKfycbwVyLv3ycpKFMej2zN6dD0brujh02v14hLMc60yb47JoGFKgoXd2CiQOCD2inxdJ9UmVA/exec", {
-    method: "POST",
-    body: new URLSearchParams(data)
-})
-.then(response => response.text()) // レスポンスのテキストを取得
-.then(result => {
-    alert(result); // レスポンスメッセージを表示
-    document.getElementById("budget-form").reset(); // フォームをリセット
-})
-.catch(error => {
-    console.error("エラーが発生しました:", error);
-    alert("送信に失敗しました。");
-});
+                method: "POST",
+                body: data
+            })
+            .then(response => response.text())  // レスポンスをテキストとして取得
+            .then(result => {
+                alert("Google Apps Script からのレスポンス: " + result);  // レスポンスを表示
+            })
+            .catch(error => {
+                console.error("エラーが発生しました:", error);
+                alert("送信に失敗しました。");
+            });
         });
     </script>
 </body>
