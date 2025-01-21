@@ -435,6 +435,14 @@
             document.getElementById('totalExpense').textContent = totalExpense;
         }
 
+
+        // 月を変更したときの処理
+        document.getElementById('month').addEventListener('change', function(event) {
+            selectedMonth = parseInt(event.target.value); // 選択した月を更新
+            localStorage.setItem('selectedMonth', selectedMonth); // ローカルストレージに保存
+            updateEntriesTable(); // 新しい月のデータを表示
+        });
+        
         // セクションの表示切替
         function showSection(sectionId, button) {
             const sections = ['entryFormSection', 'monthlyGraphSection', 'yearlyGraphSection'];
