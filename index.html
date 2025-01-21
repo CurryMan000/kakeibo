@@ -163,7 +163,6 @@
                 <button type="button" onclick="addEntry()">追加</button>
             </form>
 
-            <div id="loading-message" style="display:none;">データを読み込んでいます...</div>
             <table id="entriesTable">
                 <thead>
                     <tr>
@@ -246,7 +245,6 @@
                 .then(response => response.json())
                 .then(data => {
                     // テーブルにデータを追加
-                    const tableBody = document.getElementById("entriesTable").getElementsByTagName("tbody")[0];
                     data.forEach(row => {
                         const tr = document.createElement("tr");
                         row.forEach(cell => {
@@ -254,9 +252,10 @@
                             td.textContent = cell;
                             tr.appendChild(td);
                         });
-                        tableBody.appendChild(tr);
+                        entries.unshift(tr);
                     });
-                    document.getElementById("loading-message").style.display = "none";
+                    //エントリーテーブルの更新
+                    updateEntriesTable();
                 })
                 .catch(error => {
                     console.error("データの読み込みに失敗しました:", error);
