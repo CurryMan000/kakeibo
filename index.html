@@ -4,107 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>家計簿アプリ</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            max-width: 600px;
-            margin: auto;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            margin-top: 10px;
-        }
-        input, button {
-            margin-top: 5px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-    </style>
 </head>
 <body>
-    <h1>家計簿アプリ</h1>
-
-    <!-- 入力フォーム -->
-    <form id="budget-form">
-        <label for="item">項目:</label>
-        <input type="text" id="item" name="item" required>
-
+    <h1>家計簿</h1>
+    <form id="budgetForm">
+        <label for="date">日付:</label>
+        <input type="date" id="date" required><br><br>
+        <label for="category">カテゴリ:</label>
+        <input type="text" id="category" required><br><br>
         <label for="amount">金額:</label>
-        <input type="number" id="amount" name="amount" required>
-
-        <button type="submit">追加</button>
+        <input type="number" id="amount" required><br><br>
+        <label for="description">説明:</label>
+        <input type="text" id="description"><br><br>
+        <button type="submit">保存</button>
     </form>
 
-    <!-- データ表示 -->
-    <h2>入力データ</h2>
-    <table id="data-table">
-        <thead>
-            <tr>
-                <th>項目</th>
-                <th>金額</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- 入力データがここに表示されます -->
-        </tbody>
-    </table>
-
     <script>
-        // Google Apps Script の WebApp URL
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbw0yYg1kGoTde0zpogsAvXEWSTOw2UDUIzmPzUOYFTxlWH_7469chZ7LE2ZPNHtsXuzaw/exec";
-
-        // フォーム要素の取得
-        const form = document.getElementById('budget-form');
-        const tableBody = document.getElementById('data-table').querySelector('tbody');
-
-        // フォーム送信時の処理
-        form.addEventListener('submit', (event) => {
+        document.getElementById('budgetForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // 入力データの取得
-            const item = document.getElementById('item').value;
+            // フォームデータの取得
+            const date = document.getElementById('date').value;
+            const category = document.getElementById('category').value;
             const amount = document.getElementById('amount').value;
+            const description = document.getElementById('description').value;
 
-            // Google Apps Script にデータ送信
-            fetch(GAS_URL, {
+            // Google Apps ScriptのエンドポイントURL
+            const apiUrl = 'https://script.google.com/macros/s/AKfycbw0yYg1kGoTde0zpogsAvXEWSTOw2UDUIzmPzUOYFTxlWH_7469chZ7LE2ZPNHtsXuzaw/exec';
+
+            const requestData = {
+                "date": date,
+                "category": category,
+                "amount": amount,
+                "description": description
+            };
+
+            // Google Apps ScriptにPOSTリクエストを送信
+            fetch(apiUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    item: item,
-                    amount: amount
-                })
+                body: JSON.stringify(requestData)
             })
-            .then(response => response.text())
-            .then(result => {
-                console.log(result);
-                // テーブルにデータを追加
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `<td>${item}</td><td>${amount}</td>`;
-                tableBody.appendChild(newRow);
-
-                // フォームをリセット
-                form.reset();
+            .then(response => response.json())
+            .then(data => {
+                console.log('データがGoogle Sheetsに保存されました:', data);
+                alert('データが正常に保存されました！');
             })
             .catch(error => {
                 console.error('エラー:', error);
+                alert('データの保存に失敗しました。');
             });
         });
     </script>
