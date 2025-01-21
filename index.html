@@ -254,12 +254,12 @@
                     // テーブルにデータを追加
                     data.forEach(row => {
                         const entry = {
-                            month: row[0],
-                            date: row[1],
+                            date: row[0],
+                            category: row[1],
                             amount: row[2],
-                            category: row[3]
+                            month: row[3]
                         };
-                        entries.push(tr);
+                        entries.unishift(entry);
                     });
                     //エントリーテーブルの更新
                     updateEntriesTable();
