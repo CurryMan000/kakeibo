@@ -254,10 +254,10 @@
                     // テーブルにデータを追加
                     data.forEach(row => {
                         const entry = {
-                            date: row[0],
-                            category: row[1],
-                            amount: row[2],
-                            month: row[3]
+                            month: row[0],
+                            date: row[1],
+                            category: row[3],
+                            amount: row[3]
                         };
                         entries.unishift(entry);
                     });
