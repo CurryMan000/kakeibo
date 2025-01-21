@@ -246,12 +246,12 @@
                 .then(data => {
                     // テーブルにデータを追加
                     data.forEach(row => {
-                        const tr = document.createElement("tr");
-                        row.forEach(cell => {
-                            const td = document.createElement("td");
-                            td.textContent = cell;
-                            tr.appendChild(td);
-                        });
+                        const entry = {
+                            month: row[0],
+                            date: row[1],
+                            amount: row[2],
+                            category: row[3]
+                        };
                         entries.push(tr);
                     });
                     //エントリーテーブルの更新
