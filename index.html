@@ -240,7 +240,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        let entries = JSON.parse(localStorage.getItem('entries')) || [];
+        let entries = [];
         let selectedMonth = localStorage.getItem('selectedMonth') ? parseInt(localStorage.getItem('selectedMonth')) : 1;
         let monthlyChart = null;
         let yearlyChart = null;
@@ -253,10 +253,10 @@
                 .then(data => {
                     // テーブルにデータを追加
                     data.forEach(row => {
-                            const month = row[0];
-                            const date = row[1];
-                            const category = row[3];
-                            const amount = row[2];
+                        const month = row[0];
+                        const date = row[1];
+                        const category = row[3];
+                        const amount = row[2];
                         const entry = { date, category, amount, month };
                         entries.unishift(entry);
                     });
@@ -264,8 +264,8 @@
                     updateEntriesTable();
 
                     document.getElementById("loading-message").style.display = "none";
-                document.getElementById("loaded-message").style.display = "block"; 
-        })
+                    document.getElementById("loaded-message").style.display = "block"; 
+                })
                 .catch(error => {
                     console.error("データの読み込みに失敗しました:", error);
                 });
