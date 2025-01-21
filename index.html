@@ -35,14 +35,10 @@
     method: "POST",
     body: new URLSearchParams(data)
 })
-.then(response => response.text())
+.then(response => response.text())  // レスポンスをテキストとして取得
 .then(result => {
-    if (result === "Success") {
-        alert("データが送信されました！");
-    } else {
-        alert("送信に失敗しました！");
-    }
-    document.getElementById("budget-form").reset();
+    alert("サーバーからのメッセージ: " + result);  // 取得したテキストを表示
+    document.getElementById("budget-form").reset();  // フォームをリセット
 })
 .catch(error => {
     console.error("エラーが発生しました:", error);
