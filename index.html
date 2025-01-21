@@ -253,12 +253,11 @@
                 .then(data => {
                     // テーブルにデータを追加
                     data.forEach(row => {
-                        const entry = {
-                            month: row[0],
-                            date: row[1],
-                            category: row[3],
-                            amount: row[3]
-                        };
+                            const month = row[0];
+                            const date = row[1];
+                            const category = row[3];
+                            const amount = row[3];
+                        const entry = { date, category, amount, month };
                         entries.unishift(entry);
                     });
                     //エントリーテーブルの更新
