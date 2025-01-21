@@ -1,64 +1,50 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>家計簿アプリ</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>家計簿アプリ</title>
 </head>
 <body>
-    <h1>家計簿</h1>
-    <form id="budgetForm">
-        <label for="date">日付:</label>
-        <input type="date" id="date" required><br><br>
-        <label for="category">カテゴリ:</label>
-        <input type="text" id="category" required><br><br>
-        <label for="amount">金額:</label>
-        <input type="number" id="amount" required><br><br>
-        <label for="description">説明:</label>
-        <input type="text" id="description"><br><br>
-        <button type="submit">保存</button>
-    </form>
+  <h1>家計簿アプリ</h1>
+  <form id="budget-form">
+    <label for="date">日付:</label>
+    <input type="date" id="date" name="date" required><br><br>
 
-    <script>
-        document.getElementById('budgetForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+    <label for="item">項目:</label>
+    <input type="text" id="item" name="item" required><br><br>
 
-            // フォームデータの取得
-            const date = document.getElementById('date').value;
-            const category = document.getElementById('category').value;
-            const amount = document.getElementById('amount').value;
-            const description = document.getElementById('description').value;
+    <label for="amount">金額:</label>
+    <input type="number" id="amount" name="amount" required><br><br>
 
-            // Google Apps ScriptのエンドポイントURL
-            const apiUrl = 'https://script.google.com/macros/s/AKfycbyBJbAZ7VLLrt4ZqX1IXTUSUrwleQ_gDtCKiQ8L_pZDCzr6WNGa8V4Wqg6b_EGGjTNxxw/exec';
+    <button type="submit">送信</button>
+  </form>
 
-            const requestData = {
-                "date": date,
-                "category": category,
-                "amount": amount,
-                "description": description
-            };
+  <script>
+    document.getElementById("budget-form").addEventListener("submit", function(event) {
+      event.preventDefault();
 
-           fetch(apiUrl, {
-               method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
-        });
-    </script>
+      var formData = new FormData(event.target);
+      var data = {
+        date: formData.get("date"),
+        item: formData.get("item"),
+        amount: formData.get("amount")
+      };
+
+      fetch("<https://script.google.com/macros/s/AKfycbxHnYdOpdRR-8Rrf4T5U7DwhFJTtKkBR1thh6Jo9J80TvvY7pufVgTyF5U4Cf6j12idnw/exec>", {  // 上記で公開したGoogle Apps ScriptのURLに置き換えてください
+        method: "POST",
+        body: new URLSearchParams(data)
+      })
+      .then(response => response.text())
+      .then(result => {
+        alert("データが送信されました！");
+        document.getElementById("budget-form").reset();
+      })
+      .catch(error => {
+        console.error("エラーが発生しました:", error);
+        alert("送信に失敗しました。");
+      });
+    });
+  </script>
 </body>
 </html>
