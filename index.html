@@ -48,27 +48,17 @@
             #content {
                 padding: 20px;
             }
-            form {
+        form {
             display: flex;
             flex-direction: column;
-            gap: 15px; /* 入力欄間の間隔 */
-        }
-        .form-group {
-            display: flex;
-            align-items: center; /* 縦位置を中央揃え */
-            gap: 10px; /* ラベルと入力欄の間隔 */
-        }
-        label {
-            font-size: 1rem;
-            flex: 0 0 80px; /* ラベルの幅を固定 */
-            text-align: right;
+            gap: 10px;
         }
         input, select, button {
             font-size: 1rem;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            flex: 1; /* 入力欄を拡張 */
+            width: 100%;
             box-sizing: border-box;
         }
         button {
@@ -161,8 +151,7 @@
         <!-- 入力フォーム -->
         <div id="entryFormSection">
             <form id="entryForm">
-                <label for="month">月:</label>
-                <select id="month" onchange="updateEntriesTable()">
+                <label for="month">月:</label> <select id="month" onchange="updateEntriesTable()">
                     <option value="1">1月</option>
                     <option value="2">2月</option>
                     <option value="3">3月</option>
