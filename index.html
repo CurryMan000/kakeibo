@@ -274,6 +274,37 @@
             updateEntriesTable();
         };
 
+        // エントリテーブルの更新
+        function updateEntriesTable() {
+            const tbody = document.getElementById('entriesTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // テーブルをクリア
+
+            let totalExpense = 0;
+
+            // 逆順でエントリを表示
+            entries.filter(entry => entry.month === selectedMonth).forEach(entry => {
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = entry.month;
+                row.insertCell(1).textContent = entry.date;
+                row.insertCell(2).textContent = entry.category;
+                row.insertCell(3).textContent = entry.amount;
+
+                const deleteCell = row.insertCell(4);
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '削除';
+                deleteButton.onclick = () => {
+                    entries = entries.filter(e => e !== entry);
+                    updateEntriesTable();
+                };
+                deleteCell.appendChild(deleteButton);
+
+                totalExpense += entry.amount;
+            });
+
+            // 総支出の表示
+            document.getElementById('totalExpense').textContent = totalExpense;
+        }
+
         // 月別グラフの更新
         function updateMonthlyGraph(month) {
             selectedMonth = month;
@@ -401,11 +432,11 @@
             const entry = { date, category, amount, month };
             entries.unshift(entry); // 新しいエントリは先頭に追加
 
-            updateEntriesTable();
+            updateEntriesTable2();
         }
 
         // エントリテーブルの更新
-        function updateEntriesTable() {
+        function updateEntriesTable2() {
             const tbody = document.getElementById('entriesTable').getElementsByTagName('tbody')[0];
             tbody.innerHTML = ''; // テーブルをクリア
 
@@ -424,7 +455,7 @@
                 deleteButton.textContent = '削除';
                 deleteButton.onclick = () => {
                     entries = entries.filter(e => e !== entry);
-                    updateEntriesTable();
+                    updateEntriesTable2();
                 };
                 deleteCell.appendChild(deleteButton);
 
