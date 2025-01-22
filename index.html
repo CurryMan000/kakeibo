@@ -264,7 +264,19 @@
 
         // 月別グラフの更新
         function onchangeSelectMonth(){
-            updateMonthlyGraph(document.getElementById('monthgraph_month').value);
+            const strMonth = document.getElementById('monthgraph_month').value;
+            if(strMonth=="1月"){updateMonthlyGraph(1);}
+            else if(strMonth=="2月"){updateMonthlyGraph(2);}
+            else if(strMonth=="3月"){updateMonthlyGraph(3);}
+            else if(strMonth=="4月"){updateMonthlyGraph(4);}
+            else if(strMonth=="5月"){updateMonthlyGraph(5);}
+            else if(strMonth=="6月"){updateMonthlyGraph(6);}
+            else if(strMonth=="7月"){updateMonthlyGraph(7);}
+            else if(strMonth=="8月"){updateMonthlyGraph(8);}
+            else if(strMonth=="9月"){updateMonthlyGraph(9);}
+            else if(strMonth=="10月"){updateMonthlyGraph(10);}
+            else if(strMonth=="11月"){updateMonthlyGraph(11);}
+            else if(strMonth=="12月"){updateMonthlyGraph(12);}
         }
         function updateMonthlyGraph(month) {
             selectedMonth = month;
