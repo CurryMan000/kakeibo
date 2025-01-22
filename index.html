@@ -6,11 +6,21 @@
         <style>
             /* ベーススタイル */
             body {
-                font-family: Arial, sans-serif;
+                font-family: Meiryo, sans-serif;
                 margin: 0;
                 padding: 0;
-                background-color: #FFFFFF;
-                color: #333;
+                background-color: #E7E7E7;
+                color: #616161;
+            }
+            .content-row {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin: 20px 0;
+            }
+            content-title {
+                font-size: 16px;
+                margin: 0; 
             }
             .save-btn {
                 width: 80px;
@@ -22,7 +32,6 @@
                 background-color: #5E60CA;
                 color: white;
                 cursor: pointer;
-                margin: 20px 0;
             }
 
             .save-btn:hover {
@@ -129,6 +138,7 @@
     <div id="content">
         <!-- 入力フォーム -->
         <div id="entryFormSection">
+            <span class="content-title">あゆみきひ</span>
             <button id="saveButton" class="save-btn">保存</button>
             <form id="entryForm">
                 <select id="month" onchange="updateEntriesTable()">
