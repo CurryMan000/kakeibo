@@ -110,11 +110,6 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <button id="saveButton">保存</button>
-        <h1>家計簿あゆみきひ2025</h1>
-    </div>
-    
     <div id="content">
         <!-- 入力フォーム -->
         <div id="entryFormSection">
@@ -314,11 +309,11 @@
         }
         // 年グラフのドロップダウンが更新されたとき
         function onchangeSelectYear(){
-            if(documet.getByElementId('yeargraph_category')=='total'){
+            const selectedCategory = document.getElementById('yeargraph_category').value;
+            if (selectedCategory === '総支出') {
                 updateYearlyGraph('total');
-            }
-            else{
-                updateCategoryYearlyGraph(documet.getByElementId('yeargraph_category'));
+            } else {
+                updateCategoryYearlyGraph(selectedCategory);
             }
         }
         // 年別グラフの更新（総支出）
