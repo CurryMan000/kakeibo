@@ -18,6 +18,7 @@
             .content-row {
                 display: flex;
                 justify-content: center;
+                align-items: center;
                 width: 100%;
                 position: relative;
                 padding: 20px 0;
@@ -146,8 +147,10 @@
         <!-- 入力フォーム -->
         <div class="empty-row"></div>
         <div id="entryFormSection">
-            <span class="content-title">あゆみきひ</span>
-            <button id="saveButton" class="save-btn">保存</button>
+            <div class="content-row"></div>
+                <span class="content-title">あゆみきひ</span>
+                <button id="saveButton" class="save-btn">保存</button>
+            </div>
             <div class="empty-row"></div>
             <form id="entryForm">
                 <select id="month" onchange="updateEntriesTable()">
