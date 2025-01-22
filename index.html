@@ -3,50 +3,14 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>家計簿あゆみきひ2025</title>
         <style>
             /* ベーススタイル */
             body {
                 font-family: Arial, sans-serif;
                 margin: 0;
                 padding: 0;
-                background-color: #f9f9f9;
+                background-color: #FFFFFF;
                 color: #333;
-            }
-            .header {
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                padding: 10px;
-                background-color: #f9f9f9;
-                flex-direction: row;
-            }
-            .header h1 {
-                font-family: "Meiryo", sans-serif;
-                font-size: 1.5rem;
-                color: #ADE0EE;
-                margin: 0;
-                margin-left: 10px;
-            }
-            .header button {
-            background-color: #FFCC99;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            width: 80px;
-        }
-            .header button:hover {
-                background-color: #FF9966;
-            }
-            .header button:focus {
-                outline: none;
-                background-color: #FF9966;
-            }
-            #content {
-                padding: 20px;
             }
         form {
             display: flex;
@@ -56,7 +20,7 @@
         input, select, button {
             font-size: 1rem;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #E7E7E7;
             border-radius: 5px;
             width: 100%;
             box-sizing: border-box;
@@ -65,17 +29,17 @@
             color: #aaa;
         }
         button {
-            background-color: #FFCC99;
+            background-color: #5E60CA;
             color: white;
             border: none;
             cursor: pointer;
         }
         button:hover {
-            background-color: #FFCC99;
+            background-color: #5E60CA;
         }
         button:focus {
             outline: none;
-            background-color: #FFCC99;
+            background-color: #5E60CA;
         }
         table {
             width: 100%;
@@ -83,14 +47,14 @@
             margin-top: 20px;
         }
         table, th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #E7E7E7;
         }
         th, td {
             padding: 10px;
             text-align: left;
         }
         th {
-            background-color: #f4f4f4;
+            background-color: #E7E7E7;
         }
         .summary {
             margin-top: 20px;
@@ -101,7 +65,7 @@
             position: fixed;
             bottom: 0;
             width: 100%;
-            background-color: #ADE0EE;
+            background-color: #EBEBEB;
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
@@ -110,14 +74,15 @@
         footer button {
             background: none;
             border: none;
-            color: white;
+            color: #616161;
             font-size: 1rem;
             cursor: pointer;
         }
         footer button.active {
             font-weight: bold;
             text-decoration: underline;
-            background-color: #ADE0EE;
+            background-color: #EBEBEB;
+            color: #5E60CA;
         }
         footer button:hover {
             opacity: 0.8;
@@ -153,6 +118,7 @@
     <div id="content">
         <!-- 入力フォーム -->
         <div id="entryFormSection">
+            <button >保存</button>
             <form id="entryForm">
                 <select id="month" onchange="updateEntriesTable()">
                     <option value="1">1月</option>
@@ -217,20 +183,20 @@
         </div>
 
         <div id="monthlyGraphSection" style="display: none;">
-            <div class="button-group">
-                <button onclick="updateMonthlyGraph(1)">1月</button>
-                <button onclick="updateMonthlyGraph(2)">2月</button>
-                <button onclick="updateMonthlyGraph(3)">3月</button>
-                <button onclick="updateMonthlyGraph(4)">4月</button>
-                <button onclick="updateMonthlyGraph(5)">5月</button>
-                <button onclick="updateMonthlyGraph(6)">6月</button>
-                <button onclick="updateMonthlyGraph(7)">7月</button>
-                <button onclick="updateMonthlyGraph(8)">8月</button>
-                <button onclick="updateMonthlyGraph(9)">9月</button>
-                <button onclick="updateMonthlyGraph(10)">10月</button>
-                <button onclick="updateMonthlyGraph(11)">11月</button>
-                <button onclick="updateMonthlyGraph(12)">12月</button>
-            </div>
+            <select id="monthgraph_month" onchange="onchangeSelectMonth()">
+                <option value="1">1月</option>
+                <option value="2">2月</option>
+                <option value="3">3月</option>
+                <option value="4">4月</option>
+                <option value="5">5月</option>
+                <option value="6">6月</option>
+                <option value="7">7月</option>
+                <option value="8">8月</option>
+                <option value="9">9月</option>
+                <option value="10">10月</option>
+                <option value="11">11月</option>
+                <option value="12">12月</option>
+            </select>
 
             <div id="graphContainer">
                 <canvas id="monthlyGraph" width="400" height="400"></canvas>
@@ -238,20 +204,20 @@
         </div>
 
         <div id="yearlyGraphSection" style="display: none;">
-            <div class="button-group">
-                <button onclick="updateYearlyGraph('total')">総支出</button>
-                <button onclick="updateCategoryYearlyGraph('お肉')">お肉</button>
-                <button onclick="updateCategoryYearlyGraph('飲料')">飲料</button>
-                <button onclick="updateCategoryYearlyGraph('野菜')">野菜</button>
-                <button onclick="updateCategoryYearlyGraph('お菓子')">お菓子</button>
-                <button onclick="updateCategoryYearlyGraph('生活用品')">生活用品</button>
-                <button onclick="updateCategoryYearlyGraph('外食')">外食</button>
-                <button onclick="updateCategoryYearlyGraph('特別')">特別</button>
-                <button onclick="updateCategoryYearlyGraph('水道')">水道</button>
-                <button onclick="updateCategoryYearlyGraph('ガス')">ガス</button>
-                <button onclick="updateCategoryYearlyGraph('電気')">電気</button>
-                <button onclick="updateCategoryYearlyGraph('その他')">その他</button>
-            </div>
+            <select id="yeargraph_category" onchange="onchangeSelectYear()">
+                <option value="総支出">総支出</option>
+                <option value="お肉">お肉</option>
+                <option value="飲料">飲料</option>
+                <option value="野菜">野菜</option>
+                <option value="お菓子">お菓子</option>
+                <option value="生活用品">生活用品</option>
+                <option value="外食">外食</option>
+                <option value="特別">特別</option>
+                <option value="水道">水道</option>
+                <option value="ガス">ガス</option>
+                <option value="電気">電気</option>
+                <option value="その他">その他</option>
+            </select>
 
             <div id="graphContainer">
                 <canvas id="yearlyGraph" width="400" height="400"></canvas>
@@ -302,6 +268,9 @@
         };
 
         // 月別グラフの更新
+        function onchangeSelectMonth(){
+            updateMonthlyGraph(document.getElementById('monthgraph_month').value);
+        }
         function updateMonthlyGraph(month) {
             selectedMonth = month;
             localStorage.setItem('selectedMonth', selectedMonth);
@@ -343,7 +312,15 @@
                 },
             });
         }
-
+        // 年グラフのドロップダウンが更新されたとき
+        function onchangeSelectYear(){
+            if(documet.getByElementId('yeargraph_category')=='total'){
+                updateYearlyGraph('total');
+            }
+            else{
+                updateCategoryYearlyGraph(documet.getByElementId('yeargraph_category'));
+            }
+        }
         // 年別グラフの更新（総支出）
         function updateYearlyGraph(type) {
             if (yearlyChart) {
