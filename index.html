@@ -47,7 +47,7 @@
             margin-top: 20px;
         }
         table, th, td {
-            border: 1px solid #E7E7E7;
+            border: 1px solid #9F9F9F;
         }
         th, td {
             padding: 10px;
@@ -278,65 +278,52 @@
             else if(strMonth=="11"){updateMonthlyGraph(11);}
             else if(strMonth=="12"){updateMonthlyGraph(12);}
         }
-        function updateMonthlyGraph(month) { 
-        if (monthlyChart) {
-            monthlyChart.destroy();
-        }
+        function updateMonthlyGraph(month) {
 
-        const categoryAmounts = {
-            'お肉': 0, '飲料': 0, '野菜': 0, 'お菓子': 0, '生活用品': 0, '外食': 0,
-            '特別': 0, '水道': 0, 'ガス': 0, '電気': 0, 'その他': 0
-        };
-
-        let hasData = false;
-
-        // その月のデータを集計
-        entries.forEach(entry => {
-            if (entry.month === month) {
-                categoryAmounts[entry.category] += entry.amount;
-                hasData = true;
+            if (monthlyChart) {
+                monthlyChart.destroy();
             }
-        });
 
-        if (!hasData) {
-            alert(`${month}月のデータがありません。`);
-            return;
-        }
+            const categoryAmounts = {
+                'お肉': 0, '飲料': 0, '野菜': 0, 'お菓子': 0, '生活用品': 0, '外食': 0,
+                '特別': 0, '水道': 0, 'ガス': 0, '電気': 0, 'その他': 0
+            };
 
-        const ctx = document.getElementById('monthlyGraph').getContext('2d');
+            let hasData = false;
 
-        // グラフ作成
-        monthlyChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: Object.keys(categoryAmounts),
-                datasets: [{
-                    label: `${month}月の支出`,
-                    data: Object.values(categoryAmounts),
-                    backgroundColor: ['#ffcc00', '#4caf50', '#00bcd4', '#ff4081', '#ff9800', '#607d8b', '#8bc34a', '#f44336', '#9c27b0', '#3f51b5', '#e91e63'],
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        display: false // 凡例を非表示
-                    },
-                    datalabels: {
-                        color: '#fff', // ラベルの文字色
-                        font: {
-                            size: 12 // ラベルのフォントサイズ
-                        },
-                        formatter: (value, context) => {
-                            const label = context.chart.data.labels[context.dataIndex]; // 分類名
-                                return `${label}\n¥${value}`; // 分類名と費用を改行して表示
-                            }
+            // その月のデータを集計
+            entries.forEach(entry => {
+                if (entry.month === month) {
+                    categoryAmounts[entry.category] += entry.amount;
+                    hasData = true;
+                }
+            });
+
+            if (!hasData) {
+                alert(`${month}月のデータがありません。`);
+                return;
+            }
+
+            const ctx = document.getElementById('monthlyGraph').getContext('2d');
+            monthlyChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(categoryAmounts),
+                    datasets: [{
+                        label: `${month}月の支出`,
+                        data: Object.values(categoryAmounts),
+                        backgroundColor: ['#ffcc00', '#4caf50', '#00bcd4', '#ff4081', '#ff9800', '#607d8b', '#8bc34a', '#f44336', '#9c27b0', '#3f51b5', '#e91e63'],
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false
                         }
                     }
-                },
-                plugins: [ChartDataLabels] // プラグインの有効化
+                }
             });
         }
-
         // 年グラフのドロップダウンが更新されたとき
         function onchangeSelectYear(){
             const selectedCategory = document.getElementById('yeargraph_category').value;
