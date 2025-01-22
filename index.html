@@ -12,6 +12,9 @@
                 background-color: white;
                 color: #616161;
             }
+            .empty-row {
+                height: 20px;
+            }
             .content-row {
                 display: flex;
                 align-items: center;
@@ -140,9 +143,11 @@
 <body>
     <div id="content">
         <!-- 入力フォーム -->
+        <div class="empty-row"></div>
         <div id="entryFormSection">
             <span class="content-title">あゆみきひ</span>
             <button id="saveButton" class="save-btn">保存</button>
+            <div class="empty-row"></div>
             <form id="entryForm">
                 <select id="month" onchange="updateEntriesTable()">
                     <option value="1">1月</option>
