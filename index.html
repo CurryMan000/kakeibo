@@ -26,6 +26,12 @@
                 text-align: center;
                 flex-grow: 1;
             }
+            .logo {
+                margin-right: 20px;
+                margin: 0;
+                text-align: center;
+                flex-grow: 1;
+            }
             .save-btn {
                 width: 80px;
                 height: 30px;
@@ -144,7 +150,9 @@
         <!-- 入力フォーム -->
         <div id="entryFormSection">
             <div class="content-row">
-                <span class="content-title">あゆみきひ</span>
+                <svg class="logo" xmlns="http://www.w3.org/2000/svg" width="200" height="60">
+                    <text x="10" y="40" font-family="Meiryo, sans-serif" font-size="30" font-weight="bold" fill="black" transform="rotate(-45 10,40)">タイトル</text>
+                </svg>
                 <button id="saveButton" class="save-btn">保存</button>
             </div>
             <form id="entryForm">
