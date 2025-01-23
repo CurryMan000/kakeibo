@@ -195,6 +195,10 @@
                 <button type="button" onclick="addEntry()">追加</button>
             </form>
 
+            <div class="summary">
+                <p>総支出: <span id="totalExpense">0</span> 円</p>
+            </div>
+
             <table id="entriesTable">
                 <thead>
                     <tr>
@@ -210,9 +214,6 @@
                 </tbody>
             </table>
 
-            <div class="summary">
-                <p>総支出: <span id="totalExpense">0</span> 円</p>
-            </div>
         </div>
 
         <div id="monthlyGraphSection" style="display: none;">
@@ -232,7 +233,7 @@
             </select>
 
             <div id="graphContainer">
-                <canvas id="monthlyGraph" width="400" height="400"></canvas>
+                <canvas id="monthlyGraph" width="500" height="500"></canvas>
             </div>
         </div>
 
@@ -530,6 +531,8 @@
                 console.error("保存中にエラーが発生しました:", error);
                 alert("保存中にエラーが発生しました。再試行してください。");
             });
+            
+            updateEntriesTable();
         }
 
         // 新規入力の追加
@@ -568,14 +571,16 @@
                 row.insertCell(2).textContent = entry.category;
                 row.insertCell(3).textContent = entry.amount;
 
-                const deleteCell = row.insertCell(4);
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = '削除';
-                deleteButton.onclick = () => {
-                    entries = entries.filter(e => e !== entry);
-                    updateEntriesTable();
-                };
-                deleteCell.appendChild(deleteButton);
+                if(saverntries.length!=0){
+                    const deleteCell = row.insertCell(4);
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = '削除';
+                    deleteButton.onclick = () => {
+                        entries = entries.filter(e => e !== entry);
+                        updateEntriesTable();
+                    };
+                    deleteCell.appendChild(deleteButton);
+                }
 
                 totalExpense += entry.amount;
             });
