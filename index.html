@@ -437,7 +437,7 @@
 
         // 入力データの保存
         function saveEntry(){
-            document.getElementById("loading-message").style.display = "block";
+            document.getElementById("saving-message").style.display = "block";
             event.preventDefault(); // デフォルトのフォーム送信動作を防ぐ
 
             if (saveEntries.length === 0) {
@@ -461,7 +461,7 @@
             .then(response => response.json())
             .then(result => {
                 if (result.success) {
-                    document.getElementById("loading-message").style.display = "none";
+                    document.getElementById("saving-message").style.display = "none";
                     alert("データが正常に保存されました！");
                     saveEntries = []; // 保存済みのエントリをクリア
                 } else {
