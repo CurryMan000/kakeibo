@@ -606,9 +606,10 @@
                 const correntmonth = document.getElementById('month').value
                 document.getElementById('monthgraph_month').value = correntmonth;
                 updateMonthlyGraph(parseInt(currentMonth, 10));
+                updateMonthlyGraph(parseInt(currentMonth, 10));
             } else if (sectionId === 'yearlyGraphSection') {
                 document.getElementById('yeargraph_category').value = '総支出';
-                updateYearlyGraph('total');
+                updateYearlyGraph();
             }
         }
     </script>
