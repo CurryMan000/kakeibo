@@ -372,7 +372,7 @@
                     responsive: true,
                     plugins: {
                         legend: {
-                            display: true,
+                            display: false,
                             position: 'top',
                             labels: {
                                 boxWidth: 20,
@@ -402,8 +402,8 @@
                                     ctx.textBaseline = 'middle';
 
                                     // セクション外側に表示するためのオフセット
-                                    const offsetX = position.x + 30; // 外側に少しずらす
-                                    const offsetY = position.y;
+                                    const offsetX = position.x + 100; // 外側に少しずらす
+                                    const offsetY = position.y + 100;
 
                                     ctx.fillText(label, offsetX, offsetY);
                                 });
@@ -424,6 +424,7 @@
                 updateCategoryYearlyGraph(selectedCategory);
             }
         }
+
         // 年別グラフの更新（総支出）
         function updateYearlyGraph(type) {
             if (yearlyChart) {
