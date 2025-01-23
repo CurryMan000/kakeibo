@@ -274,7 +274,7 @@
         // アプリ起動時に前回の月のデータを表示
         window.onload = function() {
             document.getElementById("loading-message").style.display = "block";
-            fetch("https://script.google.com/macros/s/AKfycbyoV0ge-1CdIHtj3SzukCWQUq3VEZC-1ZXJTA3ge7tWH1bbT2HR_xa8DDBnsCZ-eXE/exec")
+            fetch("https://script.google.com/macros/s/AKfycbwdGWi7E8N6H-9EkJXaLqzuJrFNiJVnxrk-ecmT8EcNOXEk5ERx3OYTkPEPSVhCK7G65w/exec")
                 .then(response => response.json())
                 .then(data => {
                     // テーブルにデータを追加
@@ -452,7 +452,7 @@
             });
 
             // Google Apps Scriptにデータを送信
-            fetch("https://script.google.com/macros/s/AKfycbyoV0ge-1CdIHtj3SzukCWQUq3VEZC-1ZXJTA3ge7tWH1bbT2HR_xa8DDBnsCZ-eXE/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbwdGWi7E8N6H-9EkJXaLqzuJrFNiJVnxrk-ecmT8EcNOXEk5ERx3OYTkPEPSVhCK7G65w/exec", {
                 method: "POST",
                 body: formData,
             })
