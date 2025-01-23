@@ -400,7 +400,12 @@
                                     ctx.font = 'bold 12px Arial';
                                     ctx.textAlign = 'center';
                                     ctx.textBaseline = 'middle';
-                                    ctx.fillText(label, position.x, position.y);
+
+                                    // セクション外側に表示するためのオフセット
+                                    const offsetX = position.x + 30; // 外側に少しずらす
+                                    const offsetY = position.y;
+
+                                    ctx.fillText(label, offsetX, offsetY);
                                 });
                             }
                         });
@@ -408,6 +413,7 @@
                 }]
             });
         }
+
 
         // 年グラフのドロップダウンが更新されたとき
         function onchangeSelectYear(){
