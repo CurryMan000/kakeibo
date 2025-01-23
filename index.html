@@ -254,7 +254,7 @@
             </select>
 
             <div id="graphContainer">
-                <canvas id="yearlyGraph" width="400" height="400"></canvas>
+                <canvas id="yearlyGraph" width="500" height="500"></canvas>
             </div>
         </div>
     </div>
@@ -285,7 +285,7 @@
                         const date = row[1];
                         const category = row[3];
                         const amount = row[2];
-                        const entry = { date, category, amount, month };
+                        const entry = { date, category, amount, month, isNew:false };
                         entries.unshift(entry);
                     });
                     //エントリーテーブルの更新
@@ -522,6 +522,13 @@
                 if (result.success) {
                     document.getElementById("saving-message").style.display = "none";
                     alert("保存されました♪");
+
+                    entries.forEach(entry => {
+                        if (saveEntries.includes(entry)) {
+                            entry.isNew = false;
+                        }
+                    });
+
                     saveEntries = []; // 保存済みのエントリをクリア
                 } else {
                     alert("保存に失敗しました。エラー内容: " + result.message);
@@ -531,8 +538,6 @@
                 console.error("保存中にエラーが発生しました:", error);
                 alert("保存中にエラーが発生しました。再試行してください。");
             });
-            
-            updateEntriesTable();
         }
 
         // 新規入力の追加
@@ -547,7 +552,7 @@
                 return;
             }
 
-            const entry = { date, category, amount, month };
+            const entry = { date, category, amount, month, isNew:true };
             entries.unshift(entry);
             saveEntries.unshift(entry);
 
@@ -565,14 +570,14 @@
 
             // 逆順でエントリを表示
             entries.filter(entry => entry.month === selectedMonth).forEach(entry => {
-                const row = tbody.insertRow();
-                row.insertCell(0).textContent = entry.month;
-                row.insertCell(1).textContent = entry.date;
-                row.insertCell(2).textContent = entry.category;
-                row.insertCell(3).textContent = entry.amount;
+                    const row = tbody.insertRow();
+                    row.insertCell(0).textContent = entry.month;
+                    row.insertCell(1).textContent = entry.date;
+                    row.insertCell(2).textContent = entry.category;
+                    row.insertCell(3).textContent = entry.amount;
 
-                if(saverntries.length!=0){
                     const deleteCell = row.insertCell(4);
+                    if(entry.isNew){
                     const deleteButton = document.createElement('button');
                     deleteButton.textContent = '削除';
                     deleteButton.onclick = () => {
