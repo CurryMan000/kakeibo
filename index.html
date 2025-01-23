@@ -341,6 +341,17 @@
                 alert(`${month}月のデータがありません。`);
                 return;
             }
+
+            // 金額が0でないカテゴリをフィルタリング
+            const filteredCategoryAmounts = Object.fromEntries(
+                Object.entries(categoryAmounts).filter(([category, amount]) => amount > 0)
+            );
+
+            if (Object.keys(filteredCategoryAmounts).length === 0) {
+                alert(`${month}月に金額が0のカテゴリはありません。`);
+                return;
+            }
+
             // ラベルを「分類：金額」の形式に変換
             const labels = Object.keys(filteredCategoryAmounts).map(
                 category => `${category}：${filteredCategoryAmounts[category]}円`
@@ -571,6 +582,13 @@
             document.getElementById('totalExpense').textContent = totalExpense;
         }
 
+
+        // 月を変更したときの処理
+        document.getElementById('month').addEventListener('change', function(event) {
+            selectedMonth = parseInt(event.target.value);
+            updateEntriesTable();
+        });
+
         // セクションの表示切替
         function showSection(sectionId, button) {
             const sections = ['entryFormSection', 'monthlyGraphSection', 'yearlyGraphSection'];
@@ -587,7 +605,6 @@
             if (sectionId === 'monthlyGraphSection') {
                 const correntmonth = document.getElementById('month').value
                 document.getElementById('monthgraph_month').value = correntmonth;
-                updateMonthlyGraph(parseInt(currentMonth, 10));
                 updateMonthlyGraph(parseInt(currentMonth, 10));
             } else if (sectionId === 'yearlyGraphSection') {
                 document.getElementById('yeargraph_category').value = '総支出';
