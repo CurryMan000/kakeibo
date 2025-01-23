@@ -385,7 +385,7 @@
                         datasets: [{
                             label: '総支出',
                             data: monthlyTotals,
-                            backgroundColor: '#99DCCB',
+                            backgroundColor: '#382831',
                         }]
                     },
                     options: {
@@ -421,7 +421,7 @@
                     datasets: [{
                         label: `${category}の月別支出`,
                         data: monthlyTotals,
-                        backgroundColor: '#99DCCB',
+                        backgroundColor: '#382831',
                     }]
                 },
                 options: {
@@ -436,21 +436,38 @@
 
         // 入力データの保存
         function saveEntry(){
-            event.preventDefault();
+            event.preventDefault(); // デフォルトのフォーム送信動作を防ぐ
 
-            // fetchでGoogle Apps Scriptにデータ送信
+            if (saveEntries.length === 0) {
+                alert("保存するデータがありません。");
+                return;
+            }
+
+            // saveEntriesを送信可能な形式に変換
+            const formData = new URLSearchParams();
+            saveEntries.forEach((entry, index) => {
+                Object.keys(entry).forEach(key => {
+                    formData.append(`${index}[${key}]`, entry[key]);
+                });
+            });
+
+            // Google Apps Scriptにデータを送信
             fetch("https://script.google.com/macros/s/AKfycbyOSWjPfybXFAnXwKHFJrZuhZukbT0VEC2gwN3u0tzLOmU-b9IwXovh2U3Mvx0y16mbyg/exec", {
                 method: "POST",
-                body: new URLSearchParams(saveEntries)
+                body: formData,
             })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(result => {
-                alert(result);
-                saveEntries=[];
+                if (result.success) {
+                    alert("データが正常に保存されました！");
+                    saveEntries = []; // 保存済みのエントリをクリア
+                } else {
+                    alert("保存に失敗しました。エラー内容: " + result.message);
+                }
             })
             .catch(error => {
-                console.error("エラーが発生しました:", error);
-                alert("送信に失敗しました。");
+                console.error("保存中にエラーが発生しました:", error);
+                alert("保存中にエラーが発生しました。再試行してください。");
             });
         }
 
