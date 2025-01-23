@@ -238,7 +238,7 @@
 
         <div id="yearlyGraphSection" style="display: none;">
             <select id="yeargraph_category" onchange="onchangeSelectYear()">
-                <option value="総支出">総支出</option>
+                <option value="total">総支出</option>
                 <option value="お肉">お肉</option>
                 <option value="飲料">飲料</option>
                 <option value="野菜">野菜</option>
@@ -418,7 +418,7 @@
         // 年グラフのドロップダウンが更新されたとき
         function onchangeSelectYear(){
             const selectedCategory = document.getElementById('yeargraph_category').value;
-            if (selectedCategory === '総支出') {
+            if (selectedCategory === 'total') {
                 updateYearlyGraph();
             } else {
                 updateCategoryYearlyGraph(selectedCategory);
