@@ -528,8 +528,8 @@
                             entry.isNew = false;
                         }
                     });
-
                     saveEntries = []; // 保存済みのエントリをクリア
+                    updateEntriesTable();
                 } else {
                     alert("保存に失敗しました。エラー内容: " + result.message);
                 }
@@ -538,7 +538,6 @@
                 console.error("保存中にエラーが発生しました:", error);
                 alert("保存中にエラーが発生しました。再試行してください。");
             });
-            updateEntriesTable();
         }
 
         // 新規入力の追加
