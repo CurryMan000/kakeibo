@@ -419,47 +419,42 @@
         function onchangeSelectYear(){
             const selectedCategory = document.getElementById('yeargraph_category').value;
             if (selectedCategory === '総支出') {
-                updateYearlyGraph('total');
+                updateYearlyGraph();
             } else {
                 updateCategoryYearlyGraph(selectedCategory);
             }
         }
 
         // 年別グラフの更新（総支出）
-        function updateYearlyGraph(type) {
+        function updateYearlyGraph() {
             if (yearlyChart) {
-                yearlyChart.destroy(); // 既存のグラフを破棄
+                yearlyChart.destroy();
             }
+            // 各月の総支出を計算
+            const monthlyTotals = Array(12).fill(0);
+            entries.forEach(entry => {
+                monthlyTotals[entry.month - 1] += entry.amount;
+            });
 
-            if (type === 'total') {
-                // 各月の総支出を計算
-                const monthlyTotals = Array(12).fill(0); // 12ヶ月分の合計を格納する配列
-                entries.forEach(entry => {
-                    if (entry.month) { // monthが存在する場合のみ処理
-                        monthlyTotals[entry.month - 1] += entry.amount; // 月ごとの合計を計算
-                    }
-                });
-
-                const ctx = document.getElementById('yearlyGraph').getContext('2d');
-                yearlyChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                        datasets: [{
-                            label: '総支出',
-                            data: monthlyTotals,
-                            backgroundColor: '#382831', // バーの色
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true // Y軸がゼロから始まるように設定
-                            }
+            const ctx = document.getElementById('yearlyGraph').getContext('2d');
+            yearlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    datasets: [{
+                        label: '総支出',
+                        data: monthlyTotals,
+                        backgroundColor: '#382831',
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
                     }
-                });
-            }
+                }
+            });
         }
 
 
