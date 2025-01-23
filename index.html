@@ -318,7 +318,6 @@
             else if(strMonth=="12"){updateMonthlyGraph(12);}
         }
         function updateMonthlyGraph(month) {
-
             if (monthlyChart) {
                 monthlyChart.destroy();
             }
@@ -343,19 +342,73 @@
                 return;
             }
 
+            // 金額が0でないカテゴリをフィルタリング
+            const filteredCategoryAmounts = Object.fromEntries(
+                Object.entries(categoryAmounts).filter(([category, amount]) => amount > 0)
+            );
+
+            if (Object.keys(filteredCategoryAmounts).length === 0) {
+                alert(`${month}月に金額が0のカテゴリはありません。`);
+                return;
+            }
+
+            // ラベルを「分類：金額」の形式に変換
+            const labels = Object.keys(filteredCategoryAmounts).map(
+                category => `${category}：${filteredCategoryAmounts[category]}円`
+            );
+
             const ctx = document.getElementById('monthlyGraph').getContext('2d');
             monthlyChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: Object.keys(categoryAmounts),
+                    labels: labels,
                     datasets: [{
                         label: `${month}月の支出`,
-                        data: Object.values(categoryAmounts),
+                        data: Object.values(filteredCategoryAmounts),
                         backgroundColor: ['#ffcc00', '#4caf50', '#00bcd4', '#ff4081', '#ff9800', '#607d8b', '#8bc34a', '#f44336', '#9c27b0', '#3f51b5', '#e91e63'],
                     }]
                 },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 20,
+                                padding: 10
+                            }
+                        },
+                        tooltip: {
+                            enabled: false // ツールチップを無効にする
+                        }
+                    }
+                },
+                plugins: [{
+                    afterDatasetsDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        chart.data.datasets.forEach((dataset, i) => {
+                            const meta = chart.getDatasetMeta(i);
+                            if (!meta.hidden) {
+                                meta.data.forEach((element, index) => {
+                                    const label = `${chart.data.labels[index]}`; // "分類：金額"の形式
+                                    const position = element.tooltipPosition();
+
+                                    ctx.fillStyle = '#000'; // テキストの色
+
+                                    // テキストを描画
+                                    ctx.font = 'bold 12px Arial';
+                                    ctx.textAlign = 'center';
+                                    ctx.textBaseline = 'middle';
+                                    ctx.fillText(label, position.x, position.y);
+                                });
+                            }
+                        });
+                    }
+                }]
             });
         }
+
         // 年グラフのドロップダウンが更新されたとき
         function onchangeSelectYear(){
             const selectedCategory = document.getElementById('yeargraph_category').value;
@@ -462,7 +515,7 @@
             .then(result => {
                 if (result.success) {
                     document.getElementById("saving-message").style.display = "none";
-                    alert("データが正常に保存されました！");
+                    alert("保存されました♪");
                     saveEntries = []; // 保存済みのエントリをクリア
                 } else {
                     alert("保存に失敗しました。エラー内容: " + result.message);
