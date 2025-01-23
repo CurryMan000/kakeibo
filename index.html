@@ -436,39 +436,39 @@
 
         // 入力データの保存
         function saveEntry(){
-            event.preventDefault(); // デフォルトのフォーム送信動作を防ぐ
+            event.preventDefault(); // デフォルトのフォーム送信動作を防止
 
             if (saveEntries.length === 0) {
                 alert("保存するデータがありません。");
                 return;
             }
 
-            // saveEntriesを送信可能な形式に変換
-            const formData = new URLSearchParams();
-            saveEntries.forEach((entry, index) => {
-                Object.keys(entry).forEach(key => {
-                    formData.append(`${index}[${key}]`, entry[key]);
-                });
-            });
+            // 保存処理の前にローディングメッセージを表示
+            document.getElementById("loading-message").style.display = "block";
 
-            // Google Apps Scriptにデータを送信
+            // fetchでGoogle Apps Scriptにデータ送信
             fetch("https://script.google.com/macros/s/AKfycbyOSWjPfybXFAnXwKHFJrZuhZukbT0VEC2gwN3u0tzLOmU-b9IwXovh2U3Mvx0y16mbyg/exec", {
                 method: "POST",
-                body: formData,
+                body: new URLSearchParams(saveEntries) // 保存データを送信
             })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    alert("データが正常に保存されました！");
-                    saveEntries = []; // 保存済みのエントリをクリア
-                } else {
-                    alert("保存に失敗しました。エラー内容: " + result.message);
-                }
-            })
-            .catch(error => {
-                console.error("保存中にエラーが発生しました:", error);
-                alert("保存中にエラーが発生しました。再試行してください。");
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("サーバーエラー");
+                    }
+                    return response.text();
+                })
+                .then(result => {
+                    alert("保存が完了しました: " + result);
+                    saveEntries = []; // 保存後、データをクリア
+                })
+                .catch(error => {
+                    console.error("エラーが発生しました:", error);
+                    alert("保存中にエラーが発生しました。再試行してください。\n詳細: " + error.message);
+                })
+                .finally(() => {
+                    // ローディングメッセージを非表示
+                    document.getElementById("loading-message").style.display = "none";
+                });
         }
 
         // 新規入力の追加
