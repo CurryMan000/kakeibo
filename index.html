@@ -402,8 +402,8 @@
                                     ctx.textBaseline = 'middle';
 
                                     // セクション外側に表示するためのオフセット
-                                    const offsetX = position.x + 100; // 外側に少しずらす
-                                    const offsetY = position.y + 100;
+                                    const offsetX = position.x ; // 外側に少しずらす
+                                    const offsetY = position.y ;
 
                                     ctx.fillText(label, offsetX, offsetY);
                                 });
@@ -428,14 +428,16 @@
         // 年別グラフの更新（総支出）
         function updateYearlyGraph(type) {
             if (yearlyChart) {
-                yearlyChart.destroy();
+                yearlyChart.destroy(); // 既存のグラフを破棄
             }
 
             if (type === 'total') {
                 // 各月の総支出を計算
-                const monthlyTotals = Array(12).fill(0);
+                const monthlyTotals = Array(12).fill(0); // 12ヶ月分の合計を格納する配列
                 entries.forEach(entry => {
-                    monthlyTotals[entry.month - 1] += entry.amount;
+                    if (entry.month) { // monthが存在する場合のみ処理
+                        monthlyTotals[entry.month - 1] += entry.amount; // 月ごとの合計を計算
+                    }
                 });
 
                 const ctx = document.getElementById('yearlyGraph').getContext('2d');
@@ -446,19 +448,20 @@
                         datasets: [{
                             label: '総支出',
                             data: monthlyTotals,
-                            backgroundColor: '#382831',
+                            backgroundColor: '#382831', // バーの色
                         }]
                     },
                     options: {
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true // Y軸がゼロから始まるように設定
                             }
                         }
                     }
                 });
             }
         }
+
 
         // 分類別の年グラフ
         function updateCategoryYearlyGraph(category) {
