@@ -33,14 +33,14 @@
                 padding: 5px;
                 border: none;
                 border-radius: 5px;
-                background-color: #9ADDCC;
+                background-color: #cce4e4;
                 color: #1F7C67;
                 cursor: pointer;
                 margin-left: auto;
             }
 
             .save-btn:hover {
-                background-color: #9ADDCC;
+                background-color: #cce4e4;
             }
         form {
             display: flex;
@@ -59,17 +59,17 @@
             color: #aaa;
         }
         button {
-            background-color: #9ADDCC;
+            background-color: #cce4e4;
             color: #1F7C67;
             border: none;
             cursor: pointer;
         }
         button:hover {
-            background-color: #9ADDCC;
+            background-color: #cce4e4;
         }
         button:focus {
             outline: none;
-            background-color: #9ADDCC;
+            background-color: #cce4e4;
         }
         table {
             width: 100%;
@@ -155,7 +155,7 @@
                         Ayumikihi
                     </text>
                 </svg>
-                <button id="saveButton" class="save-btn">保存</button>
+                <button id="saveButton" class="save-btn" onclick="saveEntry()">保存</button>
             </div>
             <form id="entryForm">
                 <select id="month" onchange="updateEntriesTable()">
@@ -266,6 +266,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         let entries = [];
+        let saveEntries = [];
         let selectedMonth = localStorage.getItem('selectedMonth') ? parseInt(localStorage.getItem('selectedMonth')) : 1;
         let monthlyChart = null;
         let yearlyChart = null;
@@ -384,7 +385,7 @@
                         datasets: [{
                             label: '総支出',
                             data: monthlyTotals,
-                            backgroundColor: '#FFCC99',
+                            backgroundColor: '#cce4e4',
                         }]
                     },
                     options: {
@@ -420,7 +421,7 @@
                     datasets: [{
                         label: `${category}の月別支出`,
                         data: monthlyTotals,
-                        backgroundColor: '#FFCC99',
+                        backgroundColor: '#cce4e4',
                     }]
                 },
                 options: {
@@ -432,6 +433,27 @@
                 }
             });
         }
+
+        // 入力データの保存
+        function saveEntry(){
+            event.preventDefault();
+
+            // fetchでGoogle Apps Scriptにデータ送信
+            fetch("https://script.google.com/macros/s/AKfycbyOSWjPfybXFAnXwKHFJrZuhZukbT0VEC2gwN3u0tzLOmU-b9IwXovh2U3Mvx0y16mbyg/exec", {
+                method: "POST",
+                body: new URLSearchParams(saveRntries)
+            })
+            .then(response => response.text())
+            .then(result => {
+                alert(result);
+                saveEntries=[];
+            })
+            .catch(error => {
+                console.error("エラーが発生しました:", error);
+                alert("送信に失敗しました。");
+            });
+        }
+
         // 新規入力の追加
         function addEntry() {
             const date = document.getElementById('date').value;
@@ -445,7 +467,8 @@
             }
 
             const entry = { date, category, amount, month };
-            entries.unshift(entry); // 新しいエントリは先頭に追加
+            entries.unshift(entry);
+            savenEtries.unshift(entry);
 
             updateEntriesTable();
         }
@@ -453,7 +476,7 @@
         // エントリテーブルの更新
         function updateEntriesTable() {
             const tbody = document.getElementById('entriesTable').getElementsByTagName('tbody')[0];
-            tbody.innerHTML = ''; // テーブルをクリア
+            tbody.innerHTML = '';
 
             let totalExpense = 0;
 
@@ -484,9 +507,8 @@
 
         // 月を変更したときの処理
         document.getElementById('month').addEventListener('change', function(event) {
-            selectedMonth = parseInt(event.target.value); // 選択した月を更新
-            localStorage.setItem('selectedMonth', selectedMonth); // ローカルストレージに保存
-            updateEntriesTable(); // 新しい月のデータを表示
+            selectedMonth = parseInt(event.target.value);
+            updateEntriesTable();
         });
 
         // セクションの表示切替
