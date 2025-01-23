@@ -441,7 +441,7 @@
             // fetchでGoogle Apps Scriptにデータ送信
             fetch("https://script.google.com/macros/s/AKfycbyOSWjPfybXFAnXwKHFJrZuhZukbT0VEC2gwN3u0tzLOmU-b9IwXovh2U3Mvx0y16mbyg/exec", {
                 method: "POST",
-                body: new URLSearchParams(saveRntries)
+                body: new URLSearchParams(saveEntries)
             })
             .then(response => response.text())
             .then(result => {
@@ -468,7 +468,7 @@
 
             const entry = { date, category, amount, month };
             entries.unshift(entry);
-            savenEtries.unshift(entry);
+            saveEntries.unshift(entry);
 
             updateEntriesTable();
         }
