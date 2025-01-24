@@ -4,7 +4,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
-            /* ベーススタイル */
+/*////////////////////////////////////////////////////////////////////////////
+/// スタイル
+////////////////////////////////////////////////////////////////////////////*/
             body {
                 font-family: Noto Sans JP, sans-serif;
                 margin: 0;
@@ -145,14 +147,17 @@
         </style>
     </head>
     <body>
+        
         <div id="content">
-            <!-- 入力フォーム -->
+<!--/////////////////////////////////////////////////////////////////////////
+/// 入力タブ
+//////////////////////////////////////////////////////////////////////////-->
             <div id="entryFormSection">
                 <div id="loading-message" style="display:none;">読み込み中...</div>
                 <div id="saving-message" style="display:none;">保存中...</div>
                 <div class="content-row">
                     <svg class="logo" xmlns="http://www.w3.org/2000/svg" width="100%" height="70">
-                        <text x="50%" y="50%" font-family="Comic Sans MS, sans-serif" font-size="30" font-weight="bold" fill="#382831"text-anchor="middle" alignment-baseline="middle">
+                        <text x="50%" y="50%" font-family="-apple-syste, Comic Sans MS, sans-serif" font-size="30" font-weight="bold" fill="#382831"text-anchor="middle" alignment-baseline="middle">
                             　２０２５
                         </text>
                     </svg>
@@ -215,7 +220,9 @@
                 </table>
 
             </div>
-
+<!--/////////////////////////////////////////////////////////////////////////
+/// 月グラフタブ
+//////////////////////////////////////////////////////////////////////////-->
             <div id="monthlyGraphSection" style="display: none;">
                 <select id="monthgraph_month" onchange="onchangeSelectMonth()">
                     <option value="1">1月</option>
@@ -236,7 +243,9 @@
                     <canvas id="monthlyGraph" width="800" height="800"></canvas>
                 </div>
             </div>
-
+<!--/////////////////////////////////////////////////////////////////////////
+/// 年グラフタブ
+//////////////////////////////////////////////////////////////////////////-->
             <div id="yearlyGraphSection" style="display: none;">
                 <select id="yeargraph_category" onchange="onchangeSelectYear()">
                     <option value="total">総支出</option>
@@ -257,12 +266,14 @@
                     <canvas id="yearlyGraph" width="500" height="500"></canvas>
                 </div>
             </div>
-
+<!--/////////////////////////////////////////////////////////////////////////
+/// ウォレットタブ
+//////////////////////////////////////////////////////////////////////////-->
             <div id="walletSection" style="display: none;">
-                <div id="saving-message-wallet" style="display:none;">保中...</div>
+                <div id="saving-message-wallet" style="display:none;">保存中...</div>
                 <div class="content-row">
                     <svg class="logo" xmlns="http://www.w3.org/2000/svg" width="100%" height="70">
-                        <text x="50%" y="50%" font-family="Comic Sans MS, sans-serif" font-size="30" font-weight="bold" fill="#382831"text-anchor="middle" alignment-baseline="middle">
+                        <text x="50%" y="50%" font-family="-apple-syste, Comic Sans MS, sans-serif" font-size="30" font-weight="bold" fill="#382831"text-anchor="middle" alignment-baseline="middle">
                             　共有口座
                         </text>
                     </svg>
@@ -270,7 +281,7 @@
                 <form id="entryForm">
                     <input type="number" id="depositAmount" placeholder="振込金額">
                     <input type="number" id="withdrawAmount" placeholder="払い出し金額">
-                    <button type="button">保存</button>
+                    <button type="button" onclick="saveWallet()">保存</button>
                     <div class="summary">
                         <p>残高: <span id="walletBalance">0</span> 円</p>
                     </div>
@@ -278,7 +289,9 @@
                 </form>
             </div>
         </div>
-
+<!--/////////////////////////////////////////////////////////////////////////
+/// フッタースタイル
+//////////////////////////////////////////////////////////////////////////-->
         <footer>
             <button onclick="showSection('entryFormSection', this)" class="active">Input</button>
             <button onclick="showSection('monthlyGraphSection', this)">Month</button>
@@ -286,6 +299,9 @@
             <button onclick="showSection('walletSection', this)">Wallet</button>
         </footer>
 
+<!--//////////////////////////////////////////////////////////////////////////
+/// 起動時処理
+///////////////////////////////////////////////////////////////////////////-->       
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             let entries = [];
@@ -295,9 +311,6 @@
             let yearlyChart = null;
             let walletBalance = 0;
 
-//////////////////////////////////////////////////////////////////////////////
-/// 起動時処理
-//////////////////////////////////////////////////////////////////////////////
             window.onload = function() {
                 document.getElementById("loading-message").style.display = "block";
                 fetch("https://script.google.com/macros/s/AKfycbz_Vi5dDG8ejJyAiPIc3RHuwOi-xZtEXNe3st-soEPFw9YX5WCE9gNcBSsWRbyKBMNqbw/exec")
@@ -571,7 +584,7 @@
                 }
             }
 
-            // 年別グラフの更新（総支出）
+            // 総支出グラフ
             function updateYearlyGraph() {
                 if (yearlyChart) {
                     yearlyChart.destroy();
@@ -604,7 +617,7 @@
             }
 
 
-            // 分類別の年グラフ
+            // カテゴリーグラフ
             function updateCategoryYearlyGraph(category) {
                 if (yearlyChart) {
                     yearlyChart.destroy();
@@ -658,52 +671,31 @@
 //////////////////////////////////////////////////////////////////////////////
 /// ウォレット処理
 //////////////////////////////////////////////////////////////////////////////
-
-            // 振込処理
-            function depositToWallet() {
+            // ウォレット保存処理
+            function saveWallet(){
                 const depositAmount = parseInt(document.getElementById("depositAmount").value);
+                const withdrawAmount = parseInt(document.getElementById("withdrawAmount").value);
                 if (!isNaN(depositAmount)) {
                     walletBalance += depositAmount;
                     updateWalletDisplay();
-                    document.getElementById("depositAmount").value = ""; // 入力フィールドをクリア
-                } else {
-                    alert("有効な金額を入力してください。");
+                    document.getElementById("depositAmount").value = "";
                 }
-            }
-
-            // 払い出し処理
-            function withdrawFromWallet() {
-                const withdrawAmount = parseInt(document.getElementById("withdrawAmount").value);
-                if (!isNaN(withdrawAmount)) {
+                else if (!isNaN(withdrawAmount)) {
                     walletBalance -= withdrawAmount;
                     updateWalletDisplay();
-                    document.getElementById("withdrawAmount").value = ""; // 入力フィールドをクリア
-                } else {
-                    alert("有効な金額を入力してください。");
+                    document.getElementById("withdrawAmount").value = "";
+                }
+                else{
+                    alert("金額を入力してや♪");
                 }
             }
 
             // ウォレット表示の更新
             function updateWalletDisplay() {
+                entries.forEach(entry => {
+                    walletBalance -= entry.amount;
+                });
                 document.getElementById("walletBalance").textContent = walletBalance;
-            }
-
-            // 入力タブの合計を計算してウォレットに表示
-            function updateEntryTotal() {
-                const total = entries.reduce((sum, entry) => sum + entry.amount, 0);
-                document.getElementById("entryTotal").textContent = `${total} 円`;
-            }
-
-            // タブを切り替えたときに入力タブの金額合計を表示
-            function showSection(sectionId, button) {
-                const sections = document.querySelectorAll("section");
-                sections.forEach(section => section.style.display = "none");
-                document.getElementById(sectionId).style.display = "block";
-
-                // タブがウォレットセクションなら入力タブ合計を更新
-                if (sectionId === "walletSection") {
-                    updateEntryTotal();
-                }
             }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -726,9 +718,10 @@
                     document.getElementById('monthgraph_month').value = correntmonth;
                     updateMonthlyGraph(parseInt(correntmonth, 10));
                 } else if (sectionId === 'yearlyGraphSection') {
-                    document.getElementById('yeargraph_category').value = '総支出';
+                    document.getElementById('yeargraph_category').value = 'total';
                     updateYearlyGraph();
-                }
+                } else if (sectionId === 'walletSection') {
+                    updateWalletDisplay();
             }
         </script>
     </body>
