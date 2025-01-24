@@ -752,15 +752,14 @@
                     alert("保存するデータがありません。");
                     return;
                 }
-                alert("test2");
 
                 // savewalletを送信可能な形式に変換
                 const formData = new URLSearchParams();
+                let index = 0;
                 Object.keys(savewallet).forEach(key => {
                         formData.append(`${index}[${key}]`, savewallet[key]);
+                        index++;
                 });
-
-                alert("test1");
 
                 // Google Apps Scriptにデータを送信
                 fetch("https://script.google.com/macros/s/AKfycbyBGopO2qSAGtUVQtSUc6Wc-Ok-7PjmBUvuGhDLIyeumddTxPMTWs7S2FsUaXhRZmOdBw/exec", {
