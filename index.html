@@ -338,7 +338,7 @@
                 document.getElementById('month').value = selectedMonth;
                 updateEntriesTable();
                 entries.forEach(entry => {
-                    walletBalance -= entry.amount;
+                    walletBalance -= parseInt(entry.amount,10);
                 });
             };
             
