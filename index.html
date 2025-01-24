@@ -164,7 +164,7 @@
                     <button id="saveButton" class="save-btn" onclick="saveEntry()">保存</button>
                 </div>
                 <form id="entryForm">
-                    <select id="month" onchange="updateEntriesTable()">
+                    <select id="month" onchange="onchangeUpdateEntriesTable()">
                         <option value="1">1月</option>
                         <option value="2">2月</option>
                         <option value="3">3月</option>
@@ -306,7 +306,7 @@
         <script>
             let entries = [];
             let saveEntries = [];
-            let selectedMonth = localStorage.getItem('selectedMonth') ? parseInt(localStorage.getItem('selectedMonth')) : 1;
+            let selectedMonth = "1";
             let monthlyChart = null;
             let yearlyChart = null;
             let walletBalance = 0;
@@ -447,6 +447,10 @@
 
                 // 総支出の表示
                 document.getElementById('totalExpense').textContent = totalExpense;
+            }
+            //月が変更された
+            function onchangeUpdateEntriesTable(){
+                selectedMonth = cocument.getElemetById("month").value;
             }
 
 //////////////////////////////////////////////////////////////////////////////
