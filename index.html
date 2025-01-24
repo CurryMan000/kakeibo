@@ -735,12 +735,12 @@
                 const walletDate = document.getElementById("walletDate").value;
                 const walletCotegory = document.getElementById("walletCategory").value;
                 const walletAmount = parseInt(document.getElementById("walletAmount").value);
-                if (walletCotegory===deposit) {
-                    walletCurrent += depositAmount;
+                if (walletCotegory==='deposit') {
+                    walletCurrent += walletAmount;
                     document.getElementById("walletAmount").value = "";
                 }
-                else if (walletCotegory===withdraw) {
-                    walletCurrent -= withdrawAmount;
+                else if (walletCotegory==='withdraw') {
+                    walletCurrent -= walletAmount;
                     document.getElementById("walletAmount").value = "";
                 }
                 else{
