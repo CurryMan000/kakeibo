@@ -164,7 +164,7 @@
                     <button id="saveButton" class="save-btn" onclick="saveEntry()">保存</button>
                 </div>
                 <form id="entryForm">
-                    <select id="month" onchange="onchangeUpdateEntriesTable()">
+                    <select id="month" onchange="onchangeEntryMonth()">
                         <option value="1">1月</option>
                         <option value="2">2月</option>
                         <option value="3">3月</option>
@@ -449,7 +449,7 @@
                 document.getElementById('totalExpense').textContent = totalExpense;
             }
             //月が変更された
-            function onchangeUpdateEntriesTable(){
+            function onchangeEntryMonth(){
                 selectedMonth = parseInt(document.getElemetById('month').value);
                 updateEntriesTable();
                 alert("test");
