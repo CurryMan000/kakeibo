@@ -785,7 +785,7 @@
                 const tbody = document.getElementById('walletTable').getElementsByTagName('tbody')[0];
                 tbody.innerHTML = '';
 
-                wallets.forEach(entry => {
+                wallets.forEach(wallet => {
                         const row = tbody.insertRow();
                         row.insertCell(0).textContent = wallet.month;
                         row.insertCell(1).textContent = wallet.date;
