@@ -450,7 +450,8 @@
             }
             //月が変更された
             function onchangeUpdateEntriesTable(){
-                selectedMonth = intParse(document.getElemetById('month').value,10);
+                selectedMonth = document.getElemetById('month').value;
+                updateEntriesTable();
             }
 
 //////////////////////////////////////////////////////////////////////////////
