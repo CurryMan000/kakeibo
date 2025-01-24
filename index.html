@@ -649,7 +649,7 @@
 
         // セクションの表示切替
         function showSection(sectionId, button) {
-            const sections = ['entryFormSection', 'monthlyGraphSection', 'yearlyGraphSection'];
+            const sections = ['entryFormSection', 'monthlyGraphSection', 'yearlyGraphSection', 'walletSection'];
             sections.forEach(id => {
                 const section = document.getElementById(id);
                 section.style.display = (id === sectionId) ? 'block' : 'none';
