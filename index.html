@@ -791,10 +791,10 @@
 
                 wallets.forEach(wallet => {
                         const row = tbody.insertRow();
-                        row.insertCell(0).textContent = wallet.month;
-                        row.insertCell(1).textContent = wallet.date;
-                        row.insertCell(2).textContent = wallet.category;
-                        row.insertCell(3).textContent = wallet.amount;
+                        row.insertCell(0).textContent = wallet.walletMonth;
+                        row.insertCell(1).textContent = wallet.walletDate;
+                        row.insertCell(2).textContent = wallet.walletCategory;
+                        row.insertCell(3).textContent = wallet.walletAmount;
             });
                 document.getElementById("walletCurrent").textContent = walletCurrent;
                 document.getElementById("walletBalance").textContent = walletBalance;
