@@ -278,15 +278,52 @@
                         </text>
                     </svg>
                 </div>
-                <form id="entryForm">
-                    <input type="number" id="depositAmount" placeholder="振込金額">
-                    <input type="number" id="withdrawAmount" placeholder="払い出し金額">
-                    <button type="button" onclick="saveWallet()">保存</button>
-                    <div class="summary">
-                        <p>残高: <span id="walletBalance">0</span> 円</p>
-                    </div>
 
+                <form id="WalletForm">
+                    <select id="walletMonth" onchange="onchangeWallentMonth()">
+                        <option value="1">1月</option>
+                        <option value="2">2月</option>
+                        <option value="3">3月</option>
+                        <option value="4">4月</option>
+                        <option value="5">5月</option>
+                        <option value="6">6月</option>
+                        <option value="7">7月</option>
+                        <option value="8">8月</option>
+                        <option value="9">9月</option>
+                        <option value="10">10月</option>
+                        <option value="11">11月</option>
+                        <option value="12">12月</option>
+                    </select>
+
+                    <input type="number" id="walletDate" placeholder="日付">
+
+                    <select id="walletCategory">
+                        <option value="deposit">振込</option>
+                        <option value="withdraw">払出</option>
+                    </select>
+                    <input type="number" id="walletAmount" placeholder="金額">
+                    <button type="button" onclick="saveWallet()">保存</button>
                 </form>
+
+                <div class="summary">
+                    <p>現在残高: <span id="walletCurrent">0</span> 円</p>
+                    <p>見込残高: <span id="walletBalance">0</span> 円</p>
+                </div>
+
+                <table id="walletTable">
+                    <thead>
+                        <tr>
+                            <th>月</th>
+                            <th>日</th>
+                            <th>分類</th>
+                            <th>金額</th>
+                            <th>修正</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 記録がここに追加される -->
+                    </tbody>
+                </table>
             </div>
         </div>
 <!--/////////////////////////////////////////////////////////////////////////
@@ -304,19 +341,45 @@
 ///////////////////////////////////////////////////////////////////////////-->       
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
-            let entries = [];
-            let saveEntries = [];
-            let selectedMonth = 1;
+            let entries = [];       //入力データリスト
+            let wallets = [];       //口座金額リスト
+            let saveEntries = [];   //保存入力データリスト
+            let selectedMonth = 1;  //選択月
+            let walletCurrent = 0;  //現在残高
+            let walletBalance = 0;  //見込残高
             let monthlyChart = null;
             let yearlyChart = null;
-            let walletBalance = 0;
-
+            
             window.onload = function() {
+                fetch("https://script.google.com/macros/s/AKfycbyBGopO2qSAGtUVQtSUc6Wc-Ok-7PjmBUvuGhDLIyeumddTxPMTWs7S2FsUaXhRZmOdBw/exec")
+                // ウォレットテーブルにデータを追加
+                .then(response => response.json())
+                    .then(data => {
+                        data.forEach(row => {
+                            const month = row[0];
+                            const date = row[1];
+                            const category = row[2];
+                            const amount = row[3];
+                            const wallet = { month, date, category, amount };
+                            wallets.unshift(wallet);
+                        });
+                        wallets.forEach(wallet=>{
+                            if (entry.category=='deposit') {
+                                walletCurrent += depositAmount;
+                            }
+                            else if (entry.category=='withdraw') {
+                                walletCurrent -= withdrawAmount;
+                            }
+                        });
+                        //ウォレットテーブルの更新
+                        updateWalletDisplay();
+                    }
+                );
                 document.getElementById("loading-message").style.display = "block";
                 fetch("https://script.google.com/macros/s/AKfycbz_Vi5dDG8ejJyAiPIc3RHuwOi-xZtEXNe3st-soEPFw9YX5WCE9gNcBSsWRbyKBMNqbw/exec")
                     .then(response => response.json())
                     .then(data => {
-                        // テーブルにデータを追加
+                        // 入力テーブルにデータを追加
                         data.forEach(row => {
                             const month = row[0];
                             const date = row[1];
@@ -325,14 +388,9 @@
                             const entry = { date, category, amount, month, isNew:false };
                             entries.unshift(entry);
                         });
-                        //エントリーテーブルの更新
+                        //入力テーブルの更新
                         updateEntriesTable();
-
-                        //残高の更新
-                        entries.forEach(entry => {
-                            walletBalance -= entry.amount;
-                        });
-
+                        //メッセージ表示
                         document.getElementById("loading-message").style.display = "none";
                         alert(`読み込みました♪`);
                     })
@@ -407,7 +465,6 @@
                 const entry = { date, category, amount, month, isNew:true };
                 entries.unshift(entry);
                 saveEntries.unshift(entry);
-                walletBalance -= entry.amount;
 
                 document.getElementById('amount').value=null;
 
@@ -434,7 +491,6 @@
                         const deleteButton = document.createElement('button');
                         deleteButton.textContent = '削除';
                         deleteButton.onclick = () => {
-                            walletBalance += entry.amount;
                             entries = entries.filter(e => e !== entry);
                             saveEntries = saveEntries.filter(e => e !== entry);
                             updateEntriesTable();
@@ -448,7 +504,7 @@
                 // 総支出の表示
                 document.getElementById('totalExpense').textContent = totalExpense;
             }
-            //月が変更された
+            //入力タブの月ドロップダウンが変更されたとき
             function onchangeEntryMonth(){
                 selectedMonth = parseInt(document.getElementById('month').value);
                 updateEntriesTable();
@@ -458,22 +514,12 @@
 /// 月グラフ処理
 //////////////////////////////////////////////////////////////////////////////
 
-            // 月別グラフの更新
+            // 月タブのドロップダウンが変更されたとき
             function onchangeSelectMonth(){
-                const strMonth = document.getElementById('monthgraph_month').value;
-                if(strMonth=="1"){updateMonthlyGraph(1);}
-                else if(strMonth=="2"){updateMonthlyGraph(2);}
-                else if(strMonth=="3"){updateMonthlyGraph(3);}
-                else if(strMonth=="4"){updateMonthlyGraph(4);}
-                else if(strMonth=="5"){updateMonthlyGraph(5);}
-                else if(strMonth=="6"){updateMonthlyGraph(6);}
-                else if(strMonth=="7"){updateMonthlyGraph(7);}
-                else if(strMonth=="8"){updateMonthlyGraph(8);}
-                else if(strMonth=="9"){updateMonthlyGraph(9);}
-                else if(strMonth=="10"){updateMonthlyGraph(10);}
-                else if(strMonth=="11"){updateMonthlyGraph(11);}
-                else if(strMonth=="12"){updateMonthlyGraph(12);}
+                const month = parseInt(document.getElementById('monthgraph_month').value);
+                updateMonthlyGraph(month);
             }
+            //月グラフの更新
             function updateMonthlyGraph(month) {
                 if (monthlyChart) {
                     monthlyChart.destroy();
@@ -500,13 +546,13 @@
                 }
 
                 
-                // 金額が0でないカテゴリをフィルタリング
+                // 金額が0でない分類をフィルタリング
                 const filteredCategoryAmounts = Object.fromEntries(
                     Object.entries(categoryAmounts).filter(([category, amount]) => amount > 0)
                 );
 
                 if (Object.keys(filteredCategoryAmounts).length === 0) {
-                    alert(`${month}月に金額が0のカテゴリはありません。`);
+                    alert(`${month}月に金額が0の分類はありません。`);
                     return;
                 }
 
@@ -683,25 +729,60 @@
 //////////////////////////////////////////////////////////////////////////////
             // ウォレット保存処理
             function saveWallet(){
-                const depositAmount = parseInt(document.getElementById("depositAmount").value);
-                const withdrawAmount = parseInt(document.getElementById("withdrawAmount").value);
-                if (!isNaN(depositAmount)) {
-                    walletBalance += depositAmount;
-                    updateWalletDisplay();
-                    document.getElementById("depositAmount").value = "";
+                document.getElementById("saving-message-wallet").style.display = "block";
+                event.preventDefault(); // デフォルトのフォーム送信動作を防ぐ
+                const walletMonth = document.getElementById("walletMonth").value;
+                const walletDate = document.getElementById("walletDate").value;
+                const walletCotegory = document.getElementById("walletCategory").value;
+                const walletAmount = document.getElementById("walletAmount").value;
+                if (walletcotegory===deposit) {
+                    walletCurrent += depositAmount;
+                    document.getElementById("walletAmount").value = "";
                 }
-                else if (!isNaN(withdrawAmount)) {
-                    walletBalance -= withdrawAmount;
-                    updateWalletDisplay();
+                else if (walletcotegory===withdraw) {
+                    walletCurrent -= withdrawAmount;
                     document.getElementById("withdrawAmount").value = "";
                 }
                 else{
                     alert("金額を入力してや♪");
                 }
+
+                const savewallet={walletMonth,walletDate,walletCotegory,walletAmount};
+                if (savewarret.length === 0) {
+                    alert("保存するデータがありません。");
+                    return;
+                }
+
+                // savewalletを送信可能な形式に変換
+                const formData = new URLSearchParams();
+                Object.keys(savewallet).forEach(key => {
+                        formData.append(`${index}[${key}]`, savewallet[key]);
+                });
+
+                // Google Apps Scriptにデータを送信
+                fetch("https://script.google.com/macros/s/AKfycbyBGopO2qSAGtUVQtSUc6Wc-Ok-7PjmBUvuGhDLIyeumddTxPMTWs7S2FsUaXhRZmOdBw/exec", {
+                    method: "POST",
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        document.getElementById("saving-message-wallet").style.display = "none";
+                        alert("保存されました♪");
+                        updateWalletDisplay()
+                    } else {
+                        alert("保存に失敗しました。エラー内容: " + result.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("保存中にエラーが発生しました:", error);
+                    alert("保存中にエラーが発生しました。再試行してください。");
+                });
             }
 
             // ウォレット表示の更新
             function updateWalletDisplay() {
+                document.getElementById("walletCurrent").textContent = walletCurrent;
                 document.getElementById("walletBalance").textContent = walletBalance;
             }
 
