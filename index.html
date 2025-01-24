@@ -367,7 +367,7 @@
                     datasets: [{
                         label: `${month}月の支出`,
                         data: Object.values(filteredCategoryAmounts),
-                        backgroundColor: ['#FFB7C5', '#AEC6CF', '#FDFD96', '#77DD77', '#CBAACB', '#FFB347', '#AAF0D1', '##FF9AA2', '#E6E6FA', '#B2F2E9', '#D3D3D3'],
+                        backgroundColor: ['#FFB7C5', '#AEC6CF', '#FDFD96', '#77DD77', '#CBAACB', '#FFB347', '#AAF0D1', '#FF9AA2', '#E6E6FA', '#B2F2E9', '#D3D3D3'],
                     }]
                 },
                 options: {
@@ -396,16 +396,24 @@
                                     const label = `${chart.data.labels[index]}`; // "分類：金額"の形式
                                     const position = element.tooltipPosition();
 
-                                    ctx.fillStyle = '#000'; // テキストの色
+                                    // グラフの中心位置を取得
+                                    const centerX = chart.chartArea.left + (chart.chartArea.right - chart.chartArea.left) / 2;
+                                    const centerY = chart.chartArea.top + (chart.chartArea.bottom - chart.chartArea.top) / 2;
+
+                                    // セクションの中心からのオフセット距離を計算
+                                    const deltaX = position.x - centerX;
+                                    const deltaY = position.y - centerY;
+
+                                    // 2倍の位置に調整
+                                    const offsetX = centerX + deltaX * 2;
+                                    const offsetY = centerY + deltaY * 2;
+
+                                    ctx.fillStyle = '#382831'; // テキストの色
 
                                     // テキストを描画
                                     ctx.font = 'bold 12px Arial';
                                     ctx.textAlign = 'center';
                                     ctx.textBaseline = 'middle';
-
-                                    // セクション外側に表示するためのオフセット
-                                    const offsetX = position.x ; // 外側に少しずらす
-                                    const offsetY = position.y ;
 
                                     ctx.fillText(label, offsetX, offsetY);
                                 });
