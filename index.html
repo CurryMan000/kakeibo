@@ -349,56 +349,63 @@
             let walletBalance = 0;  //見込残高
             let monthlyChart = null;
             let yearlyChart = null;
-            
-            window.onload = function() {
-                fetch("https://script.google.com/macros/s/AKfycbyBGopO2qSAGtUVQtSUc6Wc-Ok-7PjmBUvuGhDLIyeumddTxPMTWs7S2FsUaXhRZmOdBw/exec")
-                // ウォレットテーブルにデータを追加
-                .then(response => response.json())
-                    .then(data => {
-                        data.forEach(row => {
-                            const month = row[0];
-                            const date = row[1];
-                            const category = row[2];
-                            const amount = row[3];
-                            const wallet = { month, date, category, amount };
-                            wallets.unshift(wallet);
-                        });
-                        wallets.forEach(wallet=>{
-                            if (entry.category=='deposit') {
-                                walletCurrent += depositAmount;
-                            }
-                            else if (entry.category=='withdraw') {
-                                walletCurrent -= withdrawAmount;
-                            }
-                        });
-                        //ウォレットテーブルの更新
-                        updateWalletDisplay();
-                        document.getElementById("loading-message").style.display = "block";
-                        fetch("https://script.google.com/macros/s/AKfycbz_Vi5dDG8ejJyAiPIc3RHuwOi-xZtEXNe3st-soEPFw9YX5WCE9gNcBSsWRbyKBMNqbw/exec")
-                            .then(response => response.json())
-                            .then(data => {
-                                // 入力テーブルにデータを追加
-                                data.forEach(row => {
-                                    const month = row[0];
-                                    const date = row[1];
-                                    const category = row[3];
-                                    const amount = row[2];
-                                    const entry = { date, category, amount, month, isNew:false };
-                                    entries.unshift(entry);
-                                });
-                                //入力テーブルの更新
-                                updateEntriesTable();
-                                //メッセージ表示
-                                document.getElementById("loading-message").style.display = "none";
-                                alert(`読み込みました♪`);
-                            })
-                            .catch(error => {
-                                console.error("データの読み込みに失敗しました:", error);
-                            }
-                        );
-                    }
-                );
+
+            window.onload = async function () {
+                try {
+                    // ウォレットデータを取得
+                    const walletResponse = await fetch("https://script.google.com/macros/s/AKfycbyBGopO2qSAGtUVQtSUc6Wc-Ok-7PjmBUvuGhDLIyeumddTxPMTWs7S2FsUaXhRZmOdBw/exec");
+                    const walletData = await walletResponse.json();
+
+                    // ウォレットデータを処理
+                    walletData.forEach(row => {
+                        const month = row[0];
+                        const date = row[1];
+                        const category = row[2];
+                        const amount = parseFloat(row[3]); // 数値型に変換
+                        wallets.unshift({ month, date, category, amount });
+                    });
+
+                    // 残高を計算
+                    wallets.forEach(wallet => {
+                        if (wallet.category === 'deposit') {
+                            walletCurrent += wallet.amount;
+                        } else if (wallet.category === 'withdraw') {
+                            walletCurrent -= wallet.amount;
+                        }
+                    });
+
+                    // ウォレットテーブルを更新
+                    updateWalletDisplay();
+
+                    // ローディングメッセージを表示
+                    document.getElementById("loading-message").style.display = "block";
+
+                    // 入力データを取得
+                    const entryResponse = await fetch("https://script.google.com/macros/s/AKfycbz_Vi5dDG8ejJyAiPIc3RHuwOi-xZtEXNe3st-soEPFw9YX5WCE9gNcBSsWRbyKBMNqbw/exec");
+                    const entryData = await entryResponse.json();
+
+                    // 入力データを処理
+                    entryData.forEach(row => {
+                        const month = row[0];
+                        const date = row[1];
+                        const amount = parseFloat(row[2]); // 数値型に変換
+                        const category = row[3];
+                        entries.unshift({ date, category, amount, month, isNew: false });
+                    });
+
+                    // 入力テーブルを更新
+                    updateEntriesTable();
+
+                    // ローディングメッセージを非表示
+                    document.getElementById("loading-message").style.display = "none";
+
+                    alert("データを正常に読み込みました♪");
+                } catch (error) {
+                    console.error("データの読み込み中にエラーが発生しました:", error);
+                    alert("データの読み込みに失敗しました。");
+                }
             };
+
             
 //////////////////////////////////////////////////////////////////////////////
 /// 入力画面処理
