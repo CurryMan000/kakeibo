@@ -204,7 +204,7 @@
                     <p>総支出: <span id="totalExpense">0</span> 円</p>
                 </div>
 
-                <table id="walletsTable">
+                <table id="entriesTable">
                     <thead>
                         <tr>
                             <th>月</th>
@@ -734,21 +734,21 @@
                 const walletMonth = document.getElementById("walletMonth").value;
                 const walletDate = document.getElementById("walletDate").value;
                 const walletCotegory = document.getElementById("walletCategory").value;
-                const walletAmount = document.getElementById("walletAmount").value;
-                if (walletcotegory===deposit) {
+                const walletAmount = parseInt(document.getElementById("walletAmount").value);
+                if (walletCotegory===deposit) {
                     walletCurrent += depositAmount;
                     document.getElementById("walletAmount").value = "";
                 }
-                else if (walletcotegory===withdraw) {
+                else if (walletCotegory===withdraw) {
                     walletCurrent -= withdrawAmount;
-                    document.getElementById("withdrawAmount").value = "";
+                    document.getElementById("walletAmount").value = "";
                 }
                 else{
                     alert("金額を入力してや♪");
                 }
 
-                const savewallet={walletMonth,walletDate,walletCotegory,walletAmount};
-                if (savewarret.length === 0) {
+                const savewallet={ walletMonth, walletDate, walletCotegory, walletAmount };
+                if (savewallet.length === 0) {
                     alert("保存するデータがありません。");
                     return;
                 }
@@ -782,7 +782,7 @@
 
             // ウォレット表示の更新
             function updateWalletDisplay() {
-                const tbody = document.getElementById('walletsTable').getElementsByTagName('tbody')[0];
+                const tbody = document.getElementById('walletTable').getElementsByTagName('tbody')[0];
                 tbody.innerHTML = '';
 
                 wallets.forEach(entry => {
