@@ -748,6 +748,7 @@
                 }
 
                 const savewallet={ walletMonth, walletDate, walletCotegory, walletAmount };
+                wallets.unshift(savesallet);
                 if (savewallet.length === 0) {
                     alert("保存するデータがありません。");
                     return;
