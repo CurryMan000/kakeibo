@@ -328,18 +328,18 @@
                         //エントリーテーブルの更新
                         updateEntriesTable();
 
+                        //残高の更新
+                        entries.forEach(entry => {
+                            walletBalance -= entry.amount;
+                        });
+
                         document.getElementById("loading-message").style.display = "none";
                         alert(`読み込みました♪`);
                     })
                     .catch(error => {
                         console.error("データの読み込みに失敗しました:", error);
-                    });
-                showSection('entryFormSection', document.querySelector('footer button'));
-                document.getElementById('month').value = selectedMonth;
-                updateEntriesTable();
-                entries.forEach(entry => {
-                    walletBalance -= parseInt(entry.amount,10);
-                });
+                    }
+                );
             };
             
 //////////////////////////////////////////////////////////////////////////////
