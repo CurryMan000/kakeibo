@@ -364,10 +364,10 @@
                             wallets.unshift(wallet);
                         });
                         wallets.forEach(wallet=>{
-                            if (wallet.category=='deposit') {
+                            if (wallet.category==='deposit') {
                                 walletCurrent += wallet.amount;
                             }
-                            else if (wallet.category=='withdraw') {
+                            else if (wallet.category==='withdraw') {
                                 walletCurrent -= wallet.amount;
                             }
                         });
