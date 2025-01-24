@@ -731,16 +731,16 @@
             function saveWallet(){
                 document.getElementById("saving-message-wallet").style.display = "block";
                 event.preventDefault(); // デフォルトのフォーム送信動作を防ぐ
-                const walletMonth = document.getElementById("walletMonth").value;
-                const walletDate = document.getElementById("walletDate").value;
-                const walletCotegory = document.getElementById("walletCategory").value;
-                const walletAmount = parseInt(document.getElementById("walletAmount").value);
-                if (walletCotegory==='deposit') {
-                    walletCurrent += walletAmount;
+                const month = document.getElementById("walletMonth").value;
+                const date = document.getElementById("walletDate").value;
+                const cotegory = document.getElementById("walletCategory").value;
+                const amount = parseInt(document.getElementById("walletAmount").value);
+                if (cotegory==='deposit') {
+                    walletCurrent += amount;
                     document.getElementById("walletAmount").value = "";
                 }
-                else if (walletCotegory==='withdraw') {
-                    walletCurrent -= walletAmount;
+                else if (cotegory==='withdraw') {
+                    walletCurrent -= amount;
                     document.getElementById("walletAmount").value = "";
                 }
                 else{
