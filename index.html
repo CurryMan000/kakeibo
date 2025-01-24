@@ -757,10 +757,8 @@
 
                 // savewalletを送信可能な形式に変換
                 const formData = new URLSearchParams();
-                let index = 0;
                 Object.keys(savewallet).forEach(key => {
-                        formData.append(`${index}[${key}]`, savewallet[key]);
-                        index++;
+                    formData.append(key, savewallet[key]);
                 });
 
                 // Google Apps Scriptにデータを送信
