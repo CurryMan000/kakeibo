@@ -204,7 +204,7 @@
                     <p>総支出: <span id="totalExpense">0</span> 円</p>
                 </div>
 
-                <table id="entriesTable">
+                <table id="walletsTable">
                     <thead>
                         <tr>
                             <th>月</th>
@@ -782,6 +782,16 @@
 
             // ウォレット表示の更新
             function updateWalletDisplay() {
+                const tbody = document.getElementById('walletsTable').getElementsByTagName('tbody')[0];
+                tbody.innerHTML = '';
+
+                wallets.forEach(entry => {
+                        const row = tbody.insertRow();
+                        row.insertCell(0).textContent = wallet.month;
+                        row.insertCell(1).textContent = wallet.date;
+                        row.insertCell(2).textContent = wallet.category;
+                        row.insertCell(3).textContent = wallet.amount;
+            });
                 document.getElementById("walletCurrent").textContent = walletCurrent;
                 document.getElementById("walletBalance").textContent = walletBalance;
             }
