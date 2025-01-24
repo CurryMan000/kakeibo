@@ -474,6 +474,20 @@
                 yearlyChart.destroy();
             }
 
+            const categoryColors = {
+                'お肉': '#FFB7C5',
+                '飲料': '#AEC6CF',
+                '野菜': '#77DD77',
+                'お菓子': '#FDFD96',
+                '生活用品': '#CBAACB',
+                '外食': '#FFB347',
+                '特別': '#FBEEC1',
+                '水道': '#FF9AA2',
+                'ガス': '#E6E6FA',
+                '電気': '#B2F2E9',
+                'その他': '#D3D3D3'
+            };
+
             const monthlyTotals = Array(12).fill(0);
 
             entries.forEach(entry => {
@@ -481,6 +495,8 @@
                     monthlyTotals[entry.month - 1] += entry.amount;
                 }
             });
+
+            const colors = monthlyTotals.map(() => categoryColors[category] || '#382831');
 
             const ctx = document.getElementById('yearlyGraph').getContext('2d');
             yearlyChart = new Chart(ctx, {
@@ -490,7 +506,7 @@
                     datasets: [{
                         label: `${category}の月別支出`,
                         data: monthlyTotals,
-                        backgroundColor: '#382831',
+                        backgroundColor: colors,
                     }]
                 },
                 options: {
