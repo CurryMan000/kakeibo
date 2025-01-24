@@ -434,7 +434,7 @@
                         const deleteButton = document.createElement('button');
                         deleteButton.textContent = '削除';
                         deleteButton.onclick = () => {
-                            walletBalance += entry.amout;
+                            walletBalance += entry.amount;
                             entries = entries.filter(e => e !== entry);
                             saveEntries = saveEntries.filter(e => e !== entry);
                             updateEntriesTable();
