@@ -731,7 +731,7 @@
             function saveWallet(){
                 document.getElementById("saving-message-wallet").style.display = "block";
                 event.preventDefault(); // デフォルトのフォーム送信動作を防ぐ
-                const month = document.getElementById("walletMonth").value;
+                const month = parseInt(document.getElementById("walletMonth").value);
                 const date = document.getElementById("walletDate").value;
                 const cotegory = document.getElementById("walletCategory").value;
                 const amount = parseInt(document.getElementById("walletAmount").value);
