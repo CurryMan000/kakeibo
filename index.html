@@ -343,7 +343,7 @@
                 return;
             }
 
-            /*
+            
             // 金額が0でないカテゴリをフィルタリング
             const filteredCategoryAmounts = Object.fromEntries(
                 Object.entries(categoryAmounts).filter(([category, amount]) => amount > 0)
@@ -353,7 +353,6 @@
                 alert(`${month}月に金額が0のカテゴリはありません。`);
                 return;
             }
-            */
 
             // ラベルを「分類：金額」の形式に変換
             const labels = Object.keys(filteredCategoryAmounts).map(
