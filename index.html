@@ -344,7 +344,7 @@
             let entries = [];       //入力データリスト
             let wallets = [];       //口座金額リスト
             let saveEntries = [];   //保存入力データリスト
-            let selectedMonth = 1;  //選択月
+            let selectedMonth = 1;  //入力タブで選択されている月
             let walletCurrent = 0;  //現在残高
             let walletBalance = 0;  //見込残高
             let monthlyChart = null;
@@ -373,29 +373,29 @@
                         });
                         //ウォレットテーブルの更新
                         updateWalletDisplay();
-                    }
-                );
-                document.getElementById("loading-message").style.display = "block";
-                fetch("https://script.google.com/macros/s/AKfycbz_Vi5dDG8ejJyAiPIc3RHuwOi-xZtEXNe3st-soEPFw9YX5WCE9gNcBSsWRbyKBMNqbw/exec")
-                    .then(response => response.json())
-                    .then(data => {
-                        // 入力テーブルにデータを追加
-                        data.forEach(row => {
-                            const month = row[0];
-                            const date = row[1];
-                            const category = row[3];
-                            const amount = row[2];
-                            const entry = { date, category, amount, month, isNew:false };
-                            entries.unshift(entry);
-                        });
-                        //入力テーブルの更新
-                        updateEntriesTable();
-                        //メッセージ表示
-                        document.getElementById("loading-message").style.display = "none";
-                        alert(`読み込みました♪`);
-                    })
-                    .catch(error => {
-                        console.error("データの読み込みに失敗しました:", error);
+                        document.getElementById("loading-message").style.display = "block";
+                        fetch("https://script.google.com/macros/s/AKfycbz_Vi5dDG8ejJyAiPIc3RHuwOi-xZtEXNe3st-soEPFw9YX5WCE9gNcBSsWRbyKBMNqbw/exec")
+                            .then(response => response.json())
+                            .then(data => {
+                                // 入力テーブルにデータを追加
+                                data.forEach(row => {
+                                    const month = row[0];
+                                    const date = row[1];
+                                    const category = row[3];
+                                    const amount = row[2];
+                                    const entry = { date, category, amount, month, isNew:false };
+                                    entries.unshift(entry);
+                                });
+                                //入力テーブルの更新
+                                updateEntriesTable();
+                                //メッセージ表示
+                                document.getElementById("loading-message").style.display = "none";
+                                alert(`読み込みました♪`);
+                            })
+                            .catch(error => {
+                                console.error("データの読み込みに失敗しました:", error);
+                            }
+                        );
                     }
                 );
             };
