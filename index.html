@@ -364,10 +364,10 @@
                             wallets.unshift(wallet);
                         });
                         wallets.forEach(wallet=>{
-                            if (wallet.category==='deposit') {
+                            if (wallet.category==='振込') {
                                 walletCurrent += wallet.amount;
                             }
-                            else if (wallet.category==='withdraw') {
+                            else if (wallet.category==='払出') {
                                 walletCurrent -= wallet.amount;
                             }
                         });
