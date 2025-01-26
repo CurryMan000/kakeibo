@@ -298,8 +298,8 @@
                     <input type="number" id="walletDate" placeholder="日付">
 
                     <select id="walletCategory">
-                        <option value="deposit">振込</option>
-                        <option value="withdraw">払出</option>
+                        <option value="振込">振込</option>
+                        <option value="払出">払出</option>
                     </select>
                     <input type="number" id="walletAmount" placeholder="金額">
                     <button type="button" onclick="saveWallet()">保存</button>
@@ -735,30 +735,29 @@
                 const date = document.getElementById("walletDate").value;
                 const cotegory = document.getElementById("walletCategory").value;
                 const amount = parseInt(document.getElementById("walletAmount").value);
-                if (cotegory==='deposit') {
+                if (cotegory==='振込') {
                     walletCurrent += amount;
-                    document.getElementById("walletAmount").value = "";
                 }
-                else if (cotegory==='withdraw') {
+                else if (cotegory==='払出') {
                     walletCurrent -= amount;
-                    document.getElementById("walletAmount").value = "";
                 }
                 else{
                     alert("金額を入力してや♪");
                 }
+                document.getElementById("walletDate").value = "";
+                document.getElementById("walletAmount").value = "";
 
-                const savewallet={ month, date, cotegory, amount };
-                const wallet = savewallet;
+                const wallet={ month, date, cotegory, amount };
                 wallets.unshift(wallet);
-                if (savewallet.length === 0) {
+                if (wallet.length === 0) {
                     alert("保存するデータがありません。");
                     return;
                 }
 
                 // savewalletを送信可能な形式に変換
                 const formData = new URLSearchParams();
-                Object.keys(savewallet).forEach(key => {
-                    formData.append(key, savewallet[key]);
+                Object.keys(wallet).forEach(key => {
+                    formData.append(key, wallet[key]);
                 });
 
                 // Google Apps Scriptにデータを送信
