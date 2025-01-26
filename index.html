@@ -733,12 +733,12 @@
                 event.preventDefault(); // デフォルトのフォーム送信動作を防ぐ
                 const month = parseInt(document.getElementById("walletMonth").value);
                 const date = document.getElementById("walletDate").value;
-                const cotegory = document.getElementById("walletCategory").value;
+                const category = document.getElementById("walletCategory").value;
                 const amount = parseInt(document.getElementById("walletAmount").value);
-                if (cotegory==='振込') {
+                if (category==='振込') {
                     walletCurrent += amount;
                 }
-                else if (cotegory==='払出') {
+                else if (category==='払出') {
                     walletCurrent -= amount;
                 }
                 else{
@@ -747,7 +747,7 @@
                 document.getElementById("walletDate").value = "";
                 document.getElementById("walletAmount").value = "";
 
-                const wallet={ month, date, cotegory, amount };
+                const wallet={ month, date, category, amount };
                 wallets.unshift(wallet);
                 if (wallet.length === 0) {
                     alert("保存するデータがありません。");
