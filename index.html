@@ -162,7 +162,11 @@
                             　２０２５
                         </text>
                     </svg>
-                    <button id="saveButton" class="save-btn" onclick="saveEntry()">保存</button>
+                    <button id="saveButton" class="save-btn" onclick="saveEntry()">
+                        <span class="material-symbols-outlined">
+                            download
+                        </span>
+                    </button>
                 </div>
                 <form id="entryForm">
                     <select id="month" onchange="onchangeEntryMonth()">
@@ -198,11 +202,7 @@
                     
                     <input type="number" id="amount" placeholder="金額を入力">
 
-                    <button type="button" onclick="addEntry()">
-                        <span class="material-symbols-outlined">
-                            add
-                        </span>
-                    </button>
+                    <button type="button" onclick="addEntry()">追加</button>
                 </form>
 
                 <div class="summary">
@@ -307,11 +307,7 @@
                         <option value="払出">払出</option>
                     </select>
                     <input type="number" id="walletAmount" placeholder="金額">
-                    <button type="button" onclick="saveWallet()">
-                        <span class="material-symbols-outlined">
-                            download
-                        </span>
-                    </button>
+                    <button type="button" onclick="saveWallet()">保存</button>
                 </form>
 
                 <div class="summary">
