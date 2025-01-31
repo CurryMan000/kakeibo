@@ -434,6 +434,10 @@
                     }
                 );
             };
+            // モーダルを閉じる
+            function closeLoadingModal() {
+                document.getElementById("loading-modal").style.display = "none";
+            }
             
 //////////////////////////////////////////////////////////////////////////////
 /// 入力画面処理
@@ -526,6 +530,10 @@
                     document.getElementById("saving-message").textContent = "保存に失敗しました。";
                     document.getElementById("close-savebutton").style.display = "block";
                 });
+            }
+            // モーダルを閉じる
+            function closeSavingModal() {
+                document.getElementById("saving-modal").style.display = "none";
             }
 
             // 追加ボタンが押されたとき
