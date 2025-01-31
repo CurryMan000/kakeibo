@@ -154,12 +154,24 @@
 /// 入力タブ
 //////////////////////////////////////////////////////////////////////////-->
             <div id="entryFormSection">
-                <div id="loading-message" style="display:none;">読み込み中...</div>
-                <div id="saving-message" style="display:none;">保存中...</div>
+                <div id="loading-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000;">
+                    <div style="background: white; padding: 20px; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); border-radius: 10px; text-align: center; min-width: 250px;">
+                        <p id="loading-message">読み込み中...</p>
+                        <button id="close-button" onclick="closeLoadingModal()" style="display: none; margin-top: 10px;">閉じる</button>
+                    </div>
+                </div>
+
+                <div id="saving-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000;">
+                    <div style="background: white; padding: 20px; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); border-radius: 10px; text-align: center; min-width: 250px;">
+                        <p id="saving-message">保存中...</p>
+                        <button id="close-savebutton" onclick="closeSavingModal()" style="display: none; margin-top: 10px;">閉じる</button>
+                    </div>
+                </div>
+
                 <div class="content-row">
                     <svg class="logo" xmlns="http://www.w3.org/2000/svg" width="100%" height="70">
                         <text x="50%" y="50%" font-family="-apple-syste, Comic Sans MS, sans-serif" font-size="30" font-weight="bold" fill="#382831"text-anchor="middle" alignment-baseline="middle">
-                            　 ２０２５
+                            　　２０２５
                         </text>
                     </svg>
                     <button id="saveButton" class="save-btn" onclick="saveEntry()">
@@ -273,7 +285,12 @@
 /// ウォレットタブ
 //////////////////////////////////////////////////////////////////////////-->
             <div id="walletSection" style="display: none;">
-                <div id="saving-message-wallet" style="display:none;">保存中...</div>
+                <div id="savingwallet-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000;">
+                    <div style="background: white; padding: 20px; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); border-radius: 10px; text-align: center; min-width: 250px;">
+                        <p id="savingwallet-message">保存中...</p>
+                        <button id="close-savewalletbutton" onclick="closeSavingWalletModal()" style="display: none; margin-top: 10px;">閉じる</button>
+                    </div>
+                </div>
                 <div class="content-row">
                     <svg class="logo" xmlns="http://www.w3.org/2000/svg" width="100%" height="70">
                         <text x="50%" y="50%" font-family="-apple-syste, Comic Sans MS, sans-serif" font-size="30" font-weight="bold" fill="#382831"text-anchor="middle" alignment-baseline="middle">
@@ -392,7 +409,7 @@
                         updateWalletDisplay();
                     }
                 );
-                document.getElementById("loading-message").style.display = "block";
+                document.getElementById("loading-modal").style.display = "flex";
                 fetch("https://script.google.com/macros/s/AKfycbz_Vi5dDG8ejJyAiPIc3RHuwOi-xZtEXNe3st-soEPFw9YX5WCE9gNcBSsWRbyKBMNqbw/exec")
                     .then(response => response.json())
                     .then(data => {
@@ -408,11 +425,12 @@
                         //入力テーブルの更新
                         updateEntriesTable();
                         //メッセージ表示
-                        document.getElementById("loading-message").style.display = "none";
-                        alert(`読み込みました♪`);
+                        document.getElementById("loading-message").textContent = "読み込みました🎵";
+                        document.getElementById("close-button").style.display = "block";
                     })
                     .catch(error => {
-                        console.error("データの読み込みに失敗しました:", error);
+                        document.getElementById("loading-message").textContent = "読み込みに失敗しました";
+                        document.getElementById("close-button").style.display = "block";
                     }
                 );
             };
@@ -421,13 +439,54 @@
 /// 入力画面処理
 //////////////////////////////////////////////////////////////////////////////
 
+            // 入力データソート
+            document.addEventListener("DOMContentLoaded", function () {
+                const table = document.getElementById("entriesTable");
+                const headers = table.querySelectorAll("thead th");
+                let sortOrder = {}; // 各列のソート順を記録
+
+                headers.forEach((header, columnIndex) => {
+                    if (columnIndex === 4) return; // 削除ボタン列はソートしない
+
+                    sortOrder[columnIndex] = 1; // 初期は昇順
+
+                    header.addEventListener("click", function () {
+                        const tbody = table.querySelector("tbody");
+                        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+                        // ソート処理
+                        rows.sort((rowA, rowB) => {
+                            const cellA = rowA.children[columnIndex].textContent.trim();
+                            const cellB = rowB.children[columnIndex].textContent.trim();
+
+                            // 数値かどうか判定
+                            const isNumber = !isNaN(cellA) && !isNaN(cellB);
+
+                            if (isNumber) {
+                                return (parseFloat(cellA) - parseFloat(cellB)) * sortOrder[columnIndex];
+                            } else {
+                                return cellA.localeCompare(cellB, "ja") * sortOrder[columnIndex];
+                            }
+                        });
+
+                        // ソート順を反転
+                        sortOrder[columnIndex] *= -1;
+
+                        // ソートした行をテーブルに再追加
+                        tbody.innerHTML = "";
+                        rows.forEach(row => tbody.appendChild(row));
+                    });
+                });
+            });
+
             // 保存ボタンが押された時
             function saveEntry(){
-                document.getElementById("saving-message").style.display = "block";
+                document.getElementById("saving-modal").style.display = "flex";
                 event.preventDefault(); // デフォルトのフォーム送信動作を防ぐ
 
                 if (saveEntries.length === 0) {
-                    alert("保存するデータがありません。");
+                    document.getElementById("saving-message").textContent = "保存するデータがありません";
+                    document.getElementById("close-savebutton").style.display = "block";
                     return;
                 }
 
@@ -447,8 +506,8 @@
                 .then(response => response.json())
                 .then(result => {
                     if (result.success) {
-                        document.getElementById("saving-message").style.display = "none";
-                        alert("保存されました♪");
+                        document.getElementById("saving-message").textContent = "保存しました🎵";
+                        document.getElementById("close-savebutton").style.display = "block";
 
                         entries.forEach(entry => {
                             if (saveEntries.includes(entry)) {
@@ -458,12 +517,14 @@
                         saveEntries = []; // 保存済みのエントリをクリア
                         updateEntriesTable();
                     } else {
-                        alert("保存に失敗しました。エラー内容: " + result.message);
+                        document.getElementById("saving-message").textContent = "保存に失敗しました。";
+                        document.getElementById("close-savebutton").style.display = "block";
                     }
                 })
                 .catch(error => {
                     console.error("保存中にエラーが発生しました:", error);
-                    alert("保存中にエラーが発生しました。再試行してください。");
+                    document.getElementById("saving-message").textContent = "保存に失敗しました。";
+                    document.getElementById("close-savebutton").style.display = "block";
                 });
             }
 
@@ -746,7 +807,6 @@
 //////////////////////////////////////////////////////////////////////////////
             // ウォレット保存処理
             function saveWallet(){
-                document.getElementById("saving-message-wallet").style.display = "block";
                 event.preventDefault(); // デフォルトのフォーム送信動作を防ぐ
                 const month = parseInt(document.getElementById("walletMonth").value);
                 const date = document.getElementById("walletDate").value;
@@ -776,6 +836,7 @@
                 Object.keys(wallet).forEach(key => {
                     formData.append(`0[${key}]`, wallet[key]);
                 });
+                document.getElementById("savingwallet-modal").style.display = "flex";
 
                 // Google Apps Scriptにデータを送信
                 fetch("https://script.google.com/macros/s/AKfycbyBGopO2qSAGtUVQtSUc6Wc-Ok-7PjmBUvuGhDLIyeumddTxPMTWs7S2FsUaXhRZmOdBw/exec", {
@@ -785,17 +846,23 @@
                 .then(response => response.json())
                 .then(result => {
                     if (result.success) {
-                        document.getElementById("saving-message-wallet").style.display = "none";
-                        alert("保存されました♪");
+                        document.getElementById("savingwallet-message").textContent = "保存しました♪";
+                        document.getElementById("close-savewalletbutton").style.display = "block";
                         updateWalletDisplay()
                     } else {
-                        alert("保存に失敗しました。エラー内容: " + result.message);
+                        document.getElementById("savingwallet-message").textContent = "保存に失敗しました。";
+                        document.getElementById("close-savewalletbutton").style.display = "block";
                     }
                 })
                 .catch(error => {
-                    console.error("保存中にエラーが発生しました:", error);
-                    alert("保存中にエラーが発生しました。再試行してください。");
+                    document.getElementById("savingwallet-message").textContent = "保存に失敗しました。";
+                    document.getElementById("close-savewalletbutton").style.display = "block";
                 });
+            }
+
+            // モーダルを閉じる
+            function closeSavingWalletModal() {
+                document.getElementById("savingwallet-modal").style.display = "none";
             }
 
             // ウォレット表示の更新
