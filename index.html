@@ -413,6 +413,12 @@
                 fetch("https://script.google.com/macros/s/AKfycbz_Vi5dDG8ejJyAiPIc3RHuwOi-xZtEXNe3st-soEPFw9YX5WCE9gNcBSsWRbyKBMNqbw/exec")
                     .then(response => response.json())
                     .then(data => {
+                        //最終月を設定
+                        if (data.length > 0) {
+                            const lastMonth = data[data.length - 1][0];
+                            document.getElementById('month').value = lastMonth;
+                        }
+
                         // 入力テーブルにデータを追加
                         data.forEach(row => {
                             const month = row[0];
