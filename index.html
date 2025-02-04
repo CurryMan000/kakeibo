@@ -415,8 +415,8 @@
                     .then(data => {
                         //最終月を設定
                         if (data.length > 0) {
-                            const lastMonth = data[data.length - 1][0];
-                            document.getElementById('month').value = lastMonth;
+                            selectedMonth = data[data.length - 1][0];
+                            document.getElementById('month').value = selectedMonth;
                         }
 
                         // 入力テーブルにデータを追加
