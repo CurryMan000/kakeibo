@@ -992,8 +992,8 @@
                         expenseSpan.textContent = `${amount}円`; // カテゴリ名は表示せず、金額のみ
                         cell.appendChild(expenseSpan);
 
-                        // 週ごとの合計を計算
-                        weeklyTotals[expense.category] += amount;
+                        // 週ごとの合計を計算（数値型で加算）
+                        weeklyTotals[expense.category] += parseInt(amount, 10);
                     });
 
                     row.appendChild(cell);
@@ -1006,25 +1006,25 @@
                         // 食費
                         let foodSpan = document.createElement("span");
                         foodSpan.classList.add("weekly-total", "food");
-                        foodSpan.textContent = `${weeklyTotals.食費}円`;
+                        foodSpan.textContent = `${weeklyTotals.食費.toLocaleString()}円`; // 数字の桁区切りを追加
                         summaryCell.appendChild(foodSpan);
 
                         // 生活用品
                         let householdSpan = document.createElement("span");
                         householdSpan.classList.add("weekly-total", "household");
-                        householdSpan.textContent = `${weeklyTotals.生活用品}円`;
+                        householdSpan.textContent = `${weeklyTotals.生活用品.toLocaleString()}円`; // 数字の桁区切りを追加
                         summaryCell.appendChild(householdSpan);
 
                         // 外食費
                         let diningSpan = document.createElement("span");
                         diningSpan.classList.add("weekly-total", "dining");
-                        diningSpan.textContent = `${weeklyTotals.外食費}円`;
+                        diningSpan.textContent = `${weeklyTotals.外食費.toLocaleString()}円`; // 数字の桁区切りを追加
                         summaryCell.appendChild(diningSpan);
 
                         // 特別費
                         let specialSpan = document.createElement("span");
                         specialSpan.classList.add("weekly-total", "special");
-                        specialSpan.textContent = `${weeklyTotals.特別費}円`;
+                        specialSpan.textContent = `${weeklyTotals.特別費.toLocaleString()}円`; // 数字の桁区切りを追加
                         summaryCell.appendChild(specialSpan);
 
                         row.appendChild(summaryCell);
@@ -1058,11 +1058,8 @@
                         }
                     }
                 });
-                return total === 0 ? "0" : total; // 0円も表示する
+                return total === 0 ? "0" : total.toString(); // 0円も表示する
             }
-
-
-
 
 //////////////////////////////////////////////////////////////////////////////
 /// ウォレット処理
