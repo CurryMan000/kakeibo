@@ -944,8 +944,8 @@
 /// カレンダー処理
 //////////////////////////////////////////////////////////////////////////////
             function updateCalendar() {
-                const selectedMonth = document.getElementById("calendarMonth").value;
-                generateCalendar(selectedMonth);
+                const month = document.getElementById("calendarMonth").value;
+                generateCalendar(month);
             }
 
             function generateCalendar(month) {
@@ -1163,7 +1163,9 @@
                     document.getElementById('yeargraph_category').value = 'total';
                     updateYearlyGraph();
                 } else if (sectionId === 'calendarSection') {
-                    updateCalendar();
+                    const correntmonth = document.getElementById('month').value
+                    document.getElementById('calendarMonth').value = correntmonth;
+                    generateCalendar(parseInt(correntmonth, 10));
                 } else if (sectionId === 'walletSection') {
                     updateWalletDisplay();
                 }
