@@ -979,14 +979,32 @@
                     if ((day + adjustedFirstDay) % 7 === 0 || day === daysInMonth) {
                         // 週合計列を追加
                         let summaryCell = document.createElement("td");
-                        summaryCell.textContent = `
-                            食費: ${weeklyTotals.食費}円
-                            生活用品: ${weeklyTotals.生活用品}円
-                            外食費: ${weeklyTotals.外食費}円
-                            特別費: ${weeklyTotals.特別費}円
-                        `;
-                        row.appendChild(summaryCell);
 
+                        // 食費
+                        let foodSpan = document.createElement("span");
+                        foodSpan.classList.add("weekly-total", "food");
+                        foodSpan.textContent = `${weeklyTotals.食費}円`;
+                        summaryCell.appendChild(foodSpan);
+
+                        // 生活用品
+                        let householdSpan = document.createElement("span");
+                        householdSpan.classList.add("weekly-total", "household");
+                        householdSpan.textContent = `${weeklyTotals.生活用品}円`;
+                        summaryCell.appendChild(householdSpan);
+
+                        // 外食費
+                        let diningSpan = document.createElement("span");
+                        diningSpan.classList.add("weekly-total", "dining");
+                        diningSpan.textContent = `${weeklyTotals.外食費}円`;
+                        summaryCell.appendChild(diningSpan);
+
+                        // 特別費
+                        let specialSpan = document.createElement("span");
+                        specialSpan.classList.add("weekly-total", "special");
+                        specialSpan.textContent = `${weeklyTotals.特別費}円`;
+                        summaryCell.appendChild(specialSpan);
+
+                        row.appendChild(summaryCell);
                         tbody.appendChild(row);
                         row = document.createElement("tr");
 
@@ -1019,6 +1037,7 @@
                 });
                 return total === 0 ? "0" : total; // 0円も表示する
             }
+
 
 
 //////////////////////////////////////////////////////////////////////////////
