@@ -136,6 +136,22 @@
                     margin-top: 3px;
                 }
 
+                #calendar td .expense.food {
+                    color: #FF6347; /* 食費: トマト色 */
+                }
+
+                #calendar td .expense.household {
+                    color: #32CD32; /* 生活用品: ライム色 */
+                }
+
+                #calendar td .expense.dining {
+                    color: #FFD700; /* 外食費: ゴールド */
+                }
+
+                #calendar td .expense.special {
+                    color: #8A2BE2; /* 特別費: 紫 */
+                }
+
                 .week-end {
                     border-bottom: 2px solid #9F9F9F;
                 }
@@ -934,12 +950,18 @@
                     cell.appendChild(dateSpan);
 
                     // 各費用の表示（0円でも表示）
-                    let expenses = ["食費", "生活用品", "外食費", "特別費"];
+                    let expenses = [
+                        { category: "食費", class: "food" },
+                        { category: "生活用品", class: "household" },
+                        { category: "外食費", class: "dining" },
+                        { category: "特別費", class: "special" }
+                    ];
+
                     expenses.forEach(expense => {
                         let expenseSpan = document.createElement("span");
-                        expenseSpan.classList.add("expense");
-                        let amount = calculateExpense(day, expense, month); // 月と日付に基づく金額を計算
-                        expenseSpan.textContent = `${expense}: ${amount}円`;
+                        expenseSpan.classList.add("expense", expense.class);
+                        let amount = calculateExpense(day, expense.category, month); // 月と日付に基づく金額を計算
+                        expenseSpan.textContent = `${amount}円`; // カテゴリ名は表示せず、金額のみ
                         cell.appendChild(expenseSpan);
                     });
 
