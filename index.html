@@ -103,7 +103,8 @@
                 #calendarContainer table {
                     table-layout: fixed;
                     width: 100%;
-                    border-collapse: collapse;
+                    border-collapse: separate;
+                    border-spacing: 0;
                 }
 
                 #calendarContainer th, #calendarContainer td {
@@ -112,6 +113,10 @@
                     border: none;
                 }
 
+                
+                #calendarContainer tr {
+                        border-bottom: 1px solid #9F9F9F;
+                    }
                 #calendarContainer th {
                     font-size: 0.5rem;
                     background-color: #C39A9C;
