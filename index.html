@@ -1006,25 +1006,25 @@
                         // 食費
                         let foodSpan = document.createElement("span");
                         foodSpan.classList.add("weekly-total", "food");
-                        foodSpan.textContent = `${weeklyTotals.食費.toLocaleString()}円`; // 数字の桁区切りを追加
+                        foodSpan.textContent = `${weeklyTotals.食費}円`; // カンマ区切りなし
                         summaryCell.appendChild(foodSpan);
 
                         // 生活用品
                         let householdSpan = document.createElement("span");
                         householdSpan.classList.add("weekly-total", "household");
-                        householdSpan.textContent = `${weeklyTotals.生活用品.toLocaleString()}円`; // 数字の桁区切りを追加
+                        householdSpan.textContent = `${weeklyTotals.生活用品}円`; // カンマ区切りなし
                         summaryCell.appendChild(householdSpan);
 
                         // 外食費
                         let diningSpan = document.createElement("span");
                         diningSpan.classList.add("weekly-total", "dining");
-                        diningSpan.textContent = `${weeklyTotals.外食費.toLocaleString()}円`; // 数字の桁区切りを追加
+                        diningSpan.textContent = `${weeklyTotals.外食費}円`; // カンマ区切りなし
                         summaryCell.appendChild(diningSpan);
 
                         // 特別費
                         let specialSpan = document.createElement("span");
                         specialSpan.classList.add("weekly-total", "special");
-                        specialSpan.textContent = `${weeklyTotals.特別費.toLocaleString()}円`; // 数字の桁区切りを追加
+                        specialSpan.textContent = `${weeklyTotals.特別費}円`; // カンマ区切りなし
                         summaryCell.appendChild(specialSpan);
 
                         row.appendChild(summaryCell);
