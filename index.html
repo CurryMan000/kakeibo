@@ -103,7 +103,7 @@
                 #calendarContainer table {
                     table-layout: fixed;
                     width: 100%;
-                    border-collapse: separate;
+                    border-collapse: collapse; /* セル間の隙間をなくす */
                     border-spacing: 0;
                 }
 
@@ -122,26 +122,26 @@
                 #calendarContainer {
                     overflow-x: auto;
                 }
+
                 #calendar td {
                     border-bottom: 0.75px solid #cecece;
                     background-color: whitesmoke;
                     color: #382831;
                     text-align: center;
-                    vertical-align: top;
+                    vertical-align: top; /* セル内を上揃え */
                     padding: 0;
                 }
 
                 #calendar td span {
                     font-size: 0.5rem;
-                    display: block;
+                    display: inline; /* インラインに変更 */
                     white-space: nowrap;
                     margin: 0;
                 }
 
                 #calendar td .expense {
                     font-size: 0.5rem;
-                    display: inline-block;
-                    width: 100%;
+                    display: inline; /* インラインに変更 */
                     margin: 0 1px;
                 }
 
@@ -163,9 +163,8 @@
 
                 #calendar td .weekly-total {
                     font-size: 0.5rem;
-                    display: inline-block;
+                    display: inline; /* インラインに変更 */
                     text-align: center;
-                    width: 100%;
                     margin: 0 1px;
                 }
 
