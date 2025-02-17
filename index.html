@@ -968,7 +968,7 @@
                     row.appendChild(cell);
 
                     if ((day + adjustedFirstDay) % 7 === 0 || day === daysInMonth) {
-                        cell.classList.add("week-divider");
+                        row.classList.add("week-divider");
                         tbody.appendChild(row);
                         row = document.createElement("tr");
                     }
