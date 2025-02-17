@@ -369,16 +369,13 @@
                                 <th>金</th>
                                 <th>土</th>
                                 <th>日</th>
+                                <th>合計</th>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- カレンダーがここに生成される -->
                         </tbody>
                     </table>
-                    <div id="weeklySummary">
-                        <h3>週ごとの合計</h3>
-                        <div id="weeklyTotals"></div>
-                    </div>
                 </div>
             </div>       
 <!--/////////////////////////////////////////////////////////////////////////
@@ -937,6 +934,12 @@
                 const daysInMonth = new Date(2025, month, 0).getDate();
 
                 let row = document.createElement("tr");
+                let weeklyTotals = {
+                    食費: 0,
+                    生活用品: 0,
+                    外食費: 0,
+                    特別費: 0
+                };
 
                 for (let i = 0; i < adjustedFirstDay; i++) {
                     row.appendChild(document.createElement("td"));
@@ -964,73 +967,39 @@
                         let amount = calculateExpense(day, expense.category, month); // 月と日付に基づく金額を計算
                         expenseSpan.textContent = `${amount}円`; // カテゴリ名は表示せず、金額のみ
                         cell.appendChild(expenseSpan);
+
+                        // 週ごとの合計を計算
+                        weeklyTotals[expense.category] += amount;
                     });
 
                     row.appendChild(cell);
 
+                    // 日曜日（7日目）または月末の時に週合計を表示
                     if ((day + adjustedFirstDay) % 7 === 0 || day === daysInMonth) {
+                        // 週合計列を追加
+                        let summaryCell = document.createElement("td");
+                        summaryCell.textContent = `
+                            食費: ${weeklyTotals.食費}円
+                            生活用品: ${weeklyTotals.生活用品}円
+                            外食費: ${weeklyTotals.外食費}円
+                            特別費: ${weeklyTotals.特別費}円
+                        `;
+                        row.appendChild(summaryCell);
+
                         tbody.appendChild(row);
                         row = document.createElement("tr");
+
+                        // 週合計をリセット
+                        weeklyTotals = {
+                            食費: 0,
+                            生活用品: 0,
+                            外食費: 0,
+                            特別費: 0
+                        };
                     }
                 }
-
-                calculateTotals(month, adjustedFirstDay);
             }
 
-            // 計算した費用を取得する関数
-            function calculateExpense(day, category, month) {
-                let total = 0;
-                entries.forEach(entry => {
-                    if (entry.month == month && entry.date == day) {
-                        if (category === "食費" && ["お肉", "野菜", "飲料", "お菓子", "その他"].includes(entry.category)) {
-                            total += entry.amount;
-                        } else if (category === "生活用品" && entry.category === "生活用品") {
-                            total += entry.amount;
-                        } else if (category === "外食費" && entry.category === "外食") {
-                            total += entry.amount;
-                        } else if (category === "特別費" && entry.category === "特別") {
-                            total += entry.amount;
-                        }
-                    }
-                });
-                return total === 0 ? "0" : total; // 0円も表示する
-            }
-
-            function calculateTotals(month, adjustedFirstDay) {
-                let dailyTotals = {};
-                let weeklyTotals = {};
-
-                entries.forEach(entry => {
-                    if (entry.month == month) {
-                        let day = entry.date;
-                        if (!dailyTotals[day]) dailyTotals[day] = 0;
-                        dailyTotals[day] += entry.amount;
-
-                        let week = Math.ceil((day + adjustedFirstDay - 1) / 7);
-                        if (!weeklyTotals[week]) weeklyTotals[week] = { 食費: 0, 生活用品: 0, 外食費: 0, 特別費: 0 };
-
-                        if (["お肉", "野菜", "飲料", "お菓子", "その他"].includes(entry.category)) {
-                            weeklyTotals[week].食費 += entry.amount;
-                        } else if (entry.category === "生活用品") {
-                            weeklyTotals[week].生活用品 += entry.amount;
-                        } else if (entry.category === "外食") {
-                            weeklyTotals[week].外食費 += entry.amount;
-                        } else if (entry.category === "特別") {
-                            weeklyTotals[week].特別費 += entry.amount;
-                        }
-                    }
-                });
-
-                for (let day in dailyTotals) {
-                    document.getElementById(`total-${day}`).textContent = `${dailyTotals[day]}円`;
-                }
-
-                document.getElementById("weeklyTotals").innerHTML = "";
-                for (let week in weeklyTotals) {
-                    document.getElementById("weeklyTotals").innerHTML += `
-                        <div>第${week}週: 食費 ${weeklyTotals[week].食費}円, 生活用品 ${weeklyTotals[week].生活用品}円, 外食費 ${weeklyTotals[week].外食費}円, 特別費 ${weeklyTotals[week].特別費}円</div>`;
-                }
-            }
 
 //////////////////////////////////////////////////////////////////////////////
 /// ウォレット処理
