@@ -941,6 +941,7 @@
                     特別費: 0
                 };
 
+                // 月の初めの空白のセルを追加
                 for (let i = 0; i < adjustedFirstDay; i++) {
                     row.appendChild(document.createElement("td"));
                 }
@@ -998,6 +999,25 @@
                         };
                     }
                 }
+            }
+
+            // 計算した費用を取得する関数
+            function calculateExpense(day, category, month) {
+                let total = 0;
+                entries.forEach(entry => {
+                    if (entry.month == month && entry.date == day) {
+                        if (category === "食費" && ["お肉", "野菜", "飲料", "お菓子", "その他"].includes(entry.category)) {
+                            total += entry.amount;
+                        } else if (category === "生活用品" && entry.category === "生活用品") {
+                            total += entry.amount;
+                        } else if (category === "外食費" && entry.category === "外食") {
+                            total += entry.amount;
+                        } else if (category === "特別費" && entry.category === "特別") {
+                            total += entry.amount;
+                        }
+                    }
+                });
+                return total === 0 ? "0" : total; // 0円も表示する
             }
 
 
