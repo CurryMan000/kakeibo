@@ -1007,6 +1007,9 @@
                     if ((day + adjustedFirstDay) % 7 === 0 || day === daysInMonth) {
                         // 週合計列を追加
                         let summaryCell = document.createElement("td");
+                        let totalLabelSpan = document.createElement("span");
+                        totalLabelSpan.textContent = "合計";
+                        summaryCell.appendChild(totalLabelSpan);
 
                         // 食費
                         let foodSpan = document.createElement("span");
