@@ -103,7 +103,7 @@
                 #calendarContainer table {
                     table-layout: fixed;
                     width: 100%;
-                    border-collapse: collapse; /* セル間の隙間をなくす */
+                    border-collapse: collapse;
                     border-spacing: 0;
                 }
 
@@ -128,20 +128,21 @@
                     background-color: whitesmoke;
                     color: #382831;
                     text-align: center;
-                    vertical-align: top; /* セル内を上揃え */
-                    padding: 0;
+                    vertical-align: top;
+                    padding: 4px 2px;
+                    line-height: 1.2;
                 }
 
                 #calendar td span {
                     font-size: 0.5rem;
-                    display: block; /* 日付と費用はブロック要素として表示 */
+                    display: block;
                     white-space: nowrap;
                     margin: 0;
                 }
 
                 #calendar td .expense {
                     font-size: 0.5rem;
-                    display: block; /* 費用もブロック要素にする */
+                    display: block;
                     margin: 0 1px;
                 }
 
@@ -163,7 +164,7 @@
 
                 #calendar td .weekly-total {
                     font-size: 0.5rem;
-                    display: block; /* 合計もブロック要素にする */
+                    display: block;
                     text-align: center;
                     margin: 0 1px;
                 }
@@ -961,13 +962,17 @@
                 const daysInMonth = new Date(2025, month, 0).getDate();
 
                 let row = document.createElement("tr");
+                let weeklyTotals = {
+                    食費: 0,
+                    生活用品: 0,
+                    外食費: 0,
+                    特別費: 0
+                };
 
-                // カレンダーの最初の空のセルを追加
+                // 月の初めの空白のセルを追加
                 for (let i = 0; i < adjustedFirstDay; i++) {
                     row.appendChild(document.createElement("td"));
                 }
-
-                let weeklyTotals = {}; // 週ごとの合計を管理
 
                 for (let day = 1; day <= daysInMonth; day++) {
                     let cell = document.createElement("td");
@@ -988,61 +993,61 @@
                     expenses.forEach(expense => {
                         let expenseSpan = document.createElement("span");
                         expenseSpan.classList.add("expense", expense.class);
-                        let amount = calculateExpense(day, expense.category, month);
-                        expenseSpan.textContent = `${amount}円`;
+                        let amount = calculateExpense(day, expense.category, month); // 月と日付に基づく金額を計算
+                        expenseSpan.textContent = `${amount}円`; // カテゴリ名は表示せず、金額のみ
                         cell.appendChild(expenseSpan);
+
+                        // 週ごとの合計を計算（数値型で加算）
+                        weeklyTotals[expense.category] += parseInt(amount, 10);
                     });
 
                     row.appendChild(cell);
 
-                    // 週ごとの合計を計算
-                    let week = Math.ceil((day + adjustedFirstDay - 1) / 7);
-                    if (!weeklyTotals[week]) {
-                        weeklyTotals[week] = { 食費: 0, 生活用品: 0, 外食費: 0, 特別費: 0 };
-                    }
-
-                    expenses.forEach(expense => {
-                        let amount = calculateExpense(day, expense.category, month);
-                        weeklyTotals[week][expense.category] += amount;
-                    });
-
-                    // 週の合計を表示
+                    // 日曜日（7日目）または月末の時に週合計を表示
                     if ((day + adjustedFirstDay) % 7 === 0 || day === daysInMonth) {
-                        // 最後の曜日の後に週の合計列を追加
-                        let totalCell = document.createElement("td");
-                        totalCell.classList.add("weekly-total");
+                        // 週合計列を追加
+                        let summaryCell = document.createElement("td");
 
-                        for (let expense of expenses) {
-                            let totalSpan = document.createElement("span");
-                            totalSpan.classList.add("weekly-total", expense.class);
-                            totalSpan.textContent = `${weeklyTotals[week][expense.category]}円`;
-                            totalCell.appendChild(totalSpan);
-                        }
-                        row.appendChild(totalCell);
+                        // 食費
+                        let foodSpan = document.createElement("span");
+                        foodSpan.classList.add("weekly-total", "food");
+                        foodSpan.textContent = `${weeklyTotals.食費}円`; // カンマ区切りなし
+                        summaryCell.appendChild(foodSpan);
+
+                        // 生活用品
+                        let householdSpan = document.createElement("span");
+                        householdSpan.classList.add("weekly-total", "household");
+                        householdSpan.textContent = `${weeklyTotals.生活用品}円`; // カンマ区切りなし
+                        summaryCell.appendChild(householdSpan);
+
+                        // 外食費
+                        let diningSpan = document.createElement("span");
+                        diningSpan.classList.add("weekly-total", "dining");
+                        diningSpan.textContent = `${weeklyTotals.外食費}円`; // カンマ区切りなし
+                        summaryCell.appendChild(diningSpan);
+
+                        // 特別費
+                        let specialSpan = document.createElement("span");
+                        specialSpan.classList.add("weekly-total", "special");
+                        specialSpan.textContent = `${weeklyTotals.特別費}円`; // カンマ区切りなし
+                        summaryCell.appendChild(specialSpan);
+
+                        row.appendChild(summaryCell);
                         tbody.appendChild(row);
                         row = document.createElement("tr");
-                    }
-                }
-                
-                // カレンダーの最後に合計列がない場合に追加
-                if ((daysInMonth + adjustedFirstDay) % 7 !== 0) {
-                    let totalCell = document.createElement("td");
-                    totalCell.classList.add("weekly-total");
 
-                    for (let expense of expenses) {
-                        let totalSpan = document.createElement("span");
-                        totalSpan.classList.add("weekly-total", expense.class);
-                        totalSpan.textContent = `${weeklyTotals[Object.keys(weeklyTotals).length][expense.category]}円`;
-                        totalCell.appendChild(totalSpan);
+                        // 週合計をリセット
+                        weeklyTotals = {
+                            食費: 0,
+                            生活用品: 0,
+                            外食費: 0,
+                            特別費: 0
+                        };
                     }
-                    row.appendChild(totalCell);
-                    tbody.appendChild(row);
                 }
-                
-                // 合計を計算
-                calculateTotals(month, adjustedFirstDay);
             }
 
+            // 計算した費用を取得する関数
             function calculateExpense(day, category, month) {
                 let total = 0;
                 entries.forEach(entry => {
@@ -1058,39 +1063,7 @@
                         }
                     }
                 });
-                return total === 0 ? "0" : total;
-            }
-
-            function calculateTotals(month, adjustedFirstDay) {
-                // 週ごとの合計を計算して表示
-                let weeklyTotals = {};
-
-                entries.forEach(entry => {
-                    if (entry.month == month) {
-                        let day = entry.date;
-                        let week = Math.ceil((day + adjustedFirstDay - 1) / 7);
-                        if (!weeklyTotals[week]) {
-                            weeklyTotals[week] = { 食費: 0, 生活用品: 0, 外食費: 0, 特別費: 0 };
-                        }
-
-                        if (["お肉", "野菜", "飲料", "お菓子", "その他"].includes(entry.category)) {
-                            weeklyTotals[week].食費 += entry.amount;
-                        } else if (entry.category === "生活用品") {
-                            weeklyTotals[week].生活用品 += entry.amount;
-                        } else if (entry.category === "外食") {
-                            weeklyTotals[week].外食費 += entry.amount;
-                        } else if (entry.category === "特別") {
-                            weeklyTotals[week].特別費 += entry.amount;
-                        }
-                    }
-                });
-
-                // 週ごとの合計を表示
-                document.getElementById("weeklyTotals").innerHTML = "";
-                for (let week in weeklyTotals) {
-                    document.getElementById("weeklyTotals").innerHTML += `
-                        <div>第${week}週: 食費 ${weeklyTotals[week].食費}円, 生活用品 ${weeklyTotals[week].生活用品}円, 外食費 ${weeklyTotals[week].外食費}円, 特別費 ${weeklyTotals[week].特別費}円</div>`;
-                }
+                return total === 0 ? "0" : total.toString(); // 0円も表示する
             }
 
 //////////////////////////////////////////////////////////////////////////////
