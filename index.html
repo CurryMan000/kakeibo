@@ -137,23 +137,23 @@
                 }
 
                 #calendar td .expense.food {
-                    color: #FF6347; /* 食費: トマト色 */
+                    color: #FF6347;
                 }
 
                 #calendar td .expense.household {
-                    color: #32CD32; /* 生活用品: ライム色 */
+                    color: #32CD32;
                 }
 
                 #calendar td .expense.dining {
-                    color: #FFD700; /* 外食費: ゴールド */
+                    color: #947e02;
                 }
 
                 #calendar td .expense.special {
-                    color: #8A2BE2; /* 特別費: 紫 */
+                    color: #8A2BE2;
                 }
 
-                .week-end {
-                    border-bottom: 2px solid #9F9F9F;
+                #calendar td.week-divider {
+                    border-bottom: 2px solid #9F9F9F; /* 横線を引く */
                 }
             }
             footer {
@@ -968,6 +968,7 @@
                     row.appendChild(cell);
 
                     if ((day + adjustedFirstDay) % 7 === 0 || day === daysInMonth) {
+                        cell.classList.add("week-divider");
                         tbody.appendChild(row);
                         row = document.createElement("tr");
                     }
