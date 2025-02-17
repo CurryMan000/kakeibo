@@ -305,13 +305,13 @@
                     <table id="calendar">
                         <thead>
                             <tr>
-                                <th>日</th>
                                 <th>月</th>
                                 <th>火</th>
                                 <th>水</th>
                                 <th>木</th>
                                 <th>金</th>
                                 <th>土</th>
+                                <th>日</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -874,34 +874,44 @@
             function generateCalendar(month) {
                 const tbody = document.querySelector("#calendar tbody");
                 tbody.innerHTML = "";
+
                 const firstDay = new Date(2025, month - 1, 1).getDay();
+                const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1;
                 const daysInMonth = new Date(2025, month, 0).getDate();
+
                 let row = document.createElement("tr");
-                for (let i = 0; i < firstDay; i++) {
+
+                for (let i = 0; i < adjustedFirstDay; i++) {
                     row.appendChild(document.createElement("td"));
                 }
+
                 for (let day = 1; day <= daysInMonth; day++) {
                     let cell = document.createElement("td");
                     cell.innerHTML = `<span>${day}</span><br><span id='total-${day}'>0円</span>`;
                     row.appendChild(cell);
-                    if ((day + firstDay) % 7 === 0 || day === daysInMonth) {
+
+                    if ((day + adjustedFirstDay) % 7 === 0 || day === daysInMonth) {
                         tbody.appendChild(row);
                         row = document.createElement("tr");
                     }
                 }
-                calculateTotals(month);
+
+                calculateTotals(month, adjustedFirstDay);
             }
 
-            function calculateTotals(month) {
+            function calculateTotals(month, adjustedFirstDay) {
                 let dailyTotals = {};
                 let weeklyTotals = {};
+
                 entries.forEach(entry => {
                     if (entry.month == month) {
                         let day = entry.date;
                         if (!dailyTotals[day]) dailyTotals[day] = 0;
                         dailyTotals[day] += entry.amount;
-                        let week = Math.ceil(day / 7);
+
+                        let week = Math.ceil((day + adjustedFirstDay - 1) / 7);
                         if (!weeklyTotals[week]) weeklyTotals[week] = { 食費: 0, 生活用品: 0, 外食費: 0, 特別費: 0 };
+
                         if (["お肉", "野菜", "飲料", "お菓子", "その他"].includes(entry.category)) {
                             weeklyTotals[week].食費 += entry.amount;
                         } else if (entry.category === "生活用品") {
@@ -913,15 +923,18 @@
                         }
                     }
                 });
+
                 for (let day in dailyTotals) {
                     document.getElementById(`total-${day}`).textContent = `${dailyTotals[day]}円`;
                 }
+
                 document.getElementById("weeklyTotals").innerHTML = "";
                 for (let week in weeklyTotals) {
                     document.getElementById("weeklyTotals").innerHTML += `
                         <div>第${week}週: 食費 ${weeklyTotals[week].食費}円, 生活用品 ${weeklyTotals[week].生活用品}円, 外食費 ${weeklyTotals[week].外食費}円, 特別費 ${weeklyTotals[week].特別費}円</div>`;
                 }
             }
+
 //////////////////////////////////////////////////////////////////////////////
 /// ウォレット処理
 //////////////////////////////////////////////////////////////////////////////
