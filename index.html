@@ -284,7 +284,7 @@
  <!--/////////////////////////////////////////////////////////////////////////
 /// カレンダータブ
 //////////////////////////////////////////////////////////////////////////-->
-            <div id="calendarSection">
+            <div id="calendarSection" style="display: none;">
                 <label for="calendarMonth">月を選択:</label>
                 <select id="calendarMonth" onchange="updateCalendar()">
                     <option value="1">1月</option>
@@ -1018,7 +1018,7 @@
 /// タブ切り替え処理
 //////////////////////////////////////////////////////////////////////////////
             function showSection(sectionId, button) {
-                const sections = ['entryFormSection', 'monthlyGraphSection', 'yearlyGraphSection', 'walletSection'];
+                const sections = ['entryFormSection', 'monthlyGraphSection', 'yearlyGraphSection','calendarSection','walletSection'];
                 sections.forEach(id => {
                     const section = document.getElementById(id);
                     section.style.display = (id === sectionId) ? 'block' : 'none';
