@@ -122,6 +122,9 @@
                 #calendarContainer {
                     overflow-x: auto;
                 }
+                #calendar td {
+                    border-bottom: 2px solid #9F9F9F;
+                }
 
                 #calendar td span {
                     font-size: 0.5rem;
@@ -150,10 +153,6 @@
 
                 #calendar td .expense.special {
                     color: #8A2BE2;
-                }
-
-                #calendar tr.week-divider {
-                    border-bottom: 2px solid #9F9F9F; /* 横線を引く */
                 }
             }
             footer {
@@ -968,7 +967,6 @@
                     row.appendChild(cell);
 
                     if ((day + adjustedFirstDay) % 7 === 0 || day === daysInMonth) {
-                        row.classList.add("week-divider");
                         tbody.appendChild(row);
                         row = document.createElement("tr");
                     }
