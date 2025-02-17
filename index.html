@@ -145,6 +145,73 @@
                 border: none;
                 border-radius: 5px;
             }
+            #calendarContainer {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 20px;
+            }
+
+            #calendar {
+                width: 100%;
+                max-width: 600px;
+                border-collapse: collapse;
+                background-color: #F0E2E2;
+                color: #382831;
+            }
+
+            #calendar th, #calendar td {
+                width: 14%;
+                height: 50px;
+                text-align: center;
+                border: 1px solid #9F9F9F;
+                font-size: 1rem;
+            }
+
+            #calendar th {
+                background-color: #C39A9C;
+                color: white;
+                font-weight: bold;
+            }
+
+            #calendar td {
+                background-color: #E7E7E7;
+                cursor: pointer;
+                transition: background 0.3s ease;
+            }
+
+            #calendar td:hover {
+                background-color: #C39A9C;
+                color: white;
+            }
+
+            #calendar td.today {
+                background-color: #ED8620;
+                color: white;
+                font-weight: bold;
+            }
+
+            #weeklySummary {
+                margin-top: 20px;
+                padding: 10px;
+                background-color: white;
+                color: #382831;
+                text-align: center;
+                width: 100%;
+                max-width: 600px;
+                border-radius: 8px;
+            }
+
+            #calendarMonth {
+                font-size: 1rem;
+                padding: 5px;
+                border: 1px solid #C39A9C;
+                border-radius: 5px;
+                background-color: #E7E7E7;
+                color: #382831;
+                margin-bottom: 10px;
+            }
+
         </style>
     </head>
     <body>
