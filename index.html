@@ -156,6 +156,29 @@
                 #calendar td .expense.special {
                     color: #50009b;
                 }
+
+                #calendar td .weekly-total {
+                    font-size: 0.5rem;
+                    display: block;
+                    text-align: center;
+                    margin-top: 3px;
+                }
+
+                #calendar td .weekly-total.food {
+                    color: #aa1a00;
+                }
+
+                #calendar td .weekly-total.household {
+                    color: #009400;
+                }
+
+                #calendar td .weekly-total.dining {
+                    color: #947e02;
+                }
+
+                #calendar td .weekly-total.special {
+                    color: #50009b;
+                }
             }
             footer {
                 position: fixed;
@@ -1037,6 +1060,7 @@
                 });
                 return total === 0 ? "0" : total; // 0円も表示する
             }
+
 
 
 
