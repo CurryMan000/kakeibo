@@ -281,6 +281,49 @@
                     <canvas id="yearlyGraph" width="500" height="500"></canvas>
                 </div>
             </div>
+ <!--/////////////////////////////////////////////////////////////////////////
+/// カレンダータブ
+//////////////////////////////////////////////////////////////////////////-->
+            <div id="calendarSection">
+                <label for="calendarMonth">月を選択:</label>
+                <select id="calendarMonth" onchange="updateCalendar()">
+                    <option value="1">1月</option>
+                    <option value="2">2月</option>
+                    <option value="3">3月</option>
+                    <option value="4">4月</option>
+                    <option value="5">5月</option>
+                    <option value="6">6月</option>
+                    <option value="7">7月</option>
+                    <option value="8">8月</option>
+                    <option value="9">9月</option>
+                    <option value="10">10月</option>
+                    <option value="11">11月</option>
+                    <option value="12">12月</option>
+                </select>
+                
+                <div id="calendarContainer">
+                    <table id="calendar">
+                        <thead>
+                            <tr>
+                                <th>日</th>
+                                <th>月</th>
+                                <th>火</th>
+                                <th>水</th>
+                                <th>木</th>
+                                <th>金</th>
+                                <th>土</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- カレンダーがここに生成される -->
+                        </tbody>
+                    </table>
+                    <div id="weeklySummary">
+                        <h3>週ごとの合計</h3>
+                        <div id="weeklyTotals"></div>
+                    </div>
+                </div>
+            </div>       
 <!--/////////////////////////////////////////////////////////////////////////
 /// ウォレットタブ
 //////////////////////////////////////////////////////////////////////////-->
@@ -361,6 +404,11 @@
             <button onclick="showSection('yearlyGraphSection', this)">
                 <span class="material-symbols-outlined">
                     bar_chart_4_bars
+                </span>
+            </button>
+            <button onclick="showSection('calendarSection', this)">
+                <span class="material-symbols-outlined">
+                    calendar_month
                 </span>
             </button>
             <button onclick="showSection('walletSection', this)">
@@ -815,7 +863,65 @@
                     }
                 });
             }
+//////////////////////////////////////////////////////////////////////////////
+/// カレンダー処理
+//////////////////////////////////////////////////////////////////////////////
+            function updateCalendar() {
+                const selectedMonth = document.getElementById("calendarMonth").value;
+                generateCalendar(selectedMonth);
+            }
 
+            function generateCalendar(month) {
+                const tbody = document.querySelector("#calendar tbody");
+                tbody.innerHTML = "";
+                const firstDay = new Date(2025, month - 1, 1).getDay();
+                const daysInMonth = new Date(2025, month, 0).getDate();
+                let row = document.createElement("tr");
+                for (let i = 0; i < firstDay; i++) {
+                    row.appendChild(document.createElement("td"));
+                }
+                for (let day = 1; day <= daysInMonth; day++) {
+                    let cell = document.createElement("td");
+                    cell.innerHTML = `<span>${day}</span><br><span id='total-${day}'>0円</span>`;
+                    row.appendChild(cell);
+                    if ((day + firstDay) % 7 === 0 || day === daysInMonth) {
+                        tbody.appendChild(row);
+                        row = document.createElement("tr");
+                    }
+                }
+                calculateTotals(month);
+            }
+
+            function calculateTotals(month) {
+                let dailyTotals = {};
+                let weeklyTotals = {};
+                entries.forEach(entry => {
+                    if (entry.month == month) {
+                        let day = entry.date;
+                        if (!dailyTotals[day]) dailyTotals[day] = 0;
+                        dailyTotals[day] += entry.amount;
+                        let week = Math.ceil(day / 7);
+                        if (!weeklyTotals[week]) weeklyTotals[week] = { 食費: 0, 生活用品: 0, 外食費: 0, 特別費: 0 };
+                        if (["お肉", "野菜", "飲料", "お菓子", "その他"].includes(entry.category)) {
+                            weeklyTotals[week].食費 += entry.amount;
+                        } else if (entry.category === "生活用品") {
+                            weeklyTotals[week].生活用品 += entry.amount;
+                        } else if (entry.category === "外食") {
+                            weeklyTotals[week].外食費 += entry.amount;
+                        } else if (entry.category === "特別") {
+                            weeklyTotals[week].特別費 += entry.amount;
+                        }
+                    }
+                });
+                for (let day in dailyTotals) {
+                    document.getElementById(`total-${day}`).textContent = `${dailyTotals[day]}円`;
+                }
+                document.getElementById("weeklyTotals").innerHTML = "";
+                for (let week in weeklyTotals) {
+                    document.getElementById("weeklyTotals").innerHTML += `
+                        <div>第${week}週: 食費 ${weeklyTotals[week].食費}円, 生活用品 ${weeklyTotals[week].生活用品}円, 外食費 ${weeklyTotals[week].外食費}円, 特別費 ${weeklyTotals[week].特別費}円</div>`;
+                }
+            }
 //////////////////////////////////////////////////////////////////////////////
 /// ウォレット処理
 //////////////////////////////////////////////////////////////////////////////
@@ -917,6 +1023,8 @@
                 } else if (sectionId === 'yearlyGraphSection') {
                     document.getElementById('yeargraph_category').value = 'total';
                     updateYearlyGraph();
+                } else if (sectionId === 'calendarSection') {
+                    updateCalendar();
                 } else if (sectionId === 'walletSection') {
                     updateWalletDisplay();
                 }
