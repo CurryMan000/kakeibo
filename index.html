@@ -198,30 +198,30 @@
             }
 
             .color-box {
-                width: 60px;
-                height: 30px;
-                text-align: center;
-                line-height: 30px;
-                color: white;
-                font-size: 0.9rem;
-                border-radius: 5px;
-                font-weight: bold;
+                width: 20px;
+                height: 20px;
+                margin-right: 5px;
+                border-radius: 3px;
             }
 
             .food {
-                background-color: #aa1a00;
+                background-color: #aa1a00; /* 赤色 */
             }
 
             .household {
-                background-color: #009400;
+                background-color: #009400; /* 緑色 */
             }
 
             .dining {
-                background-color: #947e02;
+                background-color: #947e02; /* 黄土色 */
             }
 
             .special {
-                background-color: #50009b;
+                background-color: #50009b; /* 紫色 */
+            }
+
+            .legend-text {
+                font-size: 0.9rem;
             }
             footer {
                 position: fixed;
@@ -444,18 +444,22 @@
                     </table>
                     <div id="legend">
                         <div class="legend-item">
-                            <div class="color-box food">食費</div>
+                            <span class="color-box food"></span>
+                            <span class="legend-text">食費</span>
                         </div>
                         <div class="legend-item">
-                            <div class="color-box household">生活用品</div>
+                            <span class="color-box household"></span>
+                            <span class="legend-text">生活用品</span>
                         </div>
                         <div class="legend-item">
-                            <div class="color-box dining">外食</div>
+                            <span class="color-box dining"></span>
+                            <span class="legend-text">外食</span>
                         </div>
                         <div class="legend-item">
-                            <div class="color-box special">特別</div>
+                            <span class="color-box special"></span>
+                            <span class="legend-text">特別</span>
                         </div>
-                </div>
+                    </div>
             </div>       
 <!--/////////////////////////////////////////////////////////////////////////
 /// ウォレットタブ
