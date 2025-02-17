@@ -112,11 +112,7 @@
                     word-wrap: break-word;
                     border: none;
                 }
-
                 
-                #calendarContainer tr {
-                        border-bottom: 1px solid #9F9F9F;
-                    }
                 #calendarContainer th {
                     font-size: 0.5rem;
                     background-color: #C39A9C;
@@ -131,6 +127,10 @@
                     font-size: 0.5rem;
                     display: block;
                     text-align: center;
+                }
+
+                .week-end {
+                    border-bottom: 2px solid #9F9F9F;
                 }
             }
             footer {
@@ -926,6 +926,10 @@
                     if ((day + adjustedFirstDay) % 7 === 0 || day === daysInMonth) {
                         tbody.appendChild(row);
                         row = document.createElement("tr");
+
+                        if ((day + adjustedFirstDay) % 7 === 0) {
+                            row.classList.add("week-end");
+                        }
                     }
                 }
 
