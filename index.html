@@ -129,6 +129,13 @@
                     text-align: center;
                 }
 
+                #calendar td .expense {
+                    font-size: 0.5rem;
+                    display: block;
+                    text-align: center;
+                    margin-top: 3px;
+                }
+
                 .week-end {
                     border-bottom: 2px solid #9F9F9F;
                 }
@@ -920,20 +927,50 @@
 
                 for (let day = 1; day <= daysInMonth; day++) {
                     let cell = document.createElement("td");
-                    cell.innerHTML = `<span>${day}</span><br><span id='total-${day}'>0円</span>`;
+
+                    // 日付を表示
+                    let dateSpan = document.createElement("span");
+                    dateSpan.textContent = day;
+                    cell.appendChild(dateSpan);
+
+                    // 各費用の表示（0円でも表示）
+                    let expenses = ["食費", "生活用品", "外食費", "特別費"];
+                    expenses.forEach(expense => {
+                        let expenseSpan = document.createElement("span");
+                        expenseSpan.classList.add("expense");
+                        let amount = calculateExpense(day, expense, month); // 月と日付に基づく金額を計算
+                        expenseSpan.textContent = `${expense}: ${amount}円`;
+                        cell.appendChild(expenseSpan);
+                    });
+
                     row.appendChild(cell);
 
                     if ((day + adjustedFirstDay) % 7 === 0 || day === daysInMonth) {
                         tbody.appendChild(row);
                         row = document.createElement("tr");
-
-                        if ((day + adjustedFirstDay) % 7 === 0) {
-                            row.classList.add("week-end");
-                        }
                     }
                 }
 
                 calculateTotals(month, adjustedFirstDay);
+            }
+
+            // 計算した費用を取得する関数
+            function calculateExpense(day, category, month) {
+                let total = 0;
+                entries.forEach(entry => {
+                    if (entry.month == month && entry.date == day) {
+                        if (category === "食費" && ["お肉", "野菜", "飲料", "お菓子", "その他"].includes(entry.category)) {
+                            total += entry.amount;
+                        } else if (category === "生活用品" && entry.category === "生活用品") {
+                            total += entry.amount;
+                        } else if (category === "外食費" && entry.category === "外食") {
+                            total += entry.amount;
+                        } else if (category === "特別費" && entry.category === "特別") {
+                            total += entry.amount;
+                        }
+                    }
+                });
+                return total === 0 ? "0" : total; // 0円も表示する
             }
 
             function calculateTotals(month, adjustedFirstDay) {
