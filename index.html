@@ -99,6 +99,26 @@
                 background-color: white;
                 color:#382831;
             }
+            @media (max-width: 600px) {
+                #calendarContainer table {
+                    table-layout: fixed;
+                    width: 100%;
+                }
+
+                #calendarContainer th, #calendarContainer td {
+                    width: 14.28%;
+                    word-wrap: break-word;
+                }
+
+                #calendarContainer th {
+                    background-color: #C39A9C;
+                    color: #382831;
+                }
+
+                #calendarContainer {
+                    overflow-x: auto;
+                }
+            }
             footer {
                 position: fixed;
                 bottom: 0;
@@ -147,8 +167,8 @@
             }
         </style>
     </head>
+
     <body>
-        
         <div id="content">
 <!--/////////////////////////////////////////////////////////////////////////
 /// 入力タブ
@@ -285,7 +305,6 @@
 /// カレンダータブ
 //////////////////////////////////////////////////////////////////////////-->
             <div id="calendarSection" style="display: none;">
-                <label for="calendarMonth">月を選択:</label>
                 <select id="calendarMonth" onchange="updateCalendar()">
                     <option value="1">1月</option>
                     <option value="2">2月</option>
