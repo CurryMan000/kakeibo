@@ -310,6 +310,7 @@
 
                     <select id="category">
                         <option value="お肉">お肉</option>
+                        <option value="魚">魚</option>
                         <option value="飲料">飲料</option>
                         <option value="野菜">野菜</option>
                         <option value="お菓子">お菓子</option>
@@ -377,6 +378,7 @@
                 <select id="yeargraph_category" onchange="onchangeSelectYear()">
                     <option value="total">総支出</option>
                     <option value="お肉">お肉</option>
+                    <option value="魚">魚</option>
                     <option value="飲料">飲料</option>
                     <option value="野菜">野菜</option>
                     <option value="お菓子">お菓子</option>
@@ -780,7 +782,7 @@
                 }
 
                 const categoryAmounts = {
-                    'お肉': 0, '飲料': 0, '野菜': 0, 'お菓子': 0, '生活用品': 0, '外食': 0,
+                    'お肉': 0,'魚': 0, '飲料': 0, '野菜': 0, 'お菓子': 0, '生活用品': 0, '外食': 0,
                     '特別': 0, '水道': 0, 'ガス': 0, '電気': 0, 'その他': 0
                 };
 
@@ -823,7 +825,7 @@
                         datasets: [{
                             label: `${month}月の支出`,
                             data: Object.values(filteredCategoryAmounts),
-                            backgroundColor: ['#FFB7C5', '#AEC6CF', '#77DD77', '#FDFD96', '#CBAACB', '#FFB347', '#FBEEC1', '#FF9AA2', '#E6E6FA', '#B2F2E9', '#D3D3D3'],
+                            backgroundColor: ['#FFB7C5', '#89CFF0', '#AEC6CF', '#77DD77', '#FDFD96', '#CBAACB', '#FFB347', '#FBEEC1', '#FF9AA2', '#E6E6FA', '#B2F2E9', '#D3D3D3'],
                         }]
                     },
                     options: {
@@ -935,6 +937,7 @@
 
                 const categoryColors = {
                     'お肉': '#FFB7C5',
+                    '魚': '#89CFF0',
                     '飲料': '#AEC6CF',
                     '野菜': '#77DD77',
                     'お菓子': '#FDFD96',
@@ -1087,7 +1090,7 @@
                 let total = 0;
                 entries.forEach(entry => {
                     if (entry.month == month && entry.date == day) {
-                        if (category === "食費" && ["お肉", "野菜", "飲料", "お菓子", "その他"].includes(entry.category)) {
+                        if (category === "食費" && ["お肉", "魚", "野菜", "飲料", "お菓子", "その他"].includes(entry.category)) {
                             total += entry.amount;
                         } else if (category === "生活用品" && entry.category === "生活用品") {
                             total += entry.amount;
