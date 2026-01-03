@@ -4242,6 +4242,10 @@
             ];
             let selectedMonth = 1;  //入力タブで選択されている月
             let walletCurrent = 0;  //現在残高
+            wallets.forEach((wallet)=>{
+                if(wallet.amount==="振込")walletCurrent += wallet.category;
+                else if(wallet.amount==="払出")walletCurrent -= wallet.category;
+            });
             let monthlyChart = null;
             let yearlyChart = null;
 //////////////////////////////////////////////////////////////////////////////
