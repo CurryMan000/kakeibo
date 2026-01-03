@@ -266,19 +266,6 @@
 /// 入力タブ
 //////////////////////////////////////////////////////////////////////////-->
             <div id="entryFormSection">
-                <div id="loading-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
-                    <div style="background: white; padding: 20px; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); border-radius: 10px; text-align: center; min-width: 250px;">
-                        <p id="loading-message" style="color: black;">読み込み中...</p>
-                        <button id="close-button" onclick="closeLoadingModal()" style="display: none; margin-top: 10px;">閉じる</button>
-                    </div>
-                </div>
-
-                <div id="saving-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000;">
-                    <div style="background: white; padding: 20px; box-shadow: 0px 4px 6px rgba(0,0,0,0.1); border-radius: 10px; text-align: center; min-width: 250px;">
-                        <p id="saving-message" style="color: black;">保存中...</p>
-                        <button id="close-savebutton" onclick="closeSavingModal()" style="display: none; margin-top: 10px;">閉じる</button>
-                    </div>
-                </div>
 
                 <div class="content-row">
                     <svg class="logo" xmlns="http://www.w3.org/2000/svg" width="100%" height="70">
@@ -286,9 +273,6 @@
                             　　２０２５
                         </text>
                     </svg>
-                    <button id="saveButton" class="save-btn" onclick="saveEntry()">
-                        保存
-                    </button>
                 </div>
                 <form id="entryForm">
                     <select id="month" onchange="onchangeEntryMonth()">
@@ -339,7 +323,6 @@
                             <th>日付</th>
                             <th>分類</th>
                             <th>金額</th>
-                            <th>削除</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -539,76 +522,3728 @@
 ///////////////////////////////////////////////////////////////////////////-->       
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
-            let entries = [];       //入力データリスト
-            let wallets = [];       //口座金額リスト
-            let saveEntries = [];   //保存入力データリスト
+            let entries = [
+                {
+                    "month": 1,
+                    "date": 3,
+                    "amount": 434,
+                    "category": "お肉"
+                },
+                {
+                    "month": 1,
+                    "date": 3,
+                    "amount": 624,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 5,
+                    "amount": 723,
+                    "category": "お肉"
+                },
+                {
+                    "month": 1,
+                    "date": 5,
+                    "amount": 604,
+                    "category": "野菜"
+                },
+                {
+                    "month": 1,
+                    "date": 5,
+                    "amount": 614,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 7,
+                    "amount": 1935,
+                    "category": "お肉"
+                },
+                {
+                    "month": 1,
+                    "date": 7,
+                    "amount": 604,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 7,
+                    "amount": 948,
+                    "category": "野菜"
+                },
+                {
+                    "month": 1,
+                    "date": 8,
+                    "amount": 248,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 8,
+                    "amount": 258,
+                    "category": "野菜"
+                },
+                {
+                    "month": 1,
+                    "date": 10,
+                    "amount": 112,
+                    "category": "飲料"
+                },
+                {
+                    "month": 1,
+                    "date": 10,
+                    "amount": 159,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 1,
+                    "date": 10,
+                    "amount": 1298,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 10,
+                    "amount": 931,
+                    "category": "お肉"
+                },
+                {
+                    "month": 1,
+                    "date": 10,
+                    "amount": 245,
+                    "category": "野菜"
+                },
+                {
+                    "month": 1,
+                    "date": 11,
+                    "amount": 566,
+                    "category": "野菜"
+                },
+                {
+                    "month": 1,
+                    "date": 11,
+                    "amount": 368,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 4,
+                    "amount": 3593,
+                    "category": "外食"
+                },
+                {
+                    "month": 1,
+                    "date": 13,
+                    "amount": 2730,
+                    "category": "外食"
+                },
+                {
+                    "month": 1,
+                    "date": 13,
+                    "amount": 28,
+                    "category": "野菜"
+                },
+                {
+                    "month": 1,
+                    "date": 13,
+                    "amount": 258,
+                    "category": "飲料"
+                },
+                {
+                    "month": 1,
+                    "date": 13,
+                    "amount": 220,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 1,
+                    "date": 14,
+                    "amount": 1257,
+                    "category": "お肉"
+                },
+                {
+                    "month": 1,
+                    "date": 14,
+                    "amount": 218,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 14,
+                    "amount": 246,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 14,
+                    "amount": 874,
+                    "category": "野菜"
+                },
+                {
+                    "month": 1,
+                    "date": 15,
+                    "amount": 149,
+                    "category": "野菜"
+                },
+                {
+                    "month": 1,
+                    "date": 15,
+                    "amount": 888,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 1,
+                    "date": 15,
+                    "amount": 235,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 16,
+                    "amount": 203,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 16,
+                    "amount": 503,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 1,
+                    "date": 16,
+                    "amount": 110,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 1,
+                    "date": 18,
+                    "amount": 13360,
+                    "category": "特別"
+                },
+                {
+                    "month": 1,
+                    "date": 8,
+                    "amount": 2890,
+                    "category": "特別"
+                },
+                {
+                    "month": 1,
+                    "date": 19,
+                    "amount": 2280,
+                    "category": "特別"
+                },
+                {
+                    "month": 1,
+                    "date": 20,
+                    "amount": 884,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 21,
+                    "amount": 930,
+                    "category": "野菜"
+                },
+                {
+                    "month": 1,
+                    "date": 21,
+                    "amount": 226,
+                    "category": "その他"
+                },
+                {
+                    "month": 2,
+                    "date": 1,
+                    "amount": 7454,
+                    "category": "電気"
+                },
+                {
+                    "month": 2,
+                    "date": 1,
+                    "amount": 2350,
+                    "category": "ガス"
+                },
+                {
+                    "month": 1,
+                    "date": 14,
+                    "amount": 3125,
+                    "category": "電気"
+                },
+                {
+                    "month": 1,
+                    "date": 24,
+                    "amount": 465,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 1,
+                    "date": 23,
+                    "amount": 296,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 2,
+                    "date": 1,
+                    "amount": 3559,
+                    "category": "水道"
+                },
+                {
+                    "month": 1,
+                    "date": 25,
+                    "amount": 118,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 25,
+                    "amount": 98,
+                    "category": "野菜"
+                },
+                {
+                    "month": 1,
+                    "date": 25,
+                    "amount": 198,
+                    "category": "お肉"
+                },
+                {
+                    "month": 1,
+                    "date": 25,
+                    "amount": 1411,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 1,
+                    "date": 24,
+                    "amount": 465,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 1,
+                    "date": 26,
+                    "amount": 774,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 1,
+                    "date": 28,
+                    "amount": 98,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 1,
+                    "date": 28,
+                    "amount": 186,
+                    "category": "飲料"
+                },
+                {
+                    "month": 1,
+                    "date": 28,
+                    "amount": 220,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 1,
+                    "date": 28,
+                    "amount": 688,
+                    "category": "野菜"
+                },
+                {
+                    "month": 1,
+                    "date": 28,
+                    "amount": 758,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 29,
+                    "amount": 274,
+                    "category": "お肉"
+                },
+                {
+                    "month": 1,
+                    "date": 29,
+                    "amount": 116,
+                    "category": "その他"
+                },
+                {
+                    "month": 1,
+                    "date": 1,
+                    "amount": 23170,
+                    "category": "特別"
+                },
+                {
+                    "month": 2,
+                    "date": 1,
+                    "amount": 8560,
+                    "category": "外食"
+                },
+                {
+                    "month": 2,
+                    "date": 1,
+                    "amount": 1210,
+                    "category": "外食"
+                },
+                {
+                    "month": 2,
+                    "date": 1,
+                    "amount": 87,
+                    "category": "飲料"
+                },
+                {
+                    "month": 2,
+                    "date": 1,
+                    "amount": 117,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 2,
+                    "date": 1,
+                    "amount": 346,
+                    "category": "お肉"
+                },
+                {
+                    "month": 2,
+                    "date": 1,
+                    "amount": 569,
+                    "category": "野菜"
+                },
+                {
+                    "month": 2,
+                    "date": 1,
+                    "amount": 1887,
+                    "category": "その他"
+                },
+                {
+                    "month": 2,
+                    "date": 2,
+                    "amount": 1640,
+                    "category": "外食"
+                },
+                {
+                    "month": 2,
+                    "date": 2,
+                    "amount": 4000,
+                    "category": "特別"
+                },
+                {
+                    "month": 2,
+                    "date": 4,
+                    "amount": 1097,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 2,
+                    "date": 4,
+                    "amount": 643,
+                    "category": "その他"
+                },
+                {
+                    "month": 2,
+                    "date": 9,
+                    "amount": 275,
+                    "category": "その他"
+                },
+                {
+                    "month": 2,
+                    "date": 5,
+                    "amount": 877,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 2,
+                    "date": 10,
+                    "amount": 414,
+                    "category": "お肉"
+                },
+                {
+                    "month": 2,
+                    "date": 10,
+                    "amount": 348,
+                    "category": "野菜"
+                },
+                {
+                    "month": 2,
+                    "date": 10,
+                    "amount": 4838,
+                    "category": "その他"
+                },
+                {
+                    "month": 2,
+                    "date": 13,
+                    "amount": 497,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 2,
+                    "date": 11,
+                    "amount": 148,
+                    "category": "その他"
+                },
+                {
+                    "month": 2,
+                    "date": 11,
+                    "amount": 642,
+                    "category": "野菜"
+                },
+                {
+                    "month": 2,
+                    "date": 14,
+                    "amount": 248,
+                    "category": "その他"
+                },
+                {
+                    "month": 2,
+                    "date": 14,
+                    "amount": 375,
+                    "category": "お肉"
+                },
+                {
+                    "month": 2,
+                    "date": 13,
+                    "amount": 497,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 2,
+                    "date": 16,
+                    "amount": 1196,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 2,
+                    "date": 15,
+                    "amount": 410,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 2,
+                    "date": 15,
+                    "amount": 199,
+                    "category": "お肉"
+                },
+                {
+                    "month": 2,
+                    "date": 15,
+                    "amount": 442,
+                    "category": "野菜"
+                },
+                {
+                    "month": 2,
+                    "date": 15,
+                    "amount": 1174,
+                    "category": "その他"
+                },
+                {
+                    "month": 2,
+                    "date": 18,
+                    "amount": 402,
+                    "category": "野菜"
+                },
+                {
+                    "month": 2,
+                    "date": 18,
+                    "amount": 98,
+                    "category": "飲料"
+                },
+                {
+                    "month": 2,
+                    "date": 18,
+                    "amount": 590,
+                    "category": "その他"
+                },
+                {
+                    "month": 2,
+                    "date": 19,
+                    "amount": 1078,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 2,
+                    "date": 20,
+                    "amount": 18,
+                    "category": "野菜"
+                },
+                {
+                    "month": 2,
+                    "date": 20,
+                    "amount": 1308,
+                    "category": "お肉"
+                },
+                {
+                    "month": 2,
+                    "date": 20,
+                    "amount": 233,
+                    "category": "その他"
+                },
+                {
+                    "month": 2,
+                    "date": 20,
+                    "amount": 408,
+                    "category": "飲料"
+                },
+                {
+                    "month": 2,
+                    "date": 22,
+                    "amount": 108,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 2,
+                    "date": 22,
+                    "amount": 1146,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 2,
+                    "date": 21,
+                    "amount": 1200,
+                    "category": "特別"
+                },
+                {
+                    "month": 2,
+                    "date": 21,
+                    "amount": 278,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 2,
+                    "date": 22,
+                    "amount": 5000,
+                    "category": "外食"
+                },
+                {
+                    "month": 2,
+                    "date": 24,
+                    "amount": 2596,
+                    "category": "外食"
+                },
+                {
+                    "month": 2,
+                    "date": 23,
+                    "amount": 330,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 2,
+                    "date": 25,
+                    "amount": 1705,
+                    "category": "お肉"
+                },
+                {
+                    "month": 2,
+                    "date": 25,
+                    "amount": 98,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 2,
+                    "date": 25,
+                    "amount": 710,
+                    "category": "野菜"
+                },
+                {
+                    "month": 2,
+                    "date": 25,
+                    "amount": 98,
+                    "category": "飲料"
+                },
+                {
+                    "month": 2,
+                    "date": 25,
+                    "amount": 464,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 1,
+                    "amount": 5801,
+                    "category": "電気"
+                },
+                {
+                    "month": 3,
+                    "date": 1,
+                    "amount": 8763,
+                    "category": "ガス"
+                },
+                {
+                    "month": 3,
+                    "date": 2,
+                    "amount": 840,
+                    "category": "外食"
+                },
+                {
+                    "month": 3,
+                    "date": 2,
+                    "amount": 216,
+                    "category": "飲料"
+                },
+                {
+                    "month": 3,
+                    "date": 1,
+                    "amount": 4072,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 3,
+                    "date": 4,
+                    "amount": 4479,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 3,
+                    "date": 4,
+                    "amount": 998,
+                    "category": "野菜"
+                },
+                {
+                    "month": 3,
+                    "date": 4,
+                    "amount": 793,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 6,
+                    "amount": 162,
+                    "category": "飲料"
+                },
+                {
+                    "month": 3,
+                    "date": 6,
+                    "amount": 80,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 3,
+                    "date": 6,
+                    "amount": 3876,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 6,
+                    "amount": 1832,
+                    "category": "お肉"
+                },
+                {
+                    "month": 3,
+                    "date": 6,
+                    "amount": 148,
+                    "category": "野菜"
+                },
+                {
+                    "month": 3,
+                    "date": 6,
+                    "amount": 1257,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 3,
+                    "date": 8,
+                    "amount": 554,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 3,
+                    "date": 10,
+                    "amount": 7139,
+                    "category": "外食"
+                },
+                {
+                    "month": 3,
+                    "date": 10,
+                    "amount": 862,
+                    "category": "飲料"
+                },
+                {
+                    "month": 3,
+                    "date": 10,
+                    "amount": 1901,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 11,
+                    "amount": 568,
+                    "category": "野菜"
+                },
+                {
+                    "month": 3,
+                    "date": 11,
+                    "amount": 1099,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 13,
+                    "amount": 283,
+                    "category": "飲料"
+                },
+                {
+                    "month": 3,
+                    "date": 13,
+                    "amount": 168,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 13,
+                    "amount": 576,
+                    "category": "お肉"
+                },
+                {
+                    "month": 3,
+                    "date": 13,
+                    "amount": 4000,
+                    "category": "特別"
+                },
+                {
+                    "month": 3,
+                    "date": 19,
+                    "amount": 1040,
+                    "category": "外食"
+                },
+                {
+                    "month": 3,
+                    "date": 18,
+                    "amount": 504,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 18,
+                    "amount": 298,
+                    "category": "お肉"
+                },
+                {
+                    "month": 3,
+                    "date": 18,
+                    "amount": 998,
+                    "category": "野菜"
+                },
+                {
+                    "month": 3,
+                    "date": 18,
+                    "amount": 114,
+                    "category": "飲料"
+                },
+                {
+                    "month": 3,
+                    "date": 18,
+                    "amount": 248,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 18,
+                    "amount": 1141,
+                    "category": "お肉"
+                },
+                {
+                    "month": 3,
+                    "date": 18,
+                    "amount": 108,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 3,
+                    "date": 18,
+                    "amount": 635,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 3,
+                    "date": 16,
+                    "amount": 1540,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 3,
+                    "date": 15,
+                    "amount": 3720,
+                    "category": "外食"
+                },
+                {
+                    "month": 3,
+                    "date": 20,
+                    "amount": 925,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 20,
+                    "amount": 204,
+                    "category": "飲料"
+                },
+                {
+                    "month": 3,
+                    "date": 20,
+                    "amount": 216,
+                    "category": "お肉"
+                },
+                {
+                    "month": 3,
+                    "date": 22,
+                    "amount": 3830,
+                    "category": "特別"
+                },
+                {
+                    "month": 3,
+                    "date": 22,
+                    "amount": 253,
+                    "category": "お肉"
+                },
+                {
+                    "month": 3,
+                    "date": 21,
+                    "amount": 980,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 3,
+                    "date": 24,
+                    "amount": 1690,
+                    "category": "外食"
+                },
+                {
+                    "month": 3,
+                    "date": 24,
+                    "amount": 1259,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 3,
+                    "date": 26,
+                    "amount": 192,
+                    "category": "飲料"
+                },
+                {
+                    "month": 3,
+                    "date": 26,
+                    "amount": 105,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 25,
+                    "amount": 598,
+                    "category": "野菜"
+                },
+                {
+                    "month": 3,
+                    "date": 25,
+                    "amount": 911,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 28,
+                    "amount": 890,
+                    "category": "外食"
+                },
+                {
+                    "month": 3,
+                    "date": 28,
+                    "amount": 181,
+                    "category": "野菜"
+                },
+                {
+                    "month": 3,
+                    "date": 28,
+                    "amount": 10600,
+                    "category": "特別"
+                },
+                {
+                    "month": 3,
+                    "date": 27,
+                    "amount": 408,
+                    "category": "お肉"
+                },
+                {
+                    "month": 3,
+                    "date": 27,
+                    "amount": 192,
+                    "category": "飲料"
+                },
+                {
+                    "month": 3,
+                    "date": 30,
+                    "amount": 150,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 30,
+                    "amount": 560,
+                    "category": "飲料"
+                },
+                {
+                    "month": 3,
+                    "date": 29,
+                    "amount": 9284,
+                    "category": "外食"
+                },
+                {
+                    "month": 3,
+                    "date": 29,
+                    "amount": 354,
+                    "category": "その他"
+                },
+                {
+                    "month": 3,
+                    "date": 29,
+                    "amount": 5000,
+                    "category": "特別"
+                },
+                {
+                    "month": 4,
+                    "date": 1,
+                    "amount": 3847,
+                    "category": "水道"
+                },
+                {
+                    "month": 4,
+                    "date": 1,
+                    "amount": 3774,
+                    "category": "電気"
+                },
+                {
+                    "month": 4,
+                    "date": 1,
+                    "amount": 6732,
+                    "category": "ガス"
+                },
+                {
+                    "month": 4,
+                    "date": 4,
+                    "amount": 213,
+                    "category": "その他"
+                },
+                {
+                    "month": 4,
+                    "date": 4,
+                    "amount": 226,
+                    "category": "飲料"
+                },
+                {
+                    "month": 4,
+                    "date": 3,
+                    "amount": 2924,
+                    "category": "お肉"
+                },
+                {
+                    "month": 4,
+                    "date": 1,
+                    "amount": 278,
+                    "category": "魚"
+                },
+                {
+                    "month": 4,
+                    "date": 1,
+                    "amount": 386,
+                    "category": "その他"
+                },
+                {
+                    "month": 4,
+                    "date": 1,
+                    "amount": 667,
+                    "category": "お肉"
+                },
+                {
+                    "month": 4,
+                    "date": 1,
+                    "amount": 1125,
+                    "category": "野菜"
+                },
+                {
+                    "month": 4,
+                    "date": 6,
+                    "amount": 321,
+                    "category": "お肉"
+                },
+                {
+                    "month": 4,
+                    "date": 5,
+                    "amount": 88,
+                    "category": "野菜"
+                },
+                {
+                    "month": 4,
+                    "date": 5,
+                    "amount": 267,
+                    "category": "飲料"
+                },
+                {
+                    "month": 4,
+                    "date": 5,
+                    "amount": 1550,
+                    "category": "お肉"
+                },
+                {
+                    "month": 4,
+                    "date": 5,
+                    "amount": 1097,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 4,
+                    "date": 8,
+                    "amount": 528,
+                    "category": "野菜"
+                },
+                {
+                    "month": 4,
+                    "date": 8,
+                    "amount": 363,
+                    "category": "魚"
+                },
+                {
+                    "month": 4,
+                    "date": 8,
+                    "amount": 632,
+                    "category": "その他"
+                },
+                {
+                    "month": 4,
+                    "date": 7,
+                    "amount": 105,
+                    "category": "その他"
+                },
+                {
+                    "month": 4,
+                    "date": 7,
+                    "amount": 7690,
+                    "category": "飲料"
+                },
+                {
+                    "month": 4,
+                    "date": 9,
+                    "amount": 110,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 4,
+                    "date": 13,
+                    "amount": 5860,
+                    "category": "特別"
+                },
+                {
+                    "month": 4,
+                    "date": 12,
+                    "amount": 1560,
+                    "category": "外食"
+                },
+                {
+                    "month": 4,
+                    "date": 12,
+                    "amount": 9230,
+                    "category": "特別"
+                },
+                {
+                    "month": 4,
+                    "date": 11,
+                    "amount": 137,
+                    "category": "野菜"
+                },
+                {
+                    "month": 4,
+                    "date": 11,
+                    "amount": 607,
+                    "category": "お肉"
+                },
+                {
+                    "month": 4,
+                    "date": 11,
+                    "amount": 178,
+                    "category": "飲料"
+                },
+                {
+                    "month": 4,
+                    "date": 11,
+                    "amount": 1067,
+                    "category": "その他"
+                },
+                {
+                    "month": 4,
+                    "date": 10,
+                    "amount": 220,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 4,
+                    "date": 10,
+                    "amount": 750,
+                    "category": "その他"
+                },
+                {
+                    "month": 4,
+                    "date": 17,
+                    "amount": 324,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 4,
+                    "date": 15,
+                    "amount": 278,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 4,
+                    "date": 15,
+                    "amount": 541,
+                    "category": "魚"
+                },
+                {
+                    "month": 4,
+                    "date": 15,
+                    "amount": 176,
+                    "category": "飲料"
+                },
+                {
+                    "month": 4,
+                    "date": 15,
+                    "amount": 354,
+                    "category": "その他"
+                },
+                {
+                    "month": 4,
+                    "date": 15,
+                    "amount": 618,
+                    "category": "野菜"
+                },
+                {
+                    "month": 4,
+                    "date": 15,
+                    "amount": 829,
+                    "category": "お肉"
+                },
+                {
+                    "month": 4,
+                    "date": 23,
+                    "amount": 1159,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 4,
+                    "date": 23,
+                    "amount": 633,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 4,
+                    "date": 22,
+                    "amount": 256,
+                    "category": "その他"
+                },
+                {
+                    "month": 4,
+                    "date": 22,
+                    "amount": 246,
+                    "category": "お肉"
+                },
+                {
+                    "month": 4,
+                    "date": 22,
+                    "amount": 238,
+                    "category": "魚"
+                },
+                {
+                    "month": 4,
+                    "date": 22,
+                    "amount": 618,
+                    "category": "野菜"
+                },
+                {
+                    "month": 4,
+                    "date": 20,
+                    "amount": 220,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 4,
+                    "date": 20,
+                    "amount": 378,
+                    "category": "飲料"
+                },
+                {
+                    "month": 4,
+                    "date": 20,
+                    "amount": 131,
+                    "category": "その他"
+                },
+                {
+                    "month": 4,
+                    "date": 24,
+                    "amount": 877,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 4,
+                    "date": 30,
+                    "amount": 399,
+                    "category": "飲料"
+                },
+                {
+                    "month": 4,
+                    "date": 30,
+                    "amount": 5363,
+                    "category": "その他"
+                },
+                {
+                    "month": 4,
+                    "date": 29,
+                    "amount": 640,
+                    "category": "野菜"
+                },
+                {
+                    "month": 4,
+                    "date": 29,
+                    "amount": 445,
+                    "category": "その他"
+                },
+                {
+                    "month": 4,
+                    "date": 29,
+                    "amount": 370,
+                    "category": "魚"
+                },
+                {
+                    "month": 4,
+                    "date": 29,
+                    "amount": 1243,
+                    "category": "お肉"
+                },
+                {
+                    "month": 4,
+                    "date": 29,
+                    "amount": 1110,
+                    "category": "外食"
+                },
+                {
+                    "month": 5,
+                    "date": 10,
+                    "amount": 3280,
+                    "category": "外食"
+                },
+                {
+                    "month": 5,
+                    "date": 10,
+                    "amount": 121,
+                    "category": "野菜"
+                },
+                {
+                    "month": 5,
+                    "date": 10,
+                    "amount": 592,
+                    "category": "その他"
+                },
+                {
+                    "month": 5,
+                    "date": 7,
+                    "amount": 2130,
+                    "category": "特別"
+                },
+                {
+                    "month": 5,
+                    "date": 7,
+                    "amount": 278,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 5,
+                    "date": 6,
+                    "amount": 570,
+                    "category": "野菜"
+                },
+                {
+                    "month": 5,
+                    "date": 6,
+                    "amount": 254,
+                    "category": "その他"
+                },
+                {
+                    "month": 5,
+                    "date": 6,
+                    "amount": 541,
+                    "category": "魚"
+                },
+                {
+                    "month": 5,
+                    "date": 11,
+                    "amount": 1429,
+                    "category": "特別"
+                },
+                {
+                    "month": 5,
+                    "date": 13,
+                    "amount": 508,
+                    "category": "野菜"
+                },
+                {
+                    "month": 5,
+                    "date": 13,
+                    "amount": 541,
+                    "category": "魚"
+                },
+                {
+                    "month": 5,
+                    "date": 13,
+                    "amount": 524,
+                    "category": "お肉"
+                },
+                {
+                    "month": 5,
+                    "date": 13,
+                    "amount": 544,
+                    "category": "その他"
+                },
+                {
+                    "month": 5,
+                    "date": 12,
+                    "amount": 127,
+                    "category": "飲料"
+                },
+                {
+                    "month": 5,
+                    "date": 20,
+                    "amount": 484,
+                    "category": "特別"
+                },
+                {
+                    "month": 5,
+                    "date": 20,
+                    "amount": 186,
+                    "category": "魚"
+                },
+                {
+                    "month": 5,
+                    "date": 20,
+                    "amount": 558,
+                    "category": "野菜"
+                },
+                {
+                    "month": 5,
+                    "date": 20,
+                    "amount": 486,
+                    "category": "お肉"
+                },
+                {
+                    "month": 5,
+                    "date": 20,
+                    "amount": 564,
+                    "category": "その他"
+                },
+                {
+                    "month": 5,
+                    "date": 20,
+                    "amount": 1206,
+                    "category": "飲料"
+                },
+                {
+                    "month": 5,
+                    "date": 20,
+                    "amount": 1078,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 5,
+                    "date": 19,
+                    "amount": 746,
+                    "category": "特別"
+                },
+                {
+                    "month": 5,
+                    "date": 18,
+                    "amount": 17220,
+                    "category": "特別"
+                },
+                {
+                    "month": 5,
+                    "date": 17,
+                    "amount": 330,
+                    "category": "特別"
+                },
+                {
+                    "month": 5,
+                    "date": 17,
+                    "amount": 110,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 5,
+                    "date": 15,
+                    "amount": 386,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 5,
+                    "date": 14,
+                    "amount": 388,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 5,
+                    "date": 22,
+                    "amount": 1140,
+                    "category": "特別"
+                },
+                {
+                    "month": 5,
+                    "date": 27,
+                    "amount": 196,
+                    "category": "野菜"
+                },
+                {
+                    "month": 5,
+                    "date": 27,
+                    "amount": 198,
+                    "category": "お肉"
+                },
+                {
+                    "month": 5,
+                    "date": 27,
+                    "amount": 98,
+                    "category": "飲料"
+                },
+                {
+                    "month": 5,
+                    "date": 27,
+                    "amount": 238,
+                    "category": "魚"
+                },
+                {
+                    "month": 5,
+                    "date": 27,
+                    "amount": 494,
+                    "category": "その他"
+                },
+                {
+                    "month": 5,
+                    "date": 26,
+                    "amount": 1200,
+                    "category": "特別"
+                },
+                {
+                    "month": 5,
+                    "date": 25,
+                    "amount": 64593,
+                    "category": "特別"
+                },
+                {
+                    "month": 5,
+                    "date": 31,
+                    "amount": 334,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 5,
+                    "date": 30,
+                    "amount": 6729,
+                    "category": "特別"
+                },
+                {
+                    "month": 5,
+                    "date": 30,
+                    "amount": 4440,
+                    "category": "飲料"
+                },
+                {
+                    "month": 5,
+                    "date": 30,
+                    "amount": 518,
+                    "category": "その他"
+                },
+                {
+                    "month": 6,
+                    "date": 2,
+                    "amount": 2440,
+                    "category": "特別"
+                },
+                {
+                    "month": 6,
+                    "date": 2,
+                    "amount": 1630,
+                    "category": "外食"
+                },
+                {
+                    "month": 6,
+                    "date": 1,
+                    "amount": 4136,
+                    "category": "水道"
+                },
+                {
+                    "month": 6,
+                    "date": 1,
+                    "amount": 3191,
+                    "category": "電気"
+                },
+                {
+                    "month": 6,
+                    "date": 1,
+                    "amount": 8226,
+                    "category": "ガス"
+                },
+                {
+                    "month": 6,
+                    "date": 7,
+                    "amount": 548,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 6,
+                    "date": 3,
+                    "amount": 334,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 6,
+                    "date": 3,
+                    "amount": 354,
+                    "category": "その他"
+                },
+                {
+                    "month": 6,
+                    "date": 3,
+                    "amount": 196,
+                    "category": "魚"
+                },
+                {
+                    "month": 6,
+                    "date": 3,
+                    "amount": 214,
+                    "category": "野菜"
+                },
+                {
+                    "month": 6,
+                    "date": 3,
+                    "amount": 534,
+                    "category": "飲料"
+                },
+                {
+                    "month": 6,
+                    "date": 8,
+                    "amount": 925,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 6,
+                    "date": 8,
+                    "amount": 877,
+                    "category": "その他"
+                },
+                {
+                    "month": 6,
+                    "date": 8,
+                    "amount": 288,
+                    "category": "野菜"
+                },
+                {
+                    "month": 6,
+                    "date": 8,
+                    "amount": 698,
+                    "category": "お肉"
+                },
+                {
+                    "month": 6,
+                    "date": 17,
+                    "amount": 392,
+                    "category": "野菜"
+                },
+                {
+                    "month": 6,
+                    "date": 17,
+                    "amount": 276,
+                    "category": "その他"
+                },
+                {
+                    "month": 6,
+                    "date": 17,
+                    "amount": 356,
+                    "category": "魚"
+                },
+                {
+                    "month": 6,
+                    "date": 17,
+                    "amount": 1061,
+                    "category": "お肉"
+                },
+                {
+                    "month": 6,
+                    "date": 16,
+                    "amount": 795,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 6,
+                    "date": 15,
+                    "amount": 8965,
+                    "category": "外食"
+                },
+                {
+                    "month": 6,
+                    "date": 15,
+                    "amount": 8000,
+                    "category": "特別"
+                },
+                {
+                    "month": 6,
+                    "date": 14,
+                    "amount": 68,
+                    "category": "野菜"
+                },
+                {
+                    "month": 6,
+                    "date": 14,
+                    "amount": 180,
+                    "category": "その他"
+                },
+                {
+                    "month": 6,
+                    "date": 14,
+                    "amount": 78,
+                    "category": "飲料"
+                },
+                {
+                    "month": 6,
+                    "date": 14,
+                    "amount": 866,
+                    "category": "お肉"
+                },
+                {
+                    "month": 6,
+                    "date": 10,
+                    "amount": 603,
+                    "category": "野菜"
+                },
+                {
+                    "month": 6,
+                    "date": 10,
+                    "amount": 372,
+                    "category": "魚"
+                },
+                {
+                    "month": 6,
+                    "date": 10,
+                    "amount": 627,
+                    "category": "飲料"
+                },
+                {
+                    "month": 6,
+                    "date": 10,
+                    "amount": 815,
+                    "category": "その他"
+                },
+                {
+                    "month": 6,
+                    "date": 10,
+                    "amount": 356,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 6,
+                    "date": 22,
+                    "amount": 110,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 6,
+                    "date": 21,
+                    "amount": 199,
+                    "category": "その他"
+                },
+                {
+                    "month": 6,
+                    "date": 21,
+                    "amount": 441,
+                    "category": "飲料"
+                },
+                {
+                    "month": 6,
+                    "date": 21,
+                    "amount": 636,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 6,
+                    "date": 21,
+                    "amount": 220,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 6,
+                    "date": 25,
+                    "amount": 3842,
+                    "category": "その他"
+                },
+                {
+                    "month": 6,
+                    "date": 26,
+                    "amount": 430,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 6,
+                    "date": 26,
+                    "amount": 271,
+                    "category": "その他"
+                },
+                {
+                    "month": 6,
+                    "date": 26,
+                    "amount": 118,
+                    "category": "飲料"
+                },
+                {
+                    "month": 6,
+                    "date": 24,
+                    "amount": 392,
+                    "category": "野菜"
+                },
+                {
+                    "month": 6,
+                    "date": 24,
+                    "amount": 344,
+                    "category": "その他"
+                },
+                {
+                    "month": 6,
+                    "date": 24,
+                    "amount": 294,
+                    "category": "魚"
+                },
+                {
+                    "month": 6,
+                    "date": 24,
+                    "amount": 1312,
+                    "category": "お肉"
+                },
+                {
+                    "month": 6,
+                    "date": 23,
+                    "amount": 306,
+                    "category": "特別"
+                },
+                {
+                    "month": 6,
+                    "date": 29,
+                    "amount": 183,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 6,
+                    "date": 29,
+                    "amount": 2658,
+                    "category": "お肉"
+                },
+                {
+                    "month": 6,
+                    "date": 29,
+                    "amount": 361,
+                    "category": "その他"
+                },
+                {
+                    "month": 6,
+                    "date": 29,
+                    "amount": 77,
+                    "category": "野菜"
+                },
+                {
+                    "month": 6,
+                    "date": 29,
+                    "amount": 1475,
+                    "category": "外食"
+                },
+                {
+                    "month": 6,
+                    "date": 29,
+                    "amount": 10640,
+                    "category": "特別"
+                },
+                {
+                    "month": 6,
+                    "date": 28,
+                    "amount": 14950,
+                    "category": "特別"
+                },
+                {
+                    "month": 7,
+                    "date": 1,
+                    "amount": 2949,
+                    "category": "電気"
+                },
+                {
+                    "month": 7,
+                    "date": 1,
+                    "amount": 7527,
+                    "category": "ガス"
+                },
+                {
+                    "month": 6,
+                    "date": 30,
+                    "amount": 220,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 6,
+                    "date": 30,
+                    "amount": 845,
+                    "category": "その他"
+                },
+                {
+                    "month": 6,
+                    "date": 30,
+                    "amount": 681,
+                    "category": "飲料"
+                },
+                {
+                    "month": 7,
+                    "date": 6,
+                    "amount": 194,
+                    "category": "野菜"
+                },
+                {
+                    "month": 7,
+                    "date": 6,
+                    "amount": 314,
+                    "category": "その他"
+                },
+                {
+                    "month": 7,
+                    "date": 6,
+                    "amount": 327,
+                    "category": "魚"
+                },
+                {
+                    "month": 7,
+                    "date": 6,
+                    "amount": 328,
+                    "category": "お肉"
+                },
+                {
+                    "month": 7,
+                    "date": 6,
+                    "amount": 604,
+                    "category": "飲料"
+                },
+                {
+                    "month": 7,
+                    "date": 6,
+                    "amount": 915,
+                    "category": "飲料"
+                },
+                {
+                    "month": 7,
+                    "date": 6,
+                    "amount": 448,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 7,
+                    "date": 6,
+                    "amount": 437,
+                    "category": "お肉"
+                },
+                {
+                    "month": 7,
+                    "date": 6,
+                    "amount": 489,
+                    "category": "その他"
+                },
+                {
+                    "month": 7,
+                    "date": 6,
+                    "amount": 415,
+                    "category": "野菜"
+                },
+                {
+                    "month": 7,
+                    "date": 6,
+                    "amount": 371,
+                    "category": "その他"
+                },
+                {
+                    "month": 7,
+                    "date": 6,
+                    "amount": 20880,
+                    "category": "特別"
+                },
+                {
+                    "month": 7,
+                    "date": 1,
+                    "amount": 391,
+                    "category": "野菜"
+                },
+                {
+                    "month": 7,
+                    "date": 1,
+                    "amount": 919,
+                    "category": "その他"
+                },
+                {
+                    "month": 7,
+                    "date": 1,
+                    "amount": 264,
+                    "category": "魚"
+                },
+                {
+                    "month": 7,
+                    "date": 1,
+                    "amount": 656,
+                    "category": "外食"
+                },
+                {
+                    "month": 7,
+                    "date": 15,
+                    "amount": 395,
+                    "category": "野菜"
+                },
+                {
+                    "month": 7,
+                    "date": 15,
+                    "amount": 331,
+                    "category": "その他"
+                },
+                {
+                    "month": 7,
+                    "date": 15,
+                    "amount": 356,
+                    "category": "魚"
+                },
+                {
+                    "month": 7,
+                    "date": 15,
+                    "amount": 841,
+                    "category": "お肉"
+                },
+                {
+                    "month": 7,
+                    "date": 12,
+                    "amount": 1236,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 7,
+                    "date": 12,
+                    "amount": 31549,
+                    "category": "特別"
+                },
+                {
+                    "month": 7,
+                    "date": 10,
+                    "amount": 767,
+                    "category": "その他"
+                },
+                {
+                    "month": 7,
+                    "date": 22,
+                    "amount": 750,
+                    "category": "野菜"
+                },
+                {
+                    "month": 7,
+                    "date": 22,
+                    "amount": 504,
+                    "category": "お肉"
+                },
+                {
+                    "month": 7,
+                    "date": 22,
+                    "amount": 168,
+                    "category": "飲料"
+                },
+                {
+                    "month": 7,
+                    "date": 22,
+                    "amount": 3724,
+                    "category": "その他"
+                },
+                {
+                    "month": 7,
+                    "date": 20,
+                    "amount": 392,
+                    "category": "野菜"
+                },
+                {
+                    "month": 7,
+                    "date": 20,
+                    "amount": 140,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 7,
+                    "date": 20,
+                    "amount": 395,
+                    "category": "飲料"
+                },
+                {
+                    "month": 7,
+                    "date": 20,
+                    "amount": 904,
+                    "category": "その他"
+                },
+                {
+                    "month": 7,
+                    "date": 19,
+                    "amount": 146,
+                    "category": "その他"
+                },
+                {
+                    "month": 7,
+                    "date": 13,
+                    "amount": 9740,
+                    "category": "特別"
+                },
+                {
+                    "month": 7,
+                    "date": 14,
+                    "amount": 2729,
+                    "category": "特別"
+                },
+                {
+                    "month": 7,
+                    "date": 28,
+                    "amount": 108,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 7,
+                    "date": 28,
+                    "amount": 220,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 7,
+                    "date": 26,
+                    "amount": 230,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 7,
+                    "date": 25,
+                    "amount": 146,
+                    "category": "その他"
+                },
+                {
+                    "month": 7,
+                    "date": 29,
+                    "amount": 278,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 7,
+                    "date": 29,
+                    "amount": 128,
+                    "category": "飲料"
+                },
+                {
+                    "month": 7,
+                    "date": 30,
+                    "amount": 2073,
+                    "category": "その他"
+                },
+                {
+                    "month": 7,
+                    "date": 30,
+                    "amount": 415,
+                    "category": "飲料"
+                },
+                {
+                    "month": 7,
+                    "date": 29,
+                    "amount": 512,
+                    "category": "野菜"
+                },
+                {
+                    "month": 7,
+                    "date": 29,
+                    "amount": 356,
+                    "category": "その他"
+                },
+                {
+                    "month": 7,
+                    "date": 29,
+                    "amount": 689,
+                    "category": "お肉"
+                },
+                {
+                    "month": 8,
+                    "date": 1,
+                    "amount": 3270,
+                    "category": "水道"
+                },
+                {
+                    "month": 8,
+                    "date": 1,
+                    "amount": 6631,
+                    "category": "電気"
+                },
+                {
+                    "month": 8,
+                    "date": 1,
+                    "amount": 5747,
+                    "category": "ガス"
+                },
+                {
+                    "month": 8,
+                    "date": 1,
+                    "amount": 138,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 1,
+                    "amount": 633,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 8,
+                    "date": 4,
+                    "amount": 109,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 8,
+                    "date": 4,
+                    "amount": 109,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 8,
+                    "date": 4,
+                    "amount": 425,
+                    "category": "お肉"
+                },
+                {
+                    "month": 8,
+                    "date": 4,
+                    "amount": 540,
+                    "category": "野菜"
+                },
+                {
+                    "month": 7,
+                    "date": 30,
+                    "amount": 306,
+                    "category": "特別"
+                },
+                {
+                    "month": 8,
+                    "date": 6,
+                    "amount": 965,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 8,
+                    "date": 5,
+                    "amount": 790,
+                    "category": "野菜"
+                },
+                {
+                    "month": 8,
+                    "date": 5,
+                    "amount": 486,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 5,
+                    "amount": 384,
+                    "category": "魚"
+                },
+                {
+                    "month": 8,
+                    "date": 5,
+                    "amount": 900,
+                    "category": "お肉"
+                },
+                {
+                    "month": 8,
+                    "date": 5,
+                    "amount": 159,
+                    "category": "飲料"
+                },
+                {
+                    "month": 8,
+                    "date": 9,
+                    "amount": 5445,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 8,
+                    "date": 8,
+                    "amount": 146,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 10,
+                    "amount": 3240,
+                    "category": "特別"
+                },
+                {
+                    "month": 8,
+                    "date": 10,
+                    "amount": 956,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 8,
+                    "date": 10,
+                    "amount": 93,
+                    "category": "野菜"
+                },
+                {
+                    "month": 8,
+                    "date": 10,
+                    "amount": 861,
+                    "category": "飲料"
+                },
+                {
+                    "month": 8,
+                    "date": 10,
+                    "amount": 1116,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 14,
+                    "amount": 4244,
+                    "category": "特別"
+                },
+                {
+                    "month": 8,
+                    "date": 14,
+                    "amount": 2387,
+                    "category": "お肉"
+                },
+                {
+                    "month": 8,
+                    "date": 14,
+                    "amount": 933,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 12,
+                    "amount": 8533,
+                    "category": "外食"
+                },
+                {
+                    "month": 8,
+                    "date": 12,
+                    "amount": 332,
+                    "category": "野菜"
+                },
+                {
+                    "month": 8,
+                    "date": 12,
+                    "amount": 245,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 19,
+                    "amount": 158,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 19,
+                    "amount": 304,
+                    "category": "野菜"
+                },
+                {
+                    "month": 8,
+                    "date": 19,
+                    "amount": 414,
+                    "category": "魚"
+                },
+                {
+                    "month": 8,
+                    "date": 19,
+                    "amount": 542,
+                    "category": "お肉"
+                },
+                {
+                    "month": 8,
+                    "date": 19,
+                    "amount": 178,
+                    "category": "飲料"
+                },
+                {
+                    "month": 8,
+                    "date": 18,
+                    "amount": 158,
+                    "category": "野菜"
+                },
+                {
+                    "month": 8,
+                    "date": 18,
+                    "amount": 98,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 18,
+                    "amount": 375,
+                    "category": "お肉"
+                },
+                {
+                    "month": 8,
+                    "date": 18,
+                    "amount": 404,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 8,
+                    "date": 12,
+                    "amount": 1410,
+                    "category": "特別"
+                },
+                {
+                    "month": 8,
+                    "date": 25,
+                    "amount": 2380,
+                    "category": "外食"
+                },
+                {
+                    "month": 8,
+                    "date": 23,
+                    "amount": 146,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 21,
+                    "amount": 340,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 20,
+                    "amount": 330,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 8,
+                    "date": 20,
+                    "amount": 1153,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 20,
+                    "amount": 186,
+                    "category": "飲料"
+                },
+                {
+                    "month": 8,
+                    "date": 19,
+                    "amount": 462,
+                    "category": "野菜"
+                },
+                {
+                    "month": 8,
+                    "date": 19,
+                    "amount": 414,
+                    "category": "魚"
+                },
+                {
+                    "month": 8,
+                    "date": 19,
+                    "amount": 542,
+                    "category": "お肉"
+                },
+                {
+                    "month": 8,
+                    "date": 19,
+                    "amount": 178,
+                    "category": "飲料"
+                },
+                {
+                    "month": 8,
+                    "date": 18,
+                    "amount": 158,
+                    "category": "野菜"
+                },
+                {
+                    "month": 8,
+                    "date": 18,
+                    "amount": 98,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 18,
+                    "amount": 375,
+                    "category": "お肉"
+                },
+                {
+                    "month": 8,
+                    "date": 18,
+                    "amount": 404,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 8,
+                    "date": 12,
+                    "amount": 1410,
+                    "category": "特別"
+                },
+                {
+                    "month": 8,
+                    "date": 26,
+                    "amount": 196,
+                    "category": "魚"
+                },
+                {
+                    "month": 8,
+                    "date": 26,
+                    "amount": 1006,
+                    "category": "お肉"
+                },
+                {
+                    "month": 8,
+                    "date": 26,
+                    "amount": 758,
+                    "category": "野菜"
+                },
+                {
+                    "month": 8,
+                    "date": 26,
+                    "amount": 346,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 26,
+                    "amount": 668,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 8,
+                    "date": 30,
+                    "amount": 1883,
+                    "category": "その他"
+                },
+                {
+                    "month": 8,
+                    "date": 30,
+                    "amount": 538,
+                    "category": "飲料"
+                },
+                {
+                    "month": 8,
+                    "date": 27,
+                    "amount": 1259,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 8,
+                    "date": 31,
+                    "amount": 184,
+                    "category": "飲料"
+                },
+                {
+                    "month": 8,
+                    "date": 31,
+                    "amount": 558,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 9,
+                    "date": 2,
+                    "amount": 109,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 9,
+                    "date": 2,
+                    "amount": 218,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 9,
+                    "date": 2,
+                    "amount": 1159,
+                    "category": "お肉"
+                },
+                {
+                    "month": 9,
+                    "date": 2,
+                    "amount": 441,
+                    "category": "野菜"
+                },
+                {
+                    "month": 9,
+                    "date": 2,
+                    "amount": 482,
+                    "category": "その他"
+                },
+                {
+                    "month": 9,
+                    "date": 2,
+                    "amount": 178,
+                    "category": "飲料"
+                },
+                {
+                    "month": 9,
+                    "date": 1,
+                    "amount": 306,
+                    "category": "特別"
+                },
+                {
+                    "month": 9,
+                    "date": 1,
+                    "amount": 6547,
+                    "category": "電気"
+                },
+                {
+                    "month": 9,
+                    "date": 1,
+                    "amount": 5488,
+                    "category": "ガス"
+                },
+                {
+                    "month": 9,
+                    "date": 8,
+                    "amount": 95,
+                    "category": "飲料"
+                },
+                {
+                    "month": 9,
+                    "date": 7,
+                    "amount": 8480,
+                    "category": "特別"
+                },
+                {
+                    "month": 9,
+                    "date": 10,
+                    "amount": 279,
+                    "category": "飲料"
+                },
+                {
+                    "month": 9,
+                    "date": 10,
+                    "amount": 1589,
+                    "category": "その他"
+                },
+                {
+                    "month": 9,
+                    "date": 9,
+                    "amount": 542,
+                    "category": "野菜"
+                },
+                {
+                    "month": 9,
+                    "date": 9,
+                    "amount": 336,
+                    "category": "その他"
+                },
+                {
+                    "month": 9,
+                    "date": 9,
+                    "amount": 196,
+                    "category": "魚"
+                },
+                {
+                    "month": 9,
+                    "date": 9,
+                    "amount": 695,
+                    "category": "お肉"
+                },
+                {
+                    "month": 9,
+                    "date": 9,
+                    "amount": 2620,
+                    "category": "外食"
+                },
+                {
+                    "month": 9,
+                    "date": 15,
+                    "amount": 674,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 9,
+                    "date": 20,
+                    "amount": 1514,
+                    "category": "お肉"
+                },
+                {
+                    "month": 9,
+                    "date": 20,
+                    "amount": 465,
+                    "category": "飲料"
+                },
+                {
+                    "month": 9,
+                    "date": 20,
+                    "amount": 827,
+                    "category": "その他"
+                },
+                {
+                    "month": 9,
+                    "date": 17,
+                    "amount": 146,
+                    "category": "野菜"
+                },
+                {
+                    "month": 9,
+                    "date": 17,
+                    "amount": 146,
+                    "category": "その他"
+                },
+                {
+                    "month": 9,
+                    "date": 16,
+                    "amount": 612,
+                    "category": "野菜"
+                },
+                {
+                    "month": 9,
+                    "date": 16,
+                    "amount": 248,
+                    "category": "その他"
+                },
+                {
+                    "month": 9,
+                    "date": 16,
+                    "amount": 332,
+                    "category": "魚"
+                },
+                {
+                    "month": 9,
+                    "date": 16,
+                    "amount": 709,
+                    "category": "お肉"
+                },
+                {
+                    "month": 9,
+                    "date": 16,
+                    "amount": 178,
+                    "category": "飲料"
+                },
+                {
+                    "month": 9,
+                    "date": 22,
+                    "amount": 186,
+                    "category": "魚"
+                },
+                {
+                    "month": 9,
+                    "date": 22,
+                    "amount": 1170,
+                    "category": "お肉"
+                },
+                {
+                    "month": 9,
+                    "date": 22,
+                    "amount": 710,
+                    "category": "野菜"
+                },
+                {
+                    "month": 9,
+                    "date": 22,
+                    "amount": 597,
+                    "category": "その他"
+                },
+                {
+                    "month": 9,
+                    "date": 21,
+                    "amount": 3820,
+                    "category": "外食"
+                },
+                {
+                    "month": 9,
+                    "date": 22,
+                    "amount": 110,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 9,
+                    "date": 28,
+                    "amount": 1780,
+                    "category": "外食"
+                },
+                {
+                    "month": 9,
+                    "date": 24,
+                    "amount": 146,
+                    "category": "その他"
+                },
+                {
+                    "month": 9,
+                    "date": 30,
+                    "amount": 212,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 9,
+                    "date": 30,
+                    "amount": 597,
+                    "category": "野菜"
+                },
+                {
+                    "month": 9,
+                    "date": 30,
+                    "amount": 323,
+                    "category": "魚"
+                },
+                {
+                    "month": 9,
+                    "date": 30,
+                    "amount": 976,
+                    "category": "お肉"
+                },
+                {
+                    "month": 9,
+                    "date": 30,
+                    "amount": 541,
+                    "category": "飲料"
+                },
+                {
+                    "month": 9,
+                    "date": 30,
+                    "amount": 904,
+                    "category": "その他"
+                },
+                {
+                    "month": 10,
+                    "date": 1,
+                    "amount": 146,
+                    "category": "その他"
+                },
+                {
+                    "month": 10,
+                    "date": 1,
+                    "amount": 4136,
+                    "category": "水道"
+                },
+                {
+                    "month": 10,
+                    "date": 1,
+                    "amount": 6113,
+                    "category": "電気"
+                },
+                {
+                    "month": 10,
+                    "date": 1,
+                    "amount": 3957,
+                    "category": "ガス"
+                },
+                {
+                    "month": 10,
+                    "date": 8,
+                    "amount": 73,
+                    "category": "その他"
+                },
+                {
+                    "month": 10,
+                    "date": 7,
+                    "amount": 376,
+                    "category": "野菜"
+                },
+                {
+                    "month": 10,
+                    "date": 7,
+                    "amount": 521,
+                    "category": "お肉"
+                },
+                {
+                    "month": 10,
+                    "date": 6,
+                    "amount": 20872,
+                    "category": "特別"
+                },
+                {
+                    "month": 10,
+                    "date": 5,
+                    "amount": 1861,
+                    "category": "外食"
+                },
+                {
+                    "month": 10,
+                    "date": 2,
+                    "amount": 212,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 10,
+                    "date": 2,
+                    "amount": 19,
+                    "category": "野菜"
+                },
+                {
+                    "month": 10,
+                    "date": 10,
+                    "amount": 220,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 10,
+                    "date": 10,
+                    "amount": 214,
+                    "category": "飲料"
+                },
+                {
+                    "month": 10,
+                    "date": 10,
+                    "amount": 733,
+                    "category": "その他"
+                },
+                {
+                    "month": 10,
+                    "date": 17,
+                    "amount": 619,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 10,
+                    "date": 14,
+                    "amount": 360,
+                    "category": "野菜"
+                },
+                {
+                    "month": 10,
+                    "date": 14,
+                    "amount": 653,
+                    "category": "お肉"
+                },
+                {
+                    "month": 10,
+                    "date": 14,
+                    "amount": 309,
+                    "category": "その他"
+                },
+                {
+                    "month": 10,
+                    "date": 14,
+                    "amount": 169,
+                    "category": "飲料"
+                },
+                {
+                    "month": 10,
+                    "date": 13,
+                    "amount": 265,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 10,
+                    "date": 12,
+                    "amount": 679,
+                    "category": "お肉"
+                },
+                {
+                    "month": 10,
+                    "date": 12,
+                    "amount": 196,
+                    "category": "その他"
+                },
+                {
+                    "month": 10,
+                    "date": 12,
+                    "amount": 296,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 10,
+                    "date": 20,
+                    "amount": 300,
+                    "category": "野菜"
+                },
+                {
+                    "month": 10,
+                    "date": 20,
+                    "amount": 278,
+                    "category": "お肉"
+                },
+                {
+                    "month": 10,
+                    "date": 20,
+                    "amount": 1277,
+                    "category": "その他"
+                },
+                {
+                    "month": 10,
+                    "date": 20,
+                    "amount": 646,
+                    "category": "飲料"
+                },
+                {
+                    "month": 10,
+                    "date": 18,
+                    "amount": 406,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 10,
+                    "date": 21,
+                    "amount": 394,
+                    "category": "野菜"
+                },
+                {
+                    "month": 10,
+                    "date": 21,
+                    "amount": 78,
+                    "category": "その他"
+                },
+                {
+                    "month": 10,
+                    "date": 21,
+                    "amount": 1615,
+                    "category": "お肉"
+                },
+                {
+                    "month": 10,
+                    "date": 20,
+                    "amount": 315,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 10,
+                    "date": 26,
+                    "amount": 2246,
+                    "category": "外食"
+                },
+                {
+                    "month": 10,
+                    "date": 28,
+                    "amount": 756,
+                    "category": "野菜"
+                },
+                {
+                    "month": 10,
+                    "date": 28,
+                    "amount": 256,
+                    "category": "魚"
+                },
+                {
+                    "month": 10,
+                    "date": 28,
+                    "amount": 782,
+                    "category": "その他"
+                },
+                {
+                    "month": 10,
+                    "date": 28,
+                    "amount": 1215,
+                    "category": "お肉"
+                },
+                {
+                    "month": 10,
+                    "date": 27,
+                    "amount": 278,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 10,
+                    "date": 30,
+                    "amount": 265,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 10,
+                    "date": 30,
+                    "amount": 446,
+                    "category": "飲料"
+                },
+                {
+                    "month": 10,
+                    "date": 30,
+                    "amount": 1029,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 2,
+                    "amount": 668,
+                    "category": "お肉"
+                },
+                {
+                    "month": 11,
+                    "date": 2,
+                    "amount": 803,
+                    "category": "野菜"
+                },
+                {
+                    "month": 11,
+                    "date": 2,
+                    "amount": 1110,
+                    "category": "外食"
+                },
+                {
+                    "month": 11,
+                    "date": 1,
+                    "amount": 2899,
+                    "category": "電気"
+                },
+                {
+                    "month": 11,
+                    "date": 1,
+                    "amount": 4490,
+                    "category": "ガス"
+                },
+                {
+                    "month": 11,
+                    "date": 1,
+                    "amount": 2899,
+                    "category": "電気"
+                },
+                 {
+                    "month": 11,
+                    "date": 4,
+                    "amount": 196,
+                    "category": "魚"
+                },
+                {
+                    "month": 11,
+                    "date": 4,
+                    "amount": 1323,
+                    "category": "お肉"
+                },
+                {
+                    "month": 11,
+                    "date": 4,
+                    "amount": 525,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 4,
+                    "amount": 1009,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 11,
+                    "date": 1,
+                    "amount": 73,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 7,
+                    "amount": 1686,
+                    "category": "お肉"
+                },
+                {
+                    "month": 11,
+                    "date": 7,
+                    "amount": 1070,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 11,
+                    "date": 10,
+                    "amount": 482,
+                    "category": "飲料"
+                },
+                {
+                    "month": 11,
+                    "date": 10,
+                    "amount": 961,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 11,
+                    "amount": 810,
+                    "category": "野菜"
+                },
+                {
+                    "month": 11,
+                    "date": 11,
+                    "amount": 226,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 11,
+                    "amount": 396,
+                    "category": "魚"
+                },
+                {
+                    "month": 11,
+                    "date": 11,
+                    "amount": 912,
+                    "category": "お肉"
+                },
+                {
+                    "month": 11,
+                    "date": 15,
+                    "amount": 3465,
+                    "category": "外食"
+                },
+                {
+                    "month": 11,
+                    "date": 15,
+                    "amount": 378,
+                    "category": "飲料"
+                },
+                {
+                    "month": 11,
+                    "date": 15,
+                    "amount": 837,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 15,
+                    "amount": 110,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 11,
+                    "date": 25,
+                    "amount": 646,
+                    "category": "野菜"
+                },
+                {
+                    "month": 11,
+                    "date": 25,
+                    "amount": 520,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 25,
+                    "amount": 1493,
+                    "category": "お肉"
+                },
+                {
+                    "month": 11,
+                    "date": 24,
+                    "amount": 404,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 24,
+                    "amount": 298,
+                    "category": "飲料"
+                },
+                {
+                    "month": 11,
+                    "date": 24,
+                    "amount": 238,
+                    "category": "お肉"
+                },
+                {
+                    "month": 11,
+                    "date": 20,
+                    "amount": 789,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 20,
+                    "amount": 267,
+                    "category": "お肉"
+                },
+                {
+                    "month": 11,
+                    "date": 19,
+                    "amount": 289,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 18,
+                    "amount": 158,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 18,
+                    "amount": 196,
+                    "category": "魚"
+                },
+                {
+                    "month": 11,
+                    "date": 18,
+                    "amount": 1052,
+                    "category": "お肉"
+                },
+                {
+                    "month": 11,
+                    "date": 18,
+                    "amount": 612,
+                    "category": "野菜"
+                },
+                {
+                    "month": 11,
+                    "date": 17,
+                    "amount": 371,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 11,
+                    "date": 30,
+                    "amount": 442,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 11,
+                    "date": 30,
+                    "amount": 372,
+                    "category": "飲料"
+                },
+                {
+                    "month": 11,
+                    "date": 30,
+                    "amount": 300,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 27,
+                    "amount": 341,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 25,
+                    "amount": 13996,
+                    "category": "特別"
+                },
+                {
+                    "month": 12,
+                    "date": 7,
+                    "amount": 110,
+                    "category": "特別"
+                },
+                {
+                    "month": 12,
+                    "date": 2,
+                    "amount": 300,
+                    "category": "その他"
+                },
+                {
+                    "month": 12,
+                    "date": 2,
+                    "amount": 243,
+                    "category": "その他"
+                },
+                {
+                    "month": 12,
+                    "date": 2,
+                    "amount": 573,
+                    "category": "野菜"
+                },
+                {
+                    "month": 12,
+                    "date": 2,
+                    "amount": 1338,
+                    "category": "お肉"
+                },
+                {
+                    "month": 11,
+                    "date": 30,
+                    "amount": 110,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 11,
+                    "date": 30,
+                    "amount": 112,
+                    "category": "その他"
+                },
+                {
+                    "month": 11,
+                    "date": 30,
+                    "amount": 278,
+                    "category": "飲料"
+                },
+                {
+                    "month": 12,
+                    "date": 10,
+                    "amount": 4883,
+                    "category": "飲料"
+                },
+                {
+                    "month": 12,
+                    "date": 10,
+                    "amount": 1854,
+                    "category": "その他"
+                },
+                {
+                    "month": 12,
+                    "date": 9,
+                    "amount": 226,
+                    "category": "その他"
+                },
+                {
+                    "month": 12,
+                    "date": 9,
+                    "amount": 679,
+                    "category": "野菜"
+                },
+                {
+                    "month": 12,
+                    "date": 9,
+                    "amount": 286,
+                    "category": "飲料"
+                },
+                {
+                    "month": 12,
+                    "date": 9,
+                    "amount": 1505,
+                    "category": "お肉"
+                },
+                {
+                    "month": 12,
+                    "date": 1,
+                    "amount": 4708,
+                    "category": "水道"
+                },
+                {
+                    "month": 12,
+                    "date": 1,
+                    "amount": 4052,
+                    "category": "電気"
+                },
+                {
+                    "month": 12,
+                    "date": 1,
+                    "amount": 4704,
+                    "category": "ガス"
+                },
+                {
+                    "month": 12,
+                    "date": 14,
+                    "amount": 2750,
+                    "category": "外食"
+                },
+                {
+                    "month": 12,
+                    "date": 12,
+                    "amount": 306,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 12,
+                    "date": 12,
+                    "amount": 110,
+                    "category": "特別"
+                },
+                {
+                    "month": 12,
+                    "date": 11,
+                    "amount": 489,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 12,
+                    "date": 21,
+                    "amount": 6289,
+                    "category": "外食"
+                },
+                {
+                    "month": 12,
+                    "date": 20,
+                    "amount": 487,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 12,
+                    "date": 20,
+                    "amount": 538,
+                    "category": "お肉"
+                },
+                {
+                    "month": 12,
+                    "date": 20,
+                    "amount": 264,
+                    "category": "野菜"
+                },
+                {
+                    "month": 12,
+                    "date": 20,
+                    "amount": 461,
+                    "category": "その他"
+                },
+                {
+                    "month": 12,
+                    "date": 20,
+                    "amount": 1233,
+                    "category": "飲料"
+                },
+                {
+                    "month": 12,
+                    "date": 16,
+                    "amount": 752,
+                    "category": "野菜"
+                },
+                {
+                    "month": 12,
+                    "date": 16,
+                    "amount": 396,
+                    "category": "その他"
+                },
+                {
+                    "month": 12,
+                    "date": 16,
+                    "amount": 1691,
+                    "category": "お肉"
+                },
+                {
+                    "month": 12,
+                    "date": 15,
+                    "amount": 1940,
+                    "category": "外食"
+                },
+                {
+                    "month": 12,
+                    "date": 25,
+                    "amount": 633,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 12,
+                    "date": 25,
+                    "amount": 338,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 12,
+                    "date": 24,
+                    "amount": 775,
+                    "category": "お菓子"
+                },
+                {
+                    "month": 12,
+                    "date": 23,
+                    "amount": 580,
+                    "category": "野菜"
+                },
+                {
+                    "month": 12,
+                    "date": 23,
+                    "amount": 674,
+                    "category": "その他"
+                },
+                {
+                    "month": 12,
+                    "date": 23,
+                    "amount": 1677,
+                    "category": "お肉"
+                },
+                {
+                    "month": 12,
+                    "date": 23,
+                    "amount": 178,
+                    "category": "飲料"
+                },
+                {
+                    "month": 12,
+                    "date": 22,
+                    "amount": 1259,
+                    "category": "生活用品"
+                },
+                {
+                    "month": 12,
+                    "date": 30,
+                    "amount": 1109,
+                    "category": "お肉"
+                },
+                {
+                    "month": 12,
+                    "date": 30,
+                    "amount": 1131,
+                    "category": "野菜"
+                },
+                {
+                    "month": 12,
+                    "date": 30,
+                    "amount": 2695,
+                    "category": "その他"
+                },
+                {
+                    "month": 12,
+                    "date": 30,
+                    "amount": 1580,
+                    "category": "外食"
+                },
+                {
+                    "month": 12,
+                    "date": 30,
+                    "amount": 2909,
+                    "category": "特別"
+                }
+            ];
+            let wallets = [
+                {
+                    "month": 1,
+                    "date": 27,
+                    "amount": "振込",
+                    "category": 179931
+                },
+                {
+                    "month": 2,
+                    "date": 3,
+                    "amount": "払出",
+                    "category": 75601
+                },
+                {
+                    "month": 2,
+                    "date": 13,
+                    "amount": "振込",
+                    "category": 107000
+                },
+                {
+                    "month": 2,
+                    "date": 15,
+                    "amount": "振込",
+                    "category": 24
+                },
+                {
+                    "month": 3,
+                    "date": 3,
+                    "amount": "払出",
+                    "category": 65208
+                },
+                {
+                    "month": 3,
+                    "date": 11,
+                    "amount": "振込",
+                    "category": 80000
+                },
+                {
+                    "month": 4,
+                    "date": 2,
+                    "amount": "払出",
+                    "category": 74677
+                },
+                {
+                    "month": 4,
+                    "date": 11,
+                    "amount": "振込",
+                    "category": 85000
+                },
+                {
+                    "month": 5,
+                    "date": 2,
+                    "amount": "払出",
+                    "category": 72075
+                },
+                {
+                    "month": 5,
+                    "date": 12,
+                    "amount": "振込",
+                    "category": 80000
+                },
+                {
+                    "month": 5,
+                    "date": 23,
+                    "amount": "払出",
+                    "category": 30000
+                },
+                {
+                    "month": 6,
+                    "date": 2,
+                    "amount": "払出",
+                    "category": 63516
+                },
+                {
+                    "month": 5,
+                    "date": 30,
+                    "amount": "振込",
+                    "category": 30000
+                },
+                {
+                    "month": 6,
+                    "date": 16,
+                    "amount": "振込",
+                    "category": 70000
+                },
+                {
+                    "month": 7,
+                    "date": 2,
+                    "amount": "払出",
+                    "category": 135389
+                },
+                {
+                    "month": 6,
+                    "date": 28,
+                    "amount": "払出",
+                    "category": 25000
+                },
+                {
+                    "month": 7,
+                    "date": 19,
+                    "amount": "振込",
+                    "category": 104000
+                },
+                {
+                    "month": 8,
+                    "date": 2,
+                    "amount": "払出",
+                    "category": 101198
+                },
+                {
+                    "month": 8,
+                    "date": 9,
+                    "amount": "振込",
+                    "category": 157
+                },
+                {
+                    "month": 8,
+                    "date": 12,
+                    "amount": "振込",
+                    "category": 100000
+                },
+                {
+                    "month": 9,
+                    "date": 2,
+                    "amount": "払出",
+                    "category": 73974
+                },
+                {
+                    "month": 9,
+                    "date": 16,
+                    "amount": "振込",
+                    "category": 80000
+                },
+                {
+                    "month": 10,
+                    "date": 2,
+                    "amount": "払出",
+                    "category": 71546
+                },
+                {
+                    "month": 10,
+                    "date": 17,
+                    "amount": "振込",
+                    "category": 90000
+                },
+                {
+                    "month": 11,
+                    "date": 2,
+                    "amount": "払出",
+                    "category": 52355
+                },
+                {
+                    "month": 11,
+                    "date": 18,
+                    "amount": "振込",
+                    "category": 80000
+                },
+                {
+                    "month": 12,
+                    "date": 2,
+                    "amount": "払出",
+                    "category": 39754
+                },
+                {
+                    "month": 12,
+                    "date": 12,
+                    "amount": "振込",
+                    "category": 80000
+                }
+            ];
             let selectedMonth = 1;  //入力タブで選択されている月
             let walletCurrent = 0;  //現在残高
-            let walletBalance = 0;  //見込残高
             let monthlyChart = null;
             let yearlyChart = null;
-            
-            window.onload = function() {
-                fetch("https://script.google.com/macros/s/AKfycbyBGopO2qSAGtUVQtSUc6Wc-Ok-7PjmBUvuGhDLIyeumddTxPMTWs7S2FsUaXhRZmOdBw/exec")
-                // ウォレットテーブルにデータを追加
-                .then(response => response.json())
-                    .then(data => {
-                        data.forEach(row => {
-                            const month = row[0];
-                            const date = row[1];
-                            const category = row[2];
-                            const amount = row[3];
-                            const wallet = { month, date, category, amount };
-                            wallets.unshift(wallet);
-                        });
-                        wallets.forEach(wallet=>{
-                            if (wallet.category==='振込') {
-                                walletCurrent += wallet.amount;
-                            }
-                            else if (wallet.category==='払出') {
-                                walletCurrent -= wallet.amount;
-                            }
-                        });
-                        //ウォレットテーブルの更新
-                        updateWalletDisplay();
-                    }
-                );
-                document.getElementById("loading-modal").style.display = "flex";
-                fetch("https://script.google.com/macros/s/AKfycbz_Vi5dDG8ejJyAiPIc3RHuwOi-xZtEXNe3st-soEPFw9YX5WCE9gNcBSsWRbyKBMNqbw/exec")
-                    .then(response => response.json())
-                    .then(data => {
-                        //最終月を設定
-                        if (data.length > 0) {
-                            selectedMonth = data[data.length - 1][0];
-                            document.getElementById('month').value = selectedMonth;
-                        }
-
-                        // 入力テーブルにデータを追加
-                        data.forEach(row => {
-                            const month = row[0];
-                            const date = row[1];
-                            const category = row[3];
-                            const amount = row[2];
-                            const entry = { date, category, amount, month, isNew:false };
-                            entries.unshift(entry);
-                        });
-                        //入力テーブルの更新
-                        updateEntriesTable();
-                        //メッセージ表示
-                        document.getElementById("loading-message").textContent = "読み込みました🎵";
-                        document.getElementById("close-button").style.display = "block";
-                    })
-                    .catch(error => {
-                        document.getElementById("loading-message").textContent = "読み込みに失敗しました";
-                        document.getElementById("close-button").style.display = "block";
-                    }
-                );
-            };
-            // モーダルを閉じる
-            function closeLoadingModal() {
-                document.getElementById("loading-modal").style.display = "none";
-            }
-            
 //////////////////////////////////////////////////////////////////////////////
 /// 入力画面処理
 //////////////////////////////////////////////////////////////////////////////
@@ -653,80 +4288,6 @@
                 });
             });
 
-            // 保存ボタンが押された時
-            function saveEntry(){
-                document.getElementById("saving-modal").style.display = "flex";
-                event.preventDefault(); // デフォルトのフォーム送信動作を防ぐ
-
-                if (saveEntries.length === 0) {
-                    document.getElementById("saving-message").textContent = "保存するデータがありません";
-                    document.getElementById("close-savebutton").style.display = "block";
-                    return;
-                }
-
-                // saveEntriesを送信可能な形式に変換
-                const formData = new URLSearchParams();
-                saveEntries.forEach((entry, index) => {
-                    Object.keys(entry).forEach(key => {
-                        formData.append(`${index}[${key}]`, entry[key]);
-                    });
-                });
-
-                // Google Apps Scriptにデータを送信
-                fetch("https://script.google.com/macros/s/AKfycbz_Vi5dDG8ejJyAiPIc3RHuwOi-xZtEXNe3st-soEPFw9YX5WCE9gNcBSsWRbyKBMNqbw/exec", {
-                    method: "POST",
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                        document.getElementById("saving-message").textContent = "保存しました🎵";
-                        document.getElementById("close-savebutton").style.display = "block";
-
-                        entries.forEach(entry => {
-                            if (saveEntries.includes(entry)) {
-                                entry.isNew = false;
-                            }
-                        });
-                        saveEntries = []; // 保存済みのエントリをクリア
-                        updateEntriesTable();
-                    } else {
-                        document.getElementById("saving-message").textContent = "保存に失敗しました。";
-                        document.getElementById("close-savebutton").style.display = "block";
-                    }
-                })
-                .catch(error => {
-                    console.error("保存中にエラーが発生しました:", error);
-                    document.getElementById("saving-message").textContent = "保存に失敗しました。";
-                    document.getElementById("close-savebutton").style.display = "block";
-                });
-            }
-            // モーダルを閉じる
-            function closeSavingModal() {
-                document.getElementById("saving-modal").style.display = "none";
-            }
-
-            // 追加ボタンが押されたとき
-            function addEntry() {
-                const date = document.getElementById('date').value;
-                const category = document.getElementById('category').value;
-                const amount = parseInt(document.getElementById('amount').value);
-                const month = parseInt(document.getElementById('month').value);
-
-                if (isNaN(amount) || !date) {
-                    alert('金額と日付を入力してください。');
-                    return;
-                }
-
-                const entry = { date, category, amount, month, isNew:true };
-                entries.unshift(entry);
-                saveEntries.unshift(entry);
-
-                document.getElementById('amount').value=null;
-
-                updateEntriesTable();
-            }
-
             // エントリテーブルの更新
             function updateEntriesTable() {
                 const tbody = document.getElementById('entriesTable').getElementsByTagName('tbody')[0];
@@ -735,25 +4296,11 @@
                 let totalExpense = 0;
 
                 entries.filter(entry => entry.month === selectedMonth).forEach(entry => {
-                        const row = tbody.insertRow();
-                        row.insertCell(0).textContent = entry.month;
-                        row.insertCell(1).textContent = entry.date;
-                        row.insertCell(2).textContent = entry.category;
-                        row.insertCell(3).textContent = entry.amount;
-
-                        // 削除ボタンが押されたとき
-                        const deleteCell = row.insertCell(4);
-                        if(entry.isNew){
-                        const deleteButton = document.createElement('button');
-                        deleteButton.textContent = '削除';
-                        deleteButton.onclick = () => {
-                            entries = entries.filter(e => e !== entry);
-                            saveEntries = saveEntries.filter(e => e !== entry);
-                            updateEntriesTable();
-                        };
-                        deleteCell.appendChild(deleteButton);
-                    }
-
+                    const row = tbody.insertRow();
+                    row.insertCell(0).textContent = entry.month;
+                    row.insertCell(1).textContent = entry.date;
+                    row.insertCell(2).textContent = entry.category;
+                    row.insertCell(3).textContent = entry.amount;
                     totalExpense += entry.amount;
                 });
 
@@ -1107,66 +4654,6 @@
 //////////////////////////////////////////////////////////////////////////////
 /// ウォレット処理
 //////////////////////////////////////////////////////////////////////////////
-            // ウォレット保存処理
-            function saveWallet(){
-                event.preventDefault(); // デフォルトのフォーム送信動作を防ぐ
-                const month = parseInt(document.getElementById("walletMonth").value);
-                const date = document.getElementById("walletDate").value;
-                const category = document.getElementById("walletCategory").value;
-                const amount = parseInt(document.getElementById("walletAmount").value);
-                if (category==='振込') {
-                    walletCurrent += amount;
-                }
-                else if (category==='払出') {
-                    walletCurrent -= amount;
-                }
-                else{
-                    alert("金額を入力してや♪");
-                }
-                document.getElementById("walletDate").value = "";
-                document.getElementById("walletAmount").value = "";
-
-                const wallet={ month, date, category, amount };
-                wallets.unshift(wallet);
-                if (wallet.length === 0) {
-                    alert("保存するデータがありません。");
-                    return;
-                }
-
-                // savewalletを送信可能な形式に変換
-                const formData = new URLSearchParams();
-                Object.keys(wallet).forEach(key => {
-                    formData.append(`0[${key}]`, wallet[key]);
-                });
-                document.getElementById("savingwallet-modal").style.display = "flex";
-
-                // Google Apps Scriptにデータを送信
-                fetch("https://script.google.com/macros/s/AKfycbyBGopO2qSAGtUVQtSUc6Wc-Ok-7PjmBUvuGhDLIyeumddTxPMTWs7S2FsUaXhRZmOdBw/exec", {
-                    method: "POST",
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                        document.getElementById("savingwallet-message").textContent = "保存しました♪";
-                        document.getElementById("close-savewalletbutton").style.display = "block";
-                        updateWalletDisplay()
-                    } else {
-                        document.getElementById("savingwallet-message").textContent = "保存しました😸";
-                        document.getElementById("close-savewalletbutton").style.display = "block";
-                    }
-                })
-                .catch(error => {
-                    document.getElementById("savingwallet-message").textContent = "保存に失敗しました。";
-                    document.getElementById("close-savewalletbutton").style.display = "block";
-                });
-            }
-
-            // モーダルを閉じる
-            function closeSavingWalletModal() {
-                document.getElementById("savingwallet-modal").style.display = "none";
-            }
-
             // ウォレット表示の更新
             function updateWalletDisplay() {
                 const tbody = document.getElementById('walletTable').getElementsByTagName('tbody')[0];
@@ -1180,7 +4667,6 @@
                         row.insertCell(3).textContent = wallet.amount;
             });
                 document.getElementById("walletCurrent").textContent = walletCurrent;
-                document.getElementById("walletBalance").textContent = walletBalance;
             }
 
 //////////////////////////////////////////////////////////////////////////////
